@@ -3,6 +3,7 @@
 # include <stdio.h>
 # include <stdint.h>
 
+# define CARD_TYPE_NAME_MAX 60
 typedef enum _eCardType {
     CARD_ORIGINAL = -1,
     CARD_UNDEFINED = 0,
@@ -55,6 +56,7 @@ typedef enum _eCardType {
 } eCardType;
 
 
+# define CARD_SPACE_NAME_MAX 30
 typedef enum _eCardSpace{
 
     CARD_SPACE_HAND,        // 手牌

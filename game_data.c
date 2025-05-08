@@ -3,6 +3,7 @@
 
 int32_t game_data_init (int32_t mode){
     card_data_init (mode);
+    deck_data_init (mode);
     return 0;
 }
 

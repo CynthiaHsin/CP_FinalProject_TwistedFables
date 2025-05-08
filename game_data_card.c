@@ -4,7 +4,6 @@
 sCardData card_data[CARD_NUM];
 int32_t card_index[PLAYER_NUM][CARD_TYPE_NUM];
 
-
 int32_t card_data_init_basic (int32_t idx){
     // CARD_BASIC_ATTACK_L1
     for (int32_t i=PLAYER1; i<PLAYER_NUM; i++) card_index[i][CARD_BASIC_ATTACK_L1]= idx;
@@ -175,6 +174,7 @@ void card_data_set(int32_t idx, int32_t num, int32_t space, int32_t type, int32_
         if (player!=PLAYER_ORIGINAL) card_data[idx].player= player;
     }
 }
+
 void card_add (int32_t num, int32_t space, int32_t type, int32_t player){
     int32_t idx= 0;
     while (card_data[idx].type) idx++;
@@ -185,142 +185,10 @@ void card_add (int32_t num, int32_t space, int32_t type, int32_t player){
 void card_data_print (int32_t idx, int32_t num){
     debug_print ("from id: (%d) to (%d)\n", idx, num);
     for (int32_t i=0; i<num; i++, idx++){
-        char card_type_name[100]= {0};
-        switch (card_data[idx].type){
-            case CARD_UNDEFINED:
-                strcpy (card_type_name, "CARD_UNDEFINED");
-                break;
-            case CARD_BASIC_ATTACK_L1:
-                strcpy (card_type_name, "CARD_BASIC_ATTACK_L1");
-                break;
-            case CARD_BASIC_ATTACK_L2:
-                strcpy (card_type_name, "CARD_BASIC_ATTACK_L2");
-                break;
-            case CARD_BASIC_ATTACK_L3:
-                strcpy (card_type_name, "CARD_BASIC_ATTACK_L3");
-                break;
-            case CARD_BASIC_DEFENSE_L1:
-                strcpy (card_type_name, "CARD_BASIC_DEFENSE_L1");
-                break;
-            case CARD_BASIC_DEFENSE_L2:
-                strcpy (card_type_name, "CARD_BASIC_DEFENSE_L2");
-                break;
-            case CARD_BASIC_DEFENSE_L3:
-                strcpy (card_type_name, "CARD_BASIC_DEFENSE_L3");
-                break;
-            case CARD_BASIC_MOVEMENT_L1:
-                strcpy (card_type_name, "CARD_BASIC_MOVEMENT_L1");
-                break;
-            case CARD_BASIC_MOVEMENT_L2:
-                strcpy (card_type_name, "CARD_BASIC_MOVEMENT_L2");
-                break;
-            case CARD_BASIC_MOVEMENT_L3:
-                strcpy (card_type_name, "CARD_BASIC_MOVEMENT_L3");
-                break;
-            case CARD_BASIC_COMMON:
-                strcpy (card_type_name, "CARD_BASIC_COMMON");
-                break;
-            case CARD_SKILL_ATTACK_BASE_L1:
-                strcpy (card_type_name, "CARD_SKILL_ATTACK_BASE_L1");
-                break;
-            case CARD_SKILL_ATTACK_BASE_L2:
-                strcpy (card_type_name, "CARD_SKILL_ATTACK_BASE_L2");
-                break;
-            case CARD_SKILL_ATTACK_BASE_L3:
-                strcpy (card_type_name, "CARD_SKILL_ATTACK_BASE_L3");
-                break;
-            case CARD_SKILL_ATTACK_EVOLUTION_L1:
-                strcpy (card_type_name, "CARD_SKILL_ATTACK_EVOLUTION_L1");
-                break;
-            case CARD_SKILL_ATTACK_EVOLUTION_L2:
-                strcpy (card_type_name, "CARD_SKILL_ATTACK_EVOLUTION_L2");
-                break;
-            case CARD_SKILL_DEFENSE_BASE_L1:
-                strcpy (card_type_name, "CARD_SKILL_DEFENSE_BASE_L1");
-                break;
-            case CARD_SKILL_DEFENSE_BASE_L2:
-                strcpy (card_type_name, "CARD_SKILL_DEFENSE_BASE_L2");
-                break;
-            case CARD_SKILL_DEFENSE_BASE_L3:
-                strcpy (card_type_name, "CARD_SKILL_DEFENSE_BASE_L3");
-                break;
-            case CARD_SKILL_DEFENSE_EVOLUTION_L1:
-                strcpy (card_type_name, "CARD_SKILL_DEFENSE_EVOLUTION_L1");
-                break;
-            case CARD_SKILL_DEFENSE_EVOLUTION_L2:
-                strcpy (card_type_name, "CARD_SKILL_DEFENSE_EVOLUTION_L2");
-                break;
-            case CARD_SKILL_MOVEMENT_BASE_L1:
-                strcpy (card_type_name, "CARD_SKILL_MOVEMENT_BASE_L1");
-                break;
-            case CARD_SKILL_MOVEMENT_BASE_L2:
-                strcpy (card_type_name, "CARD_SKILL_MOVEMENT_BASE_L2");
-                break;
-            case CARD_SKILL_MOVEMENT_BASE_L3:
-                strcpy (card_type_name, "CARD_SKILL_MOVEMENT_BASE_L3");
-                break;
-            case CARD_SKILL_MOVEMENT_EVOLUTION_L1:
-                strcpy (card_type_name, "CARD_SKILL_MOVEMENT_EVOLUTION_L1");
-                break;
-            case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
-                strcpy (card_type_name, "CARD_SKILL_MOVEMENT_EVOLUTION_L2");
-                break;
-            case CARD_SKILL_FINISH1:
-                strcpy (card_type_name, "CARD_SKILL_FINISH1");
-                break;
-            case CARD_SKILL_FINISH2:
-                strcpy (card_type_name, "CARD_SKILL_FINISH2");
-                break;
-            case CARD_SKILL_FINISH3:
-                strcpy (card_type_name, "CARD_SKILL_FINISH3");
-                break;
-            case CARD_POISON_L1:
-                strcpy (card_type_name, "CARD_POISON_L1");
-                break;
-            case CARD_POISON_L2:
-                strcpy (card_type_name, "CARD_POISON_L2");
-                break;
-            case CARD_POISON_L3:
-                strcpy (card_type_name, "CARD_POISON_L3");
-                break;
-            case CARD_MATCH:
-                strcpy (card_type_name, "CARD_MATCH");
-                break;
-            default:
-                strcpy (card_type_name, "ERROR");
-                break;
-        }
-        char card_space_name[100]= {0};
-        switch (card_data[idx].space){
-            case CARD_SPACE_HAND:
-                strcpy (card_space_name, "HAND");
-                break;
-            case CARD_SPACE_THROW:
-                strcpy (card_space_name, "THROW");
-                break;
-            case CARD_SPACE_DECK:
-                strcpy (card_space_name, "DECK");
-                break;
-            case CARD_SPACE_DECK_MATCH:
-                strcpy (card_space_name, "DECK_MATCH");
-                break;
-            case CARD_SPACE_DECK_POISON:
-                strcpy (card_space_name, "DECK_POISON");
-                break;
-            case CARD_SPACE_USE:
-                strcpy (card_space_name, "USE");
-                break;
-            case CARD_SPACE_SHOP:
-                strcpy (card_space_name, "SHOP");
-                break;
-            case CARD_SPACE_DELETE:
-                strcpy (card_space_name, "DELETE");
-                break;
-            default:
-                strcpy (card_space_name, "ERROR");
-                break;
-
-        }
+        char card_type_name[CARD_TYPE_NAME_MAX]= {0};
+        card_data_get_type_name (card_type_name, idx);
+        char card_space_name[CARD_SPACE_NAME_MAX]= {0};
+        card_data_get_space_name (card_space_name, idx);
         // if (strstr(card_space_name, "SHOP")) continue;
         // if (strstr(card_space_name, "DELETE")) continue;
         debug_print ("card %d (%s), \tspace: %s, \tplayer: %d\n", idx, card_type_name, card_space_name, card_data[idx].player);
@@ -335,5 +203,148 @@ int32_t card_data_get (sCardData *pCard, int32_t idx){
     pCard->index = idx;
     pCard->space = card_data[idx].space;
     pCard->type  = card_data[idx].type;
+    pCard->player = card_data[idx].player;
     return 0;
+}
+
+int32_t card_data_get_type_name (char card_type_name[], int32_t idx){
+    switch (card_data[idx].type){
+        case CARD_UNDEFINED:
+            strcpy (card_type_name, "CARD_UNDEFINED");
+            break;
+        case CARD_BASIC_ATTACK_L1:
+            strcpy (card_type_name, "CARD_BASIC_ATTACK_L1");
+            break;
+        case CARD_BASIC_ATTACK_L2:
+            strcpy (card_type_name, "CARD_BASIC_ATTACK_L2");
+            break;
+        case CARD_BASIC_ATTACK_L3:
+            strcpy (card_type_name, "CARD_BASIC_ATTACK_L3");
+            break;
+        case CARD_BASIC_DEFENSE_L1:
+            strcpy (card_type_name, "CARD_BASIC_DEFENSE_L1");
+            break;
+        case CARD_BASIC_DEFENSE_L2:
+            strcpy (card_type_name, "CARD_BASIC_DEFENSE_L2");
+            break;
+        case CARD_BASIC_DEFENSE_L3:
+            strcpy (card_type_name, "CARD_BASIC_DEFENSE_L3");
+            break;
+        case CARD_BASIC_MOVEMENT_L1:
+            strcpy (card_type_name, "CARD_BASIC_MOVEMENT_L1");
+            break;
+        case CARD_BASIC_MOVEMENT_L2:
+            strcpy (card_type_name, "CARD_BASIC_MOVEMENT_L2");
+            break;
+        case CARD_BASIC_MOVEMENT_L3:
+            strcpy (card_type_name, "CARD_BASIC_MOVEMENT_L3");
+            break;
+        case CARD_BASIC_COMMON:
+            strcpy (card_type_name, "CARD_BASIC_COMMON");
+            break;
+        case CARD_SKILL_ATTACK_BASE_L1:
+            strcpy (card_type_name, "CARD_SKILL_ATTACK_BASE_L1");
+            break;
+        case CARD_SKILL_ATTACK_BASE_L2:
+            strcpy (card_type_name, "CARD_SKILL_ATTACK_BASE_L2");
+            break;
+        case CARD_SKILL_ATTACK_BASE_L3:
+            strcpy (card_type_name, "CARD_SKILL_ATTACK_BASE_L3");
+            break;
+        case CARD_SKILL_ATTACK_EVOLUTION_L1:
+            strcpy (card_type_name, "CARD_SKILL_ATTACK_EVOLUTION_L1");
+            break;
+        case CARD_SKILL_ATTACK_EVOLUTION_L2:
+            strcpy (card_type_name, "CARD_SKILL_ATTACK_EVOLUTION_L2");
+            break;
+        case CARD_SKILL_DEFENSE_BASE_L1:
+            strcpy (card_type_name, "CARD_SKILL_DEFENSE_BASE_L1");
+            break;
+        case CARD_SKILL_DEFENSE_BASE_L2:
+            strcpy (card_type_name, "CARD_SKILL_DEFENSE_BASE_L2");
+            break;
+        case CARD_SKILL_DEFENSE_BASE_L3:
+            strcpy (card_type_name, "CARD_SKILL_DEFENSE_BASE_L3");
+            break;
+        case CARD_SKILL_DEFENSE_EVOLUTION_L1:
+            strcpy (card_type_name, "CARD_SKILL_DEFENSE_EVOLUTION_L1");
+            break;
+        case CARD_SKILL_DEFENSE_EVOLUTION_L2:
+            strcpy (card_type_name, "CARD_SKILL_DEFENSE_EVOLUTION_L2");
+            break;
+        case CARD_SKILL_MOVEMENT_BASE_L1:
+            strcpy (card_type_name, "CARD_SKILL_MOVEMENT_BASE_L1");
+            break;
+        case CARD_SKILL_MOVEMENT_BASE_L2:
+            strcpy (card_type_name, "CARD_SKILL_MOVEMENT_BASE_L2");
+            break;
+        case CARD_SKILL_MOVEMENT_BASE_L3:
+            strcpy (card_type_name, "CARD_SKILL_MOVEMENT_BASE_L3");
+            break;
+        case CARD_SKILL_MOVEMENT_EVOLUTION_L1:
+            strcpy (card_type_name, "CARD_SKILL_MOVEMENT_EVOLUTION_L1");
+            break;
+        case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
+            strcpy (card_type_name, "CARD_SKILL_MOVEMENT_EVOLUTION_L2");
+            break;
+        case CARD_SKILL_FINISH1:
+            strcpy (card_type_name, "CARD_SKILL_FINISH1");
+            break;
+        case CARD_SKILL_FINISH2:
+            strcpy (card_type_name, "CARD_SKILL_FINISH2");
+            break;
+        case CARD_SKILL_FINISH3:
+            strcpy (card_type_name, "CARD_SKILL_FINISH3");
+            break;
+        case CARD_POISON_L1:
+            strcpy (card_type_name, "CARD_POISON_L1");
+            break;
+        case CARD_POISON_L2:
+            strcpy (card_type_name, "CARD_POISON_L2");
+            break;
+        case CARD_POISON_L3:
+            strcpy (card_type_name, "CARD_POISON_L3");
+            break;
+        case CARD_MATCH:
+            strcpy (card_type_name, "CARD_MATCH");
+            break;
+        default:
+            strcpy (card_type_name, "ERROR");
+            break;
+    }
+    return 0;
+}
+
+int32_t card_data_get_space_name (char card_space_name[], int32_t idx){
+    switch (card_data[idx].space){
+        case CARD_SPACE_HAND:
+            strcpy (card_space_name, "HAND");
+            break;
+        case CARD_SPACE_THROW:
+            strcpy (card_space_name, "THROW");
+            break;
+        case CARD_SPACE_DECK:
+            strcpy (card_space_name, "DECK");
+            break;
+        case CARD_SPACE_DECK_MATCH:
+            strcpy (card_space_name, "DECK_MATCH");
+            break;
+        case CARD_SPACE_DECK_POISON:
+            strcpy (card_space_name, "DECK_POISON");
+            break;
+        case CARD_SPACE_USE:
+            strcpy (card_space_name, "USE");
+            break;
+        case CARD_SPACE_SHOP:
+            strcpy (card_space_name, "SHOP");
+            break;
+        case CARD_SPACE_DELETE:
+            strcpy (card_space_name, "DELETE");
+            break;
+        default:
+            strcpy (card_space_name, "ERROR");
+            break;
+
+    }
+    
 }

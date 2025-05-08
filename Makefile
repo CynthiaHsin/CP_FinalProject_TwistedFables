@@ -1,4 +1,4 @@
-GAME_DATA := game_data.c game_data_card.c game_data_player.c
+GAME_DATA := game_data.c game_data_card.c game_data_player.c game_data_deck.c
 FUNC := $(GAME_DATA)
 
 all: $(FUNC)

@@ -1,9 +1,10 @@
 # pragma once
 # include "main.h"
+# include "game_data.h"
 
 # define POWER_MAX 25
 
-typedef struct _sPlayer{
+typedef struct _sPlayerData{
     int32_t player;     // enum ePlayer
     int32_t character;  // enum eCharacter
     int32_t token;
@@ -15,7 +16,7 @@ typedef struct _sPlayer{
     int32_t defense_max;
     int32_t power;
     int32_t power_max;
-} sPlayer;
+} sPlayerData;
 
 
 int32_t player_data_set_character (int32_t player, int32_t character);

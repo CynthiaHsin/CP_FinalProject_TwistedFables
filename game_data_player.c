@@ -1,7 +1,7 @@
 # include "main.h"
 # include "game_data.h"
 
-sPlayer player_data[PLAYER_NUM];
+sPlayerData player_data[PLAYER_NUM];
 
 int32_t player_data_set_character (int32_t player, int32_t character){
     player_data[player].character= character;
@@ -93,3 +93,4 @@ int32_t player_data_init (int32_t mode){
         player_data[i].hp= player_data[i].hp_max;
     }
 }
+
