@@ -3,9 +3,12 @@
 # include <stdio.h>
 # include <stdint.h>
 
-typedef enum _eCard {
+typedef enum _eCardType {
+    CARD_ORIGINAL = -1,
+    CARD_UNDEFINED = 0,
+
     // 基本牌 - 攻擊、防禦、移動 三種，每種分為 1、2、3 級
-    CARD_BASIC_ATTACK_L1 = 0,       // 攻擊牌 - 一級
+    CARD_BASIC_ATTACK_L1,       // 攻擊牌 - 一級
     CARD_BASIC_ATTACK_L2,           // 攻擊牌 - 二級
     CARD_BASIC_ATTACK_L3,           // 攻擊牌 - 三級
     CARD_BASIC_DEFENSE_L1,          // 防禦牌 - 一級
@@ -16,7 +19,7 @@ typedef enum _eCard {
     CARD_BASIC_MOVEMENT_L3,         // 移動牌 - 三級
 
     // 通用牌 - 只有一種
-    CARD_COMMON,                    // 通用牌
+    CARD_BASIC_COMMON,              // 通用牌
 
     // 技能牌 - 以之前的技能為基礎
     CARD_SKILL_ATTACK_BASE_L1,          // 攻擊 一級技能
@@ -40,8 +43,10 @@ typedef enum _eCard {
     // 必殺技牌
     CARD_SKILL_FINISH1,          // 必殺技 1
     CARD_SKILL_FINISH2,          // 必殺技 2
-    CARD_SKILL_FINISH3           // 必殺技 3
-} eCard;
+    CARD_SKILL_FINISH3,          // 必殺技 3
+
+    CARD_TYPE_NUM                // 標記不同卡的數量 
+} eCardType;
 
 typedef enum _eCharacter {
     CHARACTER_RED_RIDING_HOOD = 0,      // 小紅帽
@@ -55,3 +60,7 @@ typedef enum _eCharacter {
     CHARACTER_DOROTHY,                  // 桃樂絲
     CHARACTER_SCHEHERAZADE              // 山魯佐德
 } eCharacter;
+
+typedef enum _eGAMEMODE{
+    GAMEMODE_1V1,
+} eGAMEMODE;
