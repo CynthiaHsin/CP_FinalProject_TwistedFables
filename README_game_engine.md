@@ -21,4 +21,13 @@
     ```
 
 ### 遊戲資料
-- game_data
+- game_data.h
+    - 提供資料讀取
+    ```
+    typedef struct _sCardData{
+        int32_t index;
+        int32_t space;
+        int32_t type;
+    } sCardData;
+    int32_t game_data_get_card (sCardData *pCard, int32_t idx); // 讀取編號idx的卡牌資料
+    ```

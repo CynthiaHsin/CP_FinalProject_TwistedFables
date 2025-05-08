@@ -48,6 +48,17 @@ typedef enum _eCardType {
     CARD_TYPE_NUM                // 標記不同卡的數量 
 } eCardType;
 
+
+typedef enum _eCardSpace{
+
+    CARD_SPACE_HAND,    // 手牌
+    CARD_SPACE_THROW,   // 棄牌堆
+    CARD_SPACE_USE,     // 出牌堆
+    CARD_SPACE_SHOP,    // 購牌區
+    CARD_SPACE_DELETE   // 移除
+
+} eCardSpace;
+
 typedef enum _eCharacter {
     CHARACTER_RED_RIDING_HOOD = 0,      // 小紅帽
     CHARACTER_SNOW_WHITE,               // 白雪公主
@@ -64,3 +75,13 @@ typedef enum _eCharacter {
 typedef enum _eGAMEMODE{
     GAMEMODE_1V1,
 } eGAMEMODE;
+
+typedef enum _ePlayer{
+    PLAYER_ORIGINAL = -1,
+    PLAYER_UNDEFINED = 0,
+    PLAYER1, // A-1
+    PLAYER2, // B-1
+    PLAYER3, // A-2
+    PLAYER4, // B-2
+    PLAYER_NUM // will be 5 ()
+} sPlayer;

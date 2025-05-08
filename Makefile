@@ -2,8 +2,10 @@ GAME_DATA := game_data.c game_data_card.c
 FUNC := $(GAME_DATA)
 
 all: $(FUNC)
+	- gcc game.c $(FUNC) -o game
 
 debug: $(FUNC)
+	- gcc -D _DEBUG_ game.c $(FUNC) -o game
 	- gcc -D _DEBUG_ test_main.c $(FUNC) -o test 
 
 clean:
