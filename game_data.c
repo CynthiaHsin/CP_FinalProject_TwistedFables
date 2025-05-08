@@ -1,8 +1,8 @@
 # include "main.h"
 # include "game_data.h"
 
-int32_t game_data_init(){
-    card_data_init();
+int32_t game_data_init (int32_t mode){
+    card_data_init (mode);
     return 0;
 }
 

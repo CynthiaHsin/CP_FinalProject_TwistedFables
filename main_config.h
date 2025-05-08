@@ -45,17 +45,26 @@ typedef enum _eCardType {
     CARD_SKILL_FINISH2,          // 必殺技 2
     CARD_SKILL_FINISH3,          // 必殺技 3
 
+    // 特殊牌
+    CARD_POISON_L1,              // 白雪公主中毒牌 一級
+    CARD_POISON_L2,              // 白雪公主中毒牌 二級
+    CARD_POISON_L3,              // 白雪公主中毒牌 三級
+    CARD_MATCH,                  // 火柴女孩火柴牌
+
     CARD_TYPE_NUM                // 標記不同卡的數量 
 } eCardType;
 
 
 typedef enum _eCardSpace{
 
-    CARD_SPACE_HAND,    // 手牌
-    CARD_SPACE_THROW,   // 棄牌堆
-    CARD_SPACE_USE,     // 出牌堆
-    CARD_SPACE_SHOP,    // 購牌區
-    CARD_SPACE_DELETE   // 移除
+    CARD_SPACE_HAND,        // 手牌
+    CARD_SPACE_DECK,        // 牌庫
+    CARD_SPACE_DECK_MATCH,  // 牌庫：火柴
+    CARD_SPACE_DECK_POISON, // 牌庫：毒
+    CARD_SPACE_THROW,       // 棄牌堆
+    CARD_SPACE_USE,         // 出牌堆
+    CARD_SPACE_SHOP,        // 購牌區
+    CARD_SPACE_DELETE       // 移除
 
 } eCardSpace;
 
@@ -84,4 +93,4 @@ typedef enum _ePlayer{
     PLAYER3, // A-2
     PLAYER4, // B-2
     PLAYER_NUM // will be 5 ()
-} sPlayer;
+} ePlayer;

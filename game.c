@@ -2,5 +2,6 @@
 # include "game_data.h"
 
 int main(){
-    game_data_init();
+    int32_t mode= GAMEMODE_1V1;
+    game_data_init (mode);
 }

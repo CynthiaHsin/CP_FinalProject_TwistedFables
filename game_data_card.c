@@ -1,19 +1,9 @@
 # include "main.h"
-# include "game_data_card.h"
+# include "game_data.h"
 
 sCardData card_data[CARD_NUM];
 int32_t card_index[PLAYER_NUM][CARD_TYPE_NUM];
 
-void card_data_set(int32_t idx, int32_t num, int32_t space, int32_t type, int32_t player){
-    for (int32_t i=0; i<num; i++, idx++){
-        if (idx >= CARD_NUM){
-            debug_print ("error: idx (%d) larger than card num max (%d)", idx, CARD_NUM);
-        }
-        card_data[idx].space= space;
-        if (type!=CARD_ORIGINAL) card_data[idx].type= type;
-        if (player!=PLAYER_ORIGINAL) card_data[idx].player= player;
-    }
-}
 
 int32_t card_data_init_basic (int32_t idx){
     // CARD_BASIC_ATTACK_L1
@@ -138,13 +128,16 @@ int32_t card_data_init_skill (int32_t idx, int32_t player){
     return idx;
 }
 
-int32_t card_data_init(){
+int32_t card_data_init (int32_t mode){
 
     for (int32_t i=0; i<CARD_NUM; i++){
         card_data[i].index= i;
     }
     int32_t idx=0;
     int32_t player= PLAYER_UNDEFINED;
+    int32_t player_max;
+    if (mode==GAMEMODE_1V1) player_max= PLAYER2; 
+
     for (int32_t i=0; i<CARD_BASIC_NUM_SUM; i++){
         card_data[i].player= player;
     }
@@ -153,7 +146,7 @@ int32_t card_data_init(){
 
 
     // CARD_SKILL
-    for (player=PLAYER1; player<=PLAYER4; player++){
+    for (player=PLAYER1; player<=player_max; player++){
         idx= card_data_init_skill(idx, player);
     }
 
@@ -161,7 +154,7 @@ int32_t card_data_init(){
     card_data_set (idx, CARD_NUM-idx, CARD_SPACE_DELETE, CARD_UNDEFINED, PLAYER_UNDEFINED);
 
     // hand
-    for (player=PLAYER1; player<=PLAYER4; player++){
+    for (player=PLAYER1; player<=player_max; player++){
         card_data_set (card_index[player][CARD_BASIC_ATTACK_L1]+3*(player-PLAYER1), 3, CARD_SPACE_THROW, CARD_ORIGINAL, player);
         card_data_set (card_index[player][CARD_BASIC_DEFENSE_L1]+3*(player-PLAYER1), 3, CARD_SPACE_THROW, CARD_ORIGINAL, player);
         card_data_set (card_index[player][CARD_BASIC_MOVEMENT_L1]+3*(player-PLAYER1), 3, CARD_SPACE_THROW, CARD_ORIGINAL, player);
@@ -170,6 +163,23 @@ int32_t card_data_init(){
         card_data_set (card_index[player][CARD_SKILL_MOVEMENT_BASE_L1], 1, CARD_SPACE_THROW, CARD_ORIGINAL, player);
     }
     return 0;
+}
+
+void card_data_set(int32_t idx, int32_t num, int32_t space, int32_t type, int32_t player){
+    for (int32_t i=0; i<num; i++, idx++){
+        if (idx >= CARD_NUM){
+            debug_print ("error: idx (%d) larger than card num max (%d)", idx, CARD_NUM);
+        }
+        card_data[idx].space= space;
+        if (type!=CARD_ORIGINAL) card_data[idx].type= type;
+        if (player!=PLAYER_ORIGINAL) card_data[idx].player= player;
+    }
+}
+void card_add (int32_t num, int32_t space, int32_t type, int32_t player){
+    int32_t idx= 0;
+    while (card_data[idx].type) idx++;
+    card_data_set (idx, num, space, type, player);
+    card_index[player][type]= idx;
 }
 
 void card_data_print (int32_t idx, int32_t num){
@@ -264,6 +274,18 @@ void card_data_print (int32_t idx, int32_t num){
             case CARD_SKILL_FINISH3:
                 strcpy (card_type_name, "CARD_SKILL_FINISH3");
                 break;
+            case CARD_POISON_L1:
+                strcpy (card_type_name, "CARD_POISON_L1");
+                break;
+            case CARD_POISON_L2:
+                strcpy (card_type_name, "CARD_POISON_L2");
+                break;
+            case CARD_POISON_L3:
+                strcpy (card_type_name, "CARD_POISON_L3");
+                break;
+            case CARD_MATCH:
+                strcpy (card_type_name, "CARD_MATCH");
+                break;
             default:
                 strcpy (card_type_name, "ERROR");
                 break;
@@ -275,6 +297,15 @@ void card_data_print (int32_t idx, int32_t num){
                 break;
             case CARD_SPACE_THROW:
                 strcpy (card_space_name, "THROW");
+                break;
+            case CARD_SPACE_DECK:
+                strcpy (card_space_name, "DECK");
+                break;
+            case CARD_SPACE_DECK_MATCH:
+                strcpy (card_space_name, "DECK_MATCH");
+                break;
+            case CARD_SPACE_DECK_POISON:
+                strcpy (card_space_name, "DECK_POISON");
                 break;
             case CARD_SPACE_USE:
                 strcpy (card_space_name, "USE");
@@ -290,7 +321,8 @@ void card_data_print (int32_t idx, int32_t num){
                 break;
 
         }
-        if (!strstr(card_space_name, "THROW")) continue;
+        // if (strstr(card_space_name, "SHOP")) continue;
+        // if (strstr(card_space_name, "DELETE")) continue;
         debug_print ("card %d (%s), \tspace: %s, \tplayer: %d\n", idx, card_type_name, card_space_name, card_data[idx].player);
     }
 }

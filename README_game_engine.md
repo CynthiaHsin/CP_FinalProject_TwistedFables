@@ -26,6 +26,7 @@
     ```
     typedef struct _sCardData{
         int32_t index;
+        int32_t player; // 屬於誰的卡： bisic 預設 undefined，購買後屬於某玩家；skill預設屬於該玩家
         int32_t space;
         int32_t type;
     } sCardData;
