@@ -15,3 +15,6 @@ int32_t deck_data_refresh (int32_t player);
 int32_t deck_data_shuffle (int32_t player);
 
 int32_t deck_data_print (int32_t player);
+
+int32_t deck_data_get_card (sCardData *pCard, int32_t player, int32_t idx);
+int32_t deck_data_move_card (int32_t player, int32_t idx, int32_t space);

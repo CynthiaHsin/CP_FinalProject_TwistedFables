@@ -183,7 +183,7 @@ void card_add (int32_t num, int32_t space, int32_t type, int32_t player){
 }
 
 void card_data_print (int32_t idx, int32_t num){
-    debug_print ("from id: (%d) to (%d)\n", idx, num);
+    debug_print ("from id (%d) get %d datas\n", idx, num);
     for (int32_t i=0; i<num; i++, idx++){
         char card_type_name[CARD_TYPE_NAME_MAX]= {0};
         card_data_get_type_name (card_type_name, idx);

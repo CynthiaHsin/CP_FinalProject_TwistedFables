@@ -9,6 +9,7 @@
     # include <stdio.h>
     # include <stdint.h>
     # include <stdlib.h>
+    # incldue <time.h>
     # include "main_debug.h"
     # include "main_config.h"
     ```
@@ -30,5 +31,9 @@
         int32_t space;
         int32_t type;
     } sCardData;
-    int32_t game_data_get_card (sCardData *pCard, int32_t idx); // 讀取編號idx的卡牌資料
+
+    int32_t game_data_get_card (sCardData *pCard, int32_t idx);                         // 取得「牌編號idx」的資料
+    int32_t game_data_get_deck_card (sCardData *pCard, int32_t player, int32_t idx);    // 取得「玩家(player)的牌庫頂，第(idx)張牌」的資料
+    int32_t game_data_deck_card_delete (int32_t player, int32_t idx);                   // 將「玩家(player)的牌庫頂，第(idx)張牌」移除
+    int32_t game_data_deck_card_take (int32_t player, int32_t idx);                     // 將「玩家(player)的牌庫頂，第(idx)張牌」抽進手牌
     ```
