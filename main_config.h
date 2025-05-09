@@ -59,6 +59,8 @@ typedef enum _eCardType {
 # define CARD_SPACE_NAME_MAX 30
 typedef enum _eCardSpace{
 
+    CARD_SPACE_ORIGINAL= -1,
+    CARD_SPACE_UNDEFINED= 0,
     CARD_SPACE_HAND,        // 手牌
     CARD_SPACE_DECK,        // 牌庫
     CARD_SPACE_DECK_MATCH,  // 牌庫：火柴
@@ -66,8 +68,9 @@ typedef enum _eCardSpace{
     CARD_SPACE_THROW,       // 棄牌堆
     CARD_SPACE_USE,         // 出牌堆
     CARD_SPACE_SHOP,        // 購牌區
-    CARD_SPACE_DELETE       // 移除
-
+    CARD_SPACE_DELETE,      // 移除
+    CARD_SPACE_NUM
+    
 } eCardSpace;
 
 typedef enum _eCharacter {

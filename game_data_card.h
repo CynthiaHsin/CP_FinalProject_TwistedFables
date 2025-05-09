@@ -44,3 +44,5 @@ void card_data_print (int32_t idx, int32_t num);
 int32_t card_data_get (sCardData *pCard, int32_t idx);
 int32_t card_data_get_type_name (char card_type_name[], int32_t idx);
 int32_t card_data_get_space_name (char card_space_name[], int32_t idx);
+
+int32_t card_cpy (sCardData *pCard, sCardData src);

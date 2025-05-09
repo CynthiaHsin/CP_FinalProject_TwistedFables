@@ -348,3 +348,11 @@ int32_t card_data_get_space_name (char card_space_name[], int32_t idx){
     }
     
 }
+
+int32_t card_cpy (sCardData *pCard, sCardData src){
+    pCard->index= src.index;
+    pCard->player= src.player;
+    pCard->type= src.type;
+    pCard->space= src.space;
+    return 0;
+}

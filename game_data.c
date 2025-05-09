@@ -22,3 +22,18 @@ int32_t game_data_deck_card_delete (int32_t player, int32_t idx){
 int32_t game_data_deck_card_take (int32_t player, int32_t idx){
     return deck_data_move_card (player, idx, CARD_SPACE_HAND);
 }
+
+int32_t game_data_search_cards (sCardData cards[], int32_t *pGet_num, int32_t player, int32_t space, int32_t type){
+    int32_t cnt= 0;
+    sCardData card;
+    for (int32_t i=0; i<CARD_NUM; i++){
+        if (card_data_get (&card, i)<0) return -1;
+        if (player!=PLAYER_ORIGINAL && card.player!=player) continue;
+        if (space!=CARD_SPACE_ORIGINAL && card.space!=space) continue;
+        if (type!=CARD_ORIGINAL && card.type!=type) continue;
+        card_cpy (&(cards[cnt]), card);
+        cnt++;
+    }
+    *pGet_num= cnt;
+    return cnt;
+}
