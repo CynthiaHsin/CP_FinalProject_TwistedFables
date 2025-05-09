@@ -1,8 +1,5 @@
 # pragma once
 
-# include <stdio.h>
-# include <stdint.h>
-
 # define CARD_TYPE_NAME_MAX 60
 typedef enum _eCardType {
     CARD_ORIGINAL = -1,
@@ -70,7 +67,7 @@ typedef enum _eCardSpace{
     CARD_SPACE_SHOP,        // 購牌區
     CARD_SPACE_DELETE,      // 移除
     CARD_SPACE_NUM
-    
+
 } eCardSpace;
 
 typedef enum _eCharacter {

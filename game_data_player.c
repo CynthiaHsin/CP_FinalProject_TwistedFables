@@ -7,6 +7,10 @@ int32_t player_data_set_character (int32_t player, int32_t character){
     player_data[player].character= character;
 }
 
+int32_t player_data_set (int32_t player, sPlayerData src){
+    return player_data_cpy (&(player_data[player]), src);
+}
+
 int32_t player_data_init (int32_t mode){
 
     int32_t player= PLAYER1;
@@ -91,6 +95,22 @@ int32_t player_data_init (int32_t mode){
                 break;
         }
         player_data[i].hp= player_data[i].hp_max;
+        // 兩隊分邊站
+        if (i%2) player_data[i].pos= -1;
+        else player_data[i].pos= 1;
     }
 }
 
+int32_t player_data_cpy (sPlayerData *pPlayerData, sPlayerData src){
+    int32_t *pA= (int32_t*)pPlayerData;
+    int32_t *pB= (int32_t*)(&src);
+    for (int32_t i=0; i<sizeof(sPlayerData); i++){
+        pA[i]= pB[i];
+    }
+    return 0;
+}
+
+int32_t player_data_get (sPlayerData *pPlayerData, int32_t player){
+    if (player>=PLAYER_NUM) return -1;
+    return player_data_cpy (pPlayerData, player_data[player]);
+}
