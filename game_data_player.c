@@ -101,9 +101,25 @@ int32_t player_data_init (int32_t mode){
     }
 }
 
+int32_t player_data_print (int32_t player){
+    debug_print ("---\n");
+    debug_print ("player:\t%d\n",       player_data[player].player);
+    debug_print ("character:\t%d\n",    player_data[player].character);
+    debug_print ("token:\t%d\n",        player_data[player].token);
+    debug_print ("token_max:\t%d\n",    player_data[player].token_max);
+    debug_print ("hp:\t%d\n",           player_data[player].hp);
+    debug_print ("hp_finish\t%d\n",     player_data[player].hp_finish);
+    debug_print ("hp_max:\t%d\n",       player_data[player].hp_max);
+    debug_print ("defense:\t%d\n",      player_data[player].defense);
+    debug_print ("defense_max:\t%d\n",  player_data[player].defense_max);
+    debug_print ("power:\t%d\n",        player_data[player].power);
+    debug_print ("power_ma:\t%d\n",     player_data[player].power_max);
+    debug_print ("pos:\t%d\n",          player_data[player].pos);
+}
+
 int32_t player_data_cpy (sPlayerData *pPlayerData, sPlayerData src){
-    int32_t *pA= (int32_t*)pPlayerData;
-    int32_t *pB= (int32_t*)(&src);
+    int8_t *pA= (int8_t*)pPlayerData;
+    int8_t *pB= (int8_t*)(&src);
     for (int32_t i=0; i<sizeof(sPlayerData); i++){
         pA[i]= pB[i];
     }

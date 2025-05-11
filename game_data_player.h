@@ -25,4 +25,6 @@ int32_t player_data_set (int32_t player, sPlayerData src);
 int32_t player_data_init (int32_t mode);
 
 int32_t player_data_cpy (sPlayerData *pPlayerData, sPlayerData src);
+int32_t player_data_print (int32_t player);
+
 int32_t player_data_get (sPlayerData *pPlayerData, int32_t player);

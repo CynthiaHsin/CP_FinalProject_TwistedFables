@@ -43,20 +43,22 @@ int32_t game_action_use_basic_card (int32_t cards_idx, int32_t card_type, int32_
         case CARD_BASIC_MOVEMENT_L2:
         case CARD_BASIC_MOVEMENT_L3: 
             level= card_type - CARD_BASIC_MOVEMENT_L1 + 1;
-            int32_t des= player_data_des.pos + move_direction*level;
+            int32_t des= player_data_use.pos + move_direction*level;
             if (des==player_data_des.pos){
                 int32_t stay= player_data_use.pos - player_data_des.pos;
                 stay/= abs(stay);
                 des= player_data_des.pos + stay;
             }
             // not yet: 場地邊緣處理
-            player_data_des.pos= des;
+            player_data_use.pos= des;
             break;
     }
+    
     player_data_use.power+= level;
     player_data_use.power= MIN (player_data_use.power, player_data_use.power_max);
     
     player_data_set (player_use, player_data_use);
     player_data_set (player_des, player_data_des);
+    card_data_set (cards_idx, 1, CARD_SPACE_USE, CARD_ORIGINAL, PLAYER_ORIGINAL);
     return 0;
 }
