@@ -384,6 +384,9 @@ int32_t card_data_get_space_name (char card_space_name[], int32_t idx){
         case CARD_SPACE_USE:
             strcpy (card_space_name, "USE");
             break;
+        case CARD_SPACE_USE_LASTING:
+            strcpy (card_space_name, "USE_LASTING");
+            break;
         case CARD_SPACE_SHOP:
             strcpy (card_space_name, "SHOP");
             break;

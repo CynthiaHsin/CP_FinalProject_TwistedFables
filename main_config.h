@@ -52,6 +52,7 @@ typedef enum _eCardType {
     CARD_TYPE_NUM                // 標記不同卡的數量 
 } eCardType;
 
+# define CARD_COST_ORIGINAL -1
 
 # define CARD_SPACE_NAME_MAX 30
 typedef enum _eCardSpace{
@@ -64,6 +65,7 @@ typedef enum _eCardSpace{
     CARD_SPACE_DECK_POISON, // 牌庫：毒
     CARD_SPACE_THROW,       // 棄牌堆
     CARD_SPACE_USE,         // 出牌堆
+    CARD_SPACE_USE_LASTING, // 持續效果的牌
     CARD_SPACE_SHOP,        // 購牌區
     CARD_SPACE_DELETE,      // 移除
     CARD_SPACE_NUM

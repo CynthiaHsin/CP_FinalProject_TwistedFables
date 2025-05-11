@@ -18,3 +18,4 @@ int32_t deck_data_print (int32_t player);
 
 int32_t deck_data_get_card (sCardData *pCard, int32_t player, int32_t idx);
 int32_t deck_data_move_card (int32_t player, int32_t idx, int32_t space);
+int32_t deck_data_draw_cards (int32_t player, int32_t num); // 抽 num 張牌進手牌

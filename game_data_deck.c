@@ -99,3 +99,15 @@ int32_t deck_data_move_card (int32_t player, int32_t idx, int32_t space){
     }
     return 0;
 }
+
+int32_t deck_data_draw_cards (int32_t player, int32_t num){
+    if (deck_data[player].card_num < num){
+        deck_data_refresh (player);
+    }
+
+    for (int32_t i=0; i<num; i++){
+        deck_data_move_card (player, 0, CARD_SPACE_HAND);
+    }
+
+    return 0;
+}

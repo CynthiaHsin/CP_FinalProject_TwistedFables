@@ -1,6 +1,7 @@
-GAME_DATA := game_data.c game_data_card.c game_data_player.c game_data_deck.c
+GAME_DATA := game_data.c game_data_card.c game_data_player.c game_data_deck.c game_data_status.c
 GAME_ACTION := game_action.c
-FUNC := -lm $(GAME_DATA) $(GAME_ACTION)
+GAME_ROUND := game_round.c
+FUNC := -lm $(GAME_DATA) $(GAME_ACTION) $(GAME_ROUND)
 
 all:
 	# - gcc game.c $(FUNC) -o game
