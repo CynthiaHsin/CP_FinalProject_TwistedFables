@@ -20,6 +20,9 @@ int32_t status_player_order_1v1[2][ORDER_PLAYERS]={
 int32_t status_data_init (int32_t mode){
     status_data.mode= mode;
     status_data.round= 0;
+    for (int32_t i=PLAYER1; i<PLAYER_NUM; i++){
+        status_data.actions_num[i]= 0;
+    }
     return 0;
 }
 
@@ -30,6 +33,12 @@ int32_t status_data_next_round(){
         for (int32_t i=0; i<ORDER_PLAYERS; i++){
             status_data.player_order[i]= status_player_order_1v1[order][i];
         }
+        for (int32_t i=PLAYER1; i<PLAYER_NUM; i++){
+            status_data.actions_num[i]= 0;
+        }
+    }
+    for (int32_t i=PLAYER1; i<PLAYER_NUM; i++){
+        status_data.actions_num[i]= 0;
     }
     return 0;
 }
@@ -49,5 +58,10 @@ int32_t status_data_get (sStatusData *pStatusData){
 
 int32_t status_data_get_mode (int32_t *pMode){
     *pMode= status_data.mode;
+    return 0;
+}
+
+int32_t status_data_add_action (int32_t player){
+    status_data.actions_num[player]++;
     return 0;
 }

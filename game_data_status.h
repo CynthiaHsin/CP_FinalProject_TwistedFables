@@ -6,6 +6,7 @@ typedef struct _sStatusData{
     int32_t mode;
     int32_t round;
     int32_t player_order[4];
+    int32_t actions_num[PLAYER_NUM];
 } sStatusData;
 
 

@@ -98,3 +98,14 @@ typedef enum _ePlayer{
     PLAYER4, // B-2
     PLAYER_NUM // will be 5 ()
 } ePlayer;
+
+typedef enum _eAction{
+    ACTION_UNDEFINED = 0,
+    ACTION_FOCUS,
+    ACTION_ATTACK,
+    ACTION_DEFENSE,
+    ACTION_MOVE,
+    ACTION_SKILL, // 使用技能
+    ACTION_BUY,
+    ACTION_NUM // action 總數
+} eAction;

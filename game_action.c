@@ -2,11 +2,20 @@
 # include "game_data.h"
 # include "game_action.h"
 
+// allow 陣列索引值為eAction中的各個動作，陣列儲存值: 1 true(可以執行此動作), 0 flase(不可執行)，目前設計只檢查專注
+int32_t game_action_actions_allow (int32_t allow[], int32_t player){
+    sStatusData status;
+    status_data_get (&status);
+    for (int32_t i=ACTION_UNDEFINED; i<ACTION_NUM; i++){
+        allow[i]= 1;
+    }
+
+    // 檢查：專注
+    if (status.actions_num[player]) allow[ACTION_FOCUS]= 0;
+    
+}
+
 int32_t game_action_use_basic_card (int32_t cards_idx, int32_t card_type, int32_t token_num, int32_t move_direction, int32_t player_use, int32_t player_des){
-    sPlayerData player_data_use;
-    sPlayerData player_data_des;
-    if (player_data_get (&player_data_use, player_use)<0) return -1;
-    if (player_data_get (&player_data_des, player_des)<0) return -1;
 
     sCardData card;
     card_data_get (&card, cards_idx);
@@ -20,45 +29,25 @@ int32_t game_action_use_basic_card (int32_t cards_idx, int32_t card_type, int32_
         case CARD_BASIC_ATTACK_L2:
         case CARD_BASIC_ATTACK_L3:
             level= card_type - CARD_BASIC_ATTACK_L1 + 1;
-            if (abs(player_data_use.pos - player_data_des.pos) > 1){
-                debug_print ("error: too long destination: use at %d, des at %d", player_data_use.pos, player_data_des.pos);
-                return -1;
-            }
-            player_data_des.defense-= level;
-            if (player_data_des.defense<0){
-                player_data_des.hp+= player_data_des.defense;
-                player_data_des.defense= 0;
-            }
+            action_attack (level, 1, player_use, player_des);
             break;
 
         case CARD_BASIC_DEFENSE_L1:
         case CARD_BASIC_DEFENSE_L2:
         case CARD_BASIC_DEFENSE_L3:
             level= card_type - CARD_BASIC_DEFENSE_L1 + 1;
-            player_data_use.defense+= level;
-            player_data_use.defense= MIN (player_data_use.defense, player_data_use.defense_max);
+            action_defense (level, player_use);
             break;
 
         case CARD_BASIC_MOVEMENT_L1:
         case CARD_BASIC_MOVEMENT_L2:
         case CARD_BASIC_MOVEMENT_L3: 
             level= card_type - CARD_BASIC_MOVEMENT_L1 + 1;
-            int32_t des= player_data_use.pos + move_direction*level;
-            if (des==player_data_des.pos){
-                int32_t stay= player_data_use.pos - player_data_des.pos;
-                stay/= abs(stay);
-                des= player_data_des.pos + stay;
-            }
-            // not yet: 場地邊緣處理
-            player_data_use.pos= des;
+            action_move(level, move_direction, player_use);
             break;
     }
+    action_modefy_power (level, player_use);
     
-    player_data_use.power+= level;
-    player_data_use.power= MIN (player_data_use.power, player_data_use.power_max);
-    
-    player_data_set (player_use, player_data_use);
-    player_data_set (player_des, player_data_des);
     card_data_set (cards_idx, 1, CARD_SPACE_USE, CARD_ORIGINAL, PLAYER_ORIGINAL);
     return 0;
 }
