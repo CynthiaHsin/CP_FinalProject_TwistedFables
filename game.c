@@ -10,6 +10,7 @@ int main(){
     characters[PLAYER2]= CHARACTER_SNOW_WHITE;
 
     // UI CALL
+    // ui_init
     // ui_start_settings (int32_t *pMode, int32_t characters[]);
 
     // int32_t player= PLAYER1;

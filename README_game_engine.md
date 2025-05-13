@@ -94,3 +94,10 @@
     // 玩家 player 購買編號 card_idx 的牌，如果買到剛好能買蛻變牌，會直接自動買好
     int32_t game_action_buy_card (int32_t card_idx, int32_t player);
     ```
+    ```c
+    // 玩家 player 執行專注
+    int32_t game_action_focus (int32_t card_delete_hand, int32_t card_delete_throw, int32_t player);
+        // 刪除：
+        // 手牌中，編號card_delete_hand
+        // 棄牌堆中，編號card_delete_throw
+    ```

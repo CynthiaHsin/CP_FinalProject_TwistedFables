@@ -18,9 +18,7 @@ int32_t game_round(){
         game_round_end (mode, player);
         // 判斷是否結束
         int32_t winner= game_round_gameend_parse (mode);
-        if (winner<0){
-            return -1;
-        }else if (winner!=PLAYER_UNDEFINED){
+        if (winner!=PLAYER_UNDEFINED){
             return winner;
         }
     }

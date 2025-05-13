@@ -106,3 +106,30 @@ int32_t game_action_buy_card (int32_t card_idx, int32_t player){
     }
     return 0;
 }
+
+int32_t game_action_focus (int32_t card_delete_hand, int32_t card_delete_throw, int32_t player){
+    
+    // type check
+    int32_t allow[CARD_TYPE_NUM];
+    game_action_actions_allow (allow, player);
+    if (allow[ACTION_FOCUS]==0){
+        debug_print ("error: not allow to do focus\n");
+        return -1;
+    }
+    sCardData card;
+    card_data_get (&card, card_delete_hand);
+    if (card.space!=CARD_SPACE_HAND){
+        debug_print ("error: card (%d) is not in hand\n", card.index);
+        return -1;
+    }
+    card_data_get (&card, card_delete_hand);
+    if (card.space!=CARD_SPACE_THROW){
+        debug_print ("error: card (%d) is not in throw\n", card.index);
+        return -1;
+    }
+
+    // delete
+    card_data_set (card_delete_hand, 1, CARD_SPACE_DELETE, CARD_ORIGINAL, PLAYER_ORIGINAL);
+    card_data_set (card_delete_throw, 1, CARD_SPACE_DELETE, CARD_ORIGINAL, PLAYER_ORIGINAL);
+    return 0;
+}
