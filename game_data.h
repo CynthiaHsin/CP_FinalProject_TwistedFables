@@ -4,6 +4,7 @@
 # include "game_data_player.h"
 # include "game_data_deck.h"
 # include "game_data_status.h"
+# include "game_data_map.h"
 
 int32_t game_data_init (int32_t mode, int32_t characters[]);
 

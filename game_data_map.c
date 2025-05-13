@@ -1,6 +1,5 @@
 # include "main.h"
 # include "game_data.h"
-# include "game_data_map.h"
 
 # define POS_CALCULATE(mid, pos) (mid+pos)
 # define MAP_POS(data, r, x) (data.map[r][POS_CALCULATE(data.block_mid, x)])
@@ -30,8 +29,7 @@ int32_t map_data_init (int32_t mode){
     return 0;
 }
 
-// -1: false, 0: true
-int32_t map_data_cannot_move (int32_t road, int32_t pos){
+int32_t map_data_cannot_move (int32_t road, int32_t pos, int32_t player){
     int32_t is_out= 0;
     if (POS_CALCULATE(map_data.block_mid, pos) <= map_data.wall[WALL_LEFT]) is_out= 1;
     if (POS_CALCULATE(map_data.block_mid, pos) >= map_data.wall[WALL_RIGHT]) is_out= 1;
@@ -41,6 +39,7 @@ int32_t map_data_cannot_move (int32_t road, int32_t pos){
         debug_print ("error: the block (%d, %d) is out of range\n", road, pos);
         return -1;
     }
+    if (MAP_POS(map_data, road, pos).player==player) return 0;
     if (MAP_POS(map_data, road, pos).player!=PLAYER_UNDEFINED){
         debug_print ("error: the block (%d, %d) already have player (%d)\n", road, pos, MAP_POS(map_data, road, pos).player);
         return -1;

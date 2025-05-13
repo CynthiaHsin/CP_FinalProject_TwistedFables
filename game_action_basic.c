@@ -36,17 +36,13 @@ int32_t action_move (int32_t delta, int32_t direction, int32_t player){
         player_data_get (&(player_data[i]), i);
     }
     int32_t des= player_data[player].pos + direction*delta;
-    for (int32_t i=PLAYER1; i<=PLAYER2; i++){
-        if (i==player) continue;
-        if (des==player_data[i].pos){
-            int32_t stay= player_data[player].pos - player_data[i].pos;
-            stay/= abs(stay);
-            des= player_data[i].pos + stay;
-            i=PLAYER1;
-        }
 
+    while (map_data_cannot_move(0, des, player)){
+        int32_t stay= player_data[player].pos - des;
+        stay/= abs(stay);
+        des+= stay;
     }
-    // not yet: 場地邊緣處理
+
     player_data[player].pos= des;
     player_data_set (player, player_data[player]);
     return 0;
