@@ -73,7 +73,8 @@ typedef enum _eCardSpace{
 } eCardSpace;
 
 typedef enum _eCharacter {
-    CHARACTER_RED_RIDING_HOOD = 0,      // 小紅帽
+    CHARACTER_UNDEFINED= 0,
+    CHARACTER_RED_RIDING_HOOD,          // 小紅帽
     CHARACTER_SNOW_WHITE,               // 白雪公主
     CHARACTER_SLEEPING_BEAUTY,          // 睡美人
     CHARACTER_ALICE,                    // 愛麗絲
@@ -82,11 +83,14 @@ typedef enum _eCharacter {
     CHARACTER_LITTLE_MERMAID,           // 美人魚
     CHARACTER_MATCH_GIRL,               // 火柴女孩
     CHARACTER_DOROTHY,                  // 桃樂絲
-    CHARACTER_SCHEHERAZADE              // 山魯佐德
+    CHARACTER_SCHEHERAZADE,             // 山魯佐德
+    CHARACTER_NUM
 } eCharacter;
 
 typedef enum _eGameMode{
+    GAMEMODE_UNDEFINED= 0,
     GAMEMODE_1V1,
+    GAMEMODE_NUM
 } eGameMode;
 
 typedef enum _ePlayer{
