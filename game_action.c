@@ -58,6 +58,11 @@ int32_t game_action_buy_card (int32_t card_idx, int32_t player){
     sPlayerData player_data;
     player_data_get (&player_data, player);
     
+    // ensure correct card
+    if (card.space==CARD_SPACE_DELETE){
+        debug_print ("error: card (%d) has been deleted\n", card_idx);
+    }
+    
     // ensure enough power
     if (player_data.power < card.cost){
         debug_print ("error: power not enough: %d/%d\n", player_data.power, card.cost);
@@ -65,7 +70,6 @@ int32_t game_action_buy_card (int32_t card_idx, int32_t player){
     }
 
     // ensure is the only finish card
-    // not yet
     if (card.type>=CARD_SKILL_FINISH1 && card.type<=CARD_SKILL_FINISH3){
         sCardData cards[3];
         int32_t n= 0;
@@ -73,14 +77,8 @@ int32_t game_action_buy_card (int32_t card_idx, int32_t player){
         game_data_search_cards (cards+1, &n, player, CARD_SPACE_ORIGINAL, CARD_SKILL_FINISH2, CARD_COST_ORIGINAL);
         game_data_search_cards (cards+2, &n, player, CARD_SPACE_ORIGINAL, CARD_SKILL_FINISH3, CARD_COST_ORIGINAL);
         for (int32_t i=0; i<3; i++){
-            switch (cards[i].space){
-                case CARD_SPACE_SHOP:
-                // case CARD_SPACE_DELETE:
-                    break;
-                default:
-                    debug_print ("error: already had finish skill\n");
-                    return 0;
-            }
+            if (cards[i].index==card_idx) continue;
+            card_data_set (cards[i].index, 1, CARD_SPACE_DELETE, CARD_ORIGINAL, PLAYER_ORIGINAL);
         }
     }
 
