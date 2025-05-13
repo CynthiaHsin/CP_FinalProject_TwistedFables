@@ -85,9 +85,9 @@ typedef enum _eCharacter {
     CHARACTER_SCHEHERAZADE              // 山魯佐德
 } eCharacter;
 
-typedef enum _eGAMEMODE{
+typedef enum _eGameMode{
     GAMEMODE_1V1,
-} eGAMEMODE;
+} eGameMode;
 
 typedef enum _ePlayer{
     PLAYER_ORIGINAL = -1,
