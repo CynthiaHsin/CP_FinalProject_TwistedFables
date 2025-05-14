@@ -62,7 +62,7 @@ int main(){
     SDL_Event event;
 
     // choosing character
-    choose_character( ren, character, running, selected, event);
+    choose_character(ren, character, running, selected, event);
 
     SDL_DestroyTexture(image);
     SDL_DestroyRenderer(ren);

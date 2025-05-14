@@ -7,4 +7,3 @@
 #include "main.h"
 #include "main_config.h"
 #include <stdbool.h>
-#include "gui_img_data.h"
