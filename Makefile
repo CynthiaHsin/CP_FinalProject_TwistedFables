@@ -1,10 +1,15 @@
-CFLAGS := `sdl2-config --cflags` -Wall -Wextra -g
-LDFLAGS := `sdl2-config --libs` -lSDL2_image -lSDL2 -lm
+CC := gcc
+CFLAGS := -Wall -Wextra -std=c99 -O2 `sdl2-config --cflags`
+LDFLAGS := `sdl2-config --libs` -lSDL2_ttf -lSDL2_image -lSDL2 -lm
+OBJ := gui_game.o gui_opening.o gui_choose_character.o
 
 all: TwitedFables
 
-TwitedFables: init.c
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+TwitedFables: $(OBJ)
+	$(CC) $(OBJ) -o TwitedFables $(LDFLAGS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f TwitedFables
+	rm -f *.o TwitedFables
