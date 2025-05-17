@@ -48,6 +48,44 @@ int main(){
         IMG_LoadTexture(ren, "assets/character/snow_white.jpg")
     };
 
+    // load plate
+    SDL_Texture* plate = IMG_LoadTexture(ren, "assets/plate&token&track/plate.png");
+
+    // load tokens
+    SDL_Texture* token[4] = {
+        IMG_LoadTexture(ren, "assets/plate&token&track/defense_token.png"),
+        IMG_LoadTexture(ren, "assets/plate&token&track/epic_token.png"),
+        IMG_LoadTexture(ren, "assets/plate&token&track/hp_token.png"),
+        IMG_LoadTexture(ren, "assets/plate&token&track/power_token.png")
+    };
+
+    // load sheets
+    SDL_Texture* sheet[CHARACTER_NUM] = {
+        IMG_LoadTexture(ren, "assets/title&sheet/alice_sheet.png"),
+        IMG_LoadTexture(ren, "assets/title&sheet/kaguya_sheet.png"),
+        IMG_LoadTexture(ren, "assets/title&sheet/mulan_sheet.png"),
+        IMG_LoadTexture(ren, "assets/title&sheet/rrh_sheet.png"),
+        IMG_LoadTexture(ren, "assets/title&sheet/sb_sheet.png"),
+        IMG_LoadTexture(ren, "assets/title&sheet/sw_sheet.png")
+    };
+
+    // load track
+    SDL_Texture* track = IMG_LoadTexture(ren, "assets/plate&token&track/fight_track.png");
+
+    // load cards
+    SDL_Texture* card[CARD_TYPE_NUM] = {
+        IMG_LoadTexture(ren, "assets/card/attack1.png"),
+        IMG_LoadTexture(ren, "assets/card/attack2.png"),
+        IMG_LoadTexture(ren, "assets/card/attack3.png"),
+        IMG_LoadTexture(ren, "assets/card/defense1.png"),
+        IMG_LoadTexture(ren, "assets/card/defense2.png"),
+        IMG_LoadTexture(ren, "assets/card/defense3.png"),
+        IMG_LoadTexture(ren, "assets/card/move1.png"),
+        IMG_LoadTexture(ren, "assets/card/move2.png"),
+        IMG_LoadTexture(ren, "assets/card/move3.png"),
+        IMG_LoadTexture(ren, "assets/card/wild.png")
+    };
+
     // get the size of the image
     int32_t texW, texH = 0;
     SDL_QueryTexture(image, NULL, NULL, &texW, &texH);
