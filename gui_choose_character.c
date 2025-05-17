@@ -26,8 +26,8 @@ int32_t choose_character(SDL_Renderer* ren, SDL_Texture* character[], bool runni
         for (int i = 0; i < 6; i++) {
             int row = i / 3, col = i % 3;
             SDL_Rect dst = {
-                150 + col * (IMG_SIZE + 40),
-                100 + row * (IMG_SIZE + 40),
+                150 + col * (WINDOW_WIDTH/3 + 40),
+                100 + row * (WINDOW_HEIGHT/2 + 40),
                 IMG_SIZE,
                 IMG_SIZE
             };
