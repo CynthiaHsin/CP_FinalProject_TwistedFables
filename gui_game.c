@@ -2,6 +2,7 @@
 #include "gui_img_data.h"
 #include "gui_opening.h"
 #include "gui_choose_character.h"
+#include "gui_destroy.h"
 
 int main(){
     // retutns zero on success else non-zero 
@@ -28,8 +29,8 @@ int main(){
     }
 
     SDL_Renderer* ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    SDL_Texture* image = IMG_LoadTexture(ren, "assets/title&sheet/title.png");
-    if (!image) {
+    SDL_Texture* title = IMG_LoadTexture(ren, "assets/title&sheet/title.png");
+    if (!title) {
         printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
         SDL_DestroyRenderer(ren);
         SDL_DestroyWindow(win);
@@ -88,11 +89,11 @@ int main(){
 
     // get the size of the image
     int32_t texW, texH = 0;
-    SDL_QueryTexture(image, NULL, NULL, &texW, &texH);
+    SDL_QueryTexture(title, NULL, NULL, &texW, &texH);
     SDL_Rect dst = { WINDOW_WIDTH / 2 - texW / 2, WINDOW_HEIGHT / 2 - texH / 2, texW, texH };
 
     // opening title
-    opening(ren, image, dst);
+    opening(ren, title, dst);
 
     // choose the character
     int32_t selected = 0;
@@ -102,9 +103,7 @@ int main(){
     // choosing character
     choose_character(ren, character, running, selected, event);
 
-    SDL_DestroyTexture(image);
-    SDL_DestroyRenderer(ren);
-    SDL_DestroyWindow(win);
+    destroy(title, character, plate, token, sheet, track, card, win, ren);
     IMG_Quit();
     SDL_Quit();
     return 0;
