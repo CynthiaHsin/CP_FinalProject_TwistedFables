@@ -28,7 +28,7 @@ int main(){
     }
 
     SDL_Renderer* ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    SDL_Texture* image = IMG_LoadTexture(ren, "assets/title.png");
+    SDL_Texture* image = IMG_LoadTexture(ren, "assets/title&sheet/title.png");
     if (!image) {
         printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
         SDL_DestroyRenderer(ren);
@@ -40,12 +40,12 @@ int main(){
 
     // load charcter image for choose
     SDL_Texture* character[CHARACTER_NUM] = { 
-        IMG_LoadTexture(ren, "assets/alice.jpg"),
-        IMG_LoadTexture(ren, "assets/kaguya.jpg"),
-        IMG_LoadTexture(ren, "assets/mulan.jpg"),
-        IMG_LoadTexture(ren, "assets/red_riding_hood.jpg"),
-        IMG_LoadTexture(ren, "assets/sleeping_beauty.jpg"),
-        IMG_LoadTexture(ren, "assets/snow_white.jpg")
+        IMG_LoadTexture(ren, "assets/character/alice.jpg"),
+        IMG_LoadTexture(ren, "assets/character/kaguya.jpg"),
+        IMG_LoadTexture(ren, "assets/character/mulan.jpg"),
+        IMG_LoadTexture(ren, "assets/character/red_riding_hood.jpg"),
+        IMG_LoadTexture(ren, "assets/character/sleeping_beauty.jpg"),
+        IMG_LoadTexture(ren, "assets/character/snow_white.jpg")
     };
 
     // get the size of the image
