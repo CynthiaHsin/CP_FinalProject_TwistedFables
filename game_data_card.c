@@ -1,6 +1,6 @@
 # include "main.h"
-# include "game_data.h"
-
+# include "game_data_card.h"
+# include "game_data_player.h"
 sCardData card_data[CARD_NUM];
 int32_t card_index[PLAYER_NUM][CARD_TYPE_NUM];
 
@@ -441,6 +441,13 @@ int32_t card_data_is_skill (int32_t idx){
     return 0;
 }
 
+int32_t card_data_is_evolution2 (int32_t idx){
+    if (card_data[idx].type == CARD_SKILL_ATTACK_EVOLUTION_L2) return 1;
+    if (card_data[idx].type == CARD_SKILL_DEFENSE_EVOLUTION_L2) return 1;
+    if (card_data[idx].type == CARD_SKILL_MOVEMENT_EVOLUTION_L2) return 1;
+    return 0;
+}
+
 int32_t card_attach_calculate (int32_t idx, int32_t action_type){
     if (idx==CARD_ORIGINAL) return 0;
     int32_t level= 0;
@@ -463,5 +470,6 @@ int32_t card_attach_calculate (int32_t idx, int32_t action_type){
             return -1;
             break;
     }
+    debug_print ("error: wrong match for card and action\n");
     return -1;
 }

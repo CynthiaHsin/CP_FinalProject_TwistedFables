@@ -1,6 +1,6 @@
 # pragma once
 # include "main.h"
-# include "game_data.h"
+# include "game_data_status_red_riding_hood.h"
 
 typedef struct _sStatusData{
     int32_t mode;

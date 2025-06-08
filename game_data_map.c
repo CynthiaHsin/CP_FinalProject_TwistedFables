@@ -1,5 +1,6 @@
 # include "main.h"
-# include "game_data.h"
+# include "game_data_map.h"
+# include "game_data_player.h"
 
 # define POS_CALCULATE(mid, pos) (mid+pos)
 # define MAP_POS(data, r, x) (data.map[r][POS_CALCULATE(data.block_mid, x)])

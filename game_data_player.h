@@ -1,8 +1,8 @@
 # pragma once
 # include "main.h"
-# include "game_data.h"
 
 # define POWER_MAX 25
+# define CARD_NUM 318
 
 typedef struct _sPlayerData{
     int32_t player;     // enum ePlayer

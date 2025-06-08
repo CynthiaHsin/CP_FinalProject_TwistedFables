@@ -1,6 +1,6 @@
 # include "main.h"
-# include "game_data.h"
 # include "game_action_basic.h"
+# include "game_data.h"
 
 int32_t action_attack (int32_t delta, int32_t area, int32_t player_use, int32_t player_des){
     sPlayerData player_data_use;
@@ -35,6 +35,7 @@ int32_t action_move (int32_t delta, int32_t direction, int32_t player){
     for (int32_t i=PLAYER1; i<=PLAYER2; i++){
         player_data_get (&(player_data[i]), i);
     }
+    direction/= abs(direction);
     int32_t des= player_data[player].pos + direction*delta;
 
     while (map_data_cannot_move(0, des, player)){

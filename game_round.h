@@ -1,8 +1,6 @@
 # pragma once
 
 # include "main.h"
-# include "game_data.h"
-# include "game_action.h"
 
 # define HAND_CARDS_INIT_FIRST 4
 # define HAND_CARDS_ROUND 6

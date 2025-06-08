@@ -1,7 +1,6 @@
 # pragma once 
 
 # include "main.h"
-# include "game_data.h"
 
 typedef struct _sDeckData{
     int32_t cards[CARD_NUM];

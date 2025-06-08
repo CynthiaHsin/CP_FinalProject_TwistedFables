@@ -1,27 +1,31 @@
 # gmae engine
-GAME_DATA := game_data.c game_data_card.c game_data_player.c game_data_deck.c game_data_status.c game_data_map.c
+GAME_DATA_STATUS := game_data_status.c game_data_status_red_riding_hood.c
+GAME_DATA := game_data_card.c game_data_player.c game_data_deck.c $(GAME_DATA_STATUS) game_data_map.c game_data.c
 GAME_ACTION := game_action.c game_action_basic.c game_action_skill_red_riding_hood.c
 GAME_ROUND := game_round.c
-FUNC := -lm $(GAME_DATA) $(GAME_ACTION) $(GAME_ROUND)
+OBJ_GAME := $(GAME_DATA) $(GAME_ACTION) $(GAME_ROUND)
 
 # ui
+OBJ_GUI := gui_game.c gui_opening.c gui_choose_character.c gui_destroy.c gui_img_init.c
+
+# all
 CC := gcc
 CFLAGS := -Wall -Wextra -std=c99 -O2 `sdl2-config --cflags`
 LDFLAGS := `sdl2-config --libs` -lSDL2_ttf -lSDL2_image -lSDL2 -lm
-OBJ := gui_game.o gui_opening.o gui_choose_character.o gui_destroy.o gui_img_init.o
+OBJ := $(OBJ_GAME) $(OBJ_GUI)
 
 all: TwitedFables
 	# - gcc game.c $(FUNC) -o game
 
-debug: $(OBJ)
-	- $(CC) $(OBJ) $(FUNC) -D _DEBUG_ game.c  -o game $(LDFLAGS)
+debug:
+	- $(CC) $(OBJ) -D _DEBUG_ game.c  -o game $(LDFLAGS)
 	# - gcc -D _DEBUG_ test_main.c $(FUNC) -o test 
 
-TwitedFables: $(OBJ)
-	- $(CC) $(OBJ) -o TwitedFables $(LDFLAGS)
+# TwitedFables: $(OBJ)
+# 	- $(CC) $(OBJ) -o TwitedFables $(LDFLAGS)
 
-%.o: %.c
-	- $(CC) $(CFLAGS) -c $< -o $@
+# %.o: %.c
+# 	- $(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	- rm -f *.o TwitedFables

@@ -1,6 +1,5 @@
 # pragma once
 # include "main.h"
-# include "game_data.h"
 
 # define ROAD_MAX 2
 # define BLOCK_MAX 11

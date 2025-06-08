@@ -1,4 +1,6 @@
 # include "game_round.h"
+# include "game_action.h"
+# include "game_data.h"
 
 int32_t game_round(){
     sStatusData status;
@@ -28,6 +30,16 @@ int32_t game_round(){
 int32_t game_round_start (int32_t mode, int32_t player){
     sCardData cards[CARD_NUM];
     int32_t cards_num= 0;
+    sPlayerData player_data;
+    player_data_get (&player_data, player);
+    switch (player_data.character){
+        case CHARACTER_RED_RIDING_HOOD:
+            skill_red_riding_hood_round_start (player);
+            break;
+        default:
+            debug_print ("mark: undefined round start character: %d\n", player_data.character);
+            break;
+    }
     game_data_search_cards (cards, &cards_num, player, CARD_SPACE_USE, CARD_ORIGINAL, CARD_COST_ORIGINAL);
     for (int32_t i=0; i<cards_num; i++){
         card_data_print (cards[i].index, 1);

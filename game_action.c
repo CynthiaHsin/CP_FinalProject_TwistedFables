@@ -64,6 +64,7 @@ int32_t game_action_buy_card (int32_t card_idx, int32_t player){
         case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
             if (player_data.character==CHARACTER_RED_RIDING_HOOD){
                 card_data_set (card_next.index, 1, CARD_SPACE_USE_LASTING, CARD_ORIGINAL, PLAYER_ORIGINAL);
+                status_red_riding_hood_evolution2_on (card_next.type);
                 break;
             }
             card_data_set (card_next.index, 1, CARD_SPACE_THROW, CARD_ORIGINAL, player);
@@ -148,7 +149,7 @@ int32_t game_action_use_skill_card (int32_t card_idx[], int32_t card_num, int32_
     switch (player_data_use.character){
         case CHARACTER_RED_RIDING_HOOD:
             // 小紅帽
-            if (skill_red_riding_hood(card_idx, token_num, move_direction, player_use, player_des) < 0) {
+            if (skill_red_riding_hood(card_idx, player_use, player_des) < 0) {
                 debug_print ("error: skill_red_riding_hood failed\n");
                 return -1;
             }

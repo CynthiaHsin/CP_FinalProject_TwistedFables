@@ -1,5 +1,6 @@
 # include "main.h"
-# include "game_data.h"
+# include "game_data_card.h"
+# include "game_data_deck.h"
 
 # define DECK_TOP(player, i) (deck_data[player].card_num -1 -i)
 

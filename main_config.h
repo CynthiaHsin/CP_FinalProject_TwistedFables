@@ -68,6 +68,7 @@ typedef enum _eCardSpace{
     CARD_SPACE_USE_LASTING, // 持續效果的牌
     CARD_SPACE_SHOP,        // 購牌區
     CARD_SPACE_DELETE,      // 移除
+    CARD_SPACE_SKILL,
     CARD_SPACE_NUM
 
 } eCardSpace;

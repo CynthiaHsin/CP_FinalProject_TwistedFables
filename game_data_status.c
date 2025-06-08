@@ -1,5 +1,6 @@
 # include "main.h"
-# include "game_data.h"
+# include "game_data_status.h"
+# include "game_data_player.h"
 
 sStatusData status_data;
 

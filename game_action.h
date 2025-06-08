@@ -1,7 +1,6 @@
 # pragma once
 
 # include "main.h"
-# include "game_data.h"
 # include "game_action_basic.h"
 # include "game_action_skill_red_riding_hood.h"
 

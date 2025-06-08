@@ -1,5 +1,6 @@
 # include "main.h"
-# include "game_data.h"
+# include "game_data_player.h"
+# include "game_data_card.h"
 
 sPlayerData player_data[PLAYER_NUM];
 

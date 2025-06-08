@@ -11,7 +11,7 @@ int32_t game_data_init (int32_t mode, int32_t characters[]);
 // basic
 // 取得「牌編號idx」的資料
 int32_t game_data_get_card (sCardData *pCard, int32_t idx);
-// 查詢，所有符合條件的牌 (cost條件為小於，其餘為等於)，ORIGINAL 代表不篩選此項，無錯誤回傳符合數量（=*pGet_num）
+// 查詢，所有符合條件的牌 (cost條件為小於，其餘為等於)，ORIGINAL or -1 代表不篩選此項，無錯誤回傳符合數量（=*pGet_num）
 int32_t game_data_search_cards (sCardData cards[], int32_t *pGet_num, int32_t player, int32_t space, int32_t type, int32_t cost);
 
 // deck
