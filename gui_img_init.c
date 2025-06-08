@@ -1,18 +1,8 @@
 #include "gui_sdl_config.h"
 
-int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* title, 
-                SDL_Texture* character[], SDL_Texture* plate, SDL_Texture* token[], 
-                SDL_Texture* sheet[], SDL_Texture* track, SDL_Texture* card[]){
-    // load title
-    title = IMG_LoadTexture(ren, "assets/title&sheet/title.png");
-    if (!title) {
-        printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
-        SDL_DestroyRenderer(ren);
-        SDL_DestroyWindow(win);
-        IMG_Quit();
-        SDL_Quit();
-        return 1;
-    }
+int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[], 
+                SDL_Texture* plate, SDL_Texture* token[], SDL_Texture* sheet[], 
+                SDL_Texture* track, SDL_Texture* card[]){
 
     // load character
     character[0] = IMG_LoadTexture(ren, "assets/character/alice.jpg");

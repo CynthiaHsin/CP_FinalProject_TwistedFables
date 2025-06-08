@@ -36,25 +36,21 @@ int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
         SDL_Quit();
         return 1;
     }
-
     ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     
-    img_init(win, ren, title, character, plate, token, sheet, track, card);
+    img_init(win, ren, character, plate, token, sheet, track, card);
 
-    // get the size of the image
-    int32_t texW, texH = 0;
-    SDL_QueryTexture(title, NULL, NULL, &texW, &texH);
-    SDL_Rect dst = { WINDOW_WIDTH / 2 - texW / 2, WINDOW_HEIGHT / 2 - texH / 2, texW, texH };
+    // load title
+    SDL_Texture* title = NULL;
     // opening title
-    opening(ren, title, dst);
+    opening(ren, title, win);
 
     // choosing character
     int32_t selected = 0;
     bool running = true;
     SDL_Event event;
-    choose_character(ren, character, running, selected, event);
+    selected= choose_character(ren, character, running, selected, event);
     characters[PLAYER1]= selected;
-
 
     return 0;
 }

@@ -1,6 +1,7 @@
 #include "gui_sdl_config.h"
 #include "gui_img_data.h"
 
+// return the chose character
 int32_t choose_character(SDL_Renderer* ren, SDL_Texture* character[], bool running, int32_t selected, SDL_Event event){
     while (running) {
         while (SDL_PollEvent(&event)) {
@@ -46,5 +47,5 @@ int32_t choose_character(SDL_Renderer* ren, SDL_Texture* character[], bool runni
         SDL_Delay(16);
     }
 
-    return 0;
+    return (selected+1);
 }
