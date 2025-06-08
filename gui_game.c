@@ -24,31 +24,29 @@ int main(){
         SDL_Quit();
         return 1;
     }
-
     SDL_Renderer* ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     
     // load images
-    SDL_Texture* title;
-    SDL_Texture* character[CHARACTER_NUM];
-    SDL_Texture* plate;
-    SDL_Texture* token[4];
-    SDL_Texture* sheet[CHARACTER_NUM];
-    SDL_Texture* track;
-    SDL_Texture* card[CARD_TYPE_NUM];
-    img_init(win, ren, title, character, plate, token, sheet, track, card);
+    SDL_Texture* character[CHARACTER_NUM] = {NULL};
+    SDL_Texture* plate = NULL;
+    SDL_Texture* token[4] = {NULL};
+    SDL_Texture* sheet[CHARACTER_NUM] = {NULL};
+    SDL_Texture* track = NULL;
+    SDL_Texture* card[CARD_TYPE_NUM] = {NULL};
+    img_init(win, ren, character, plate, token, sheet, track, card);
 
-    // get the size of the image
-    int32_t texW, texH = 0;
-    SDL_QueryTexture(title, NULL, NULL, &texW, &texH);
-    SDL_Rect dst = { WINDOW_WIDTH / 2 - texW / 2, WINDOW_HEIGHT / 2 - texH / 2, texW, texH };
+    // load title
+    SDL_Texture* title = NULL;
     // opening title
-    opening(ren, title, dst);
+    opening(ren, title, win);
 
     // choosing character
     int32_t selected = 0;
     bool running = true;
     SDL_Event event;
     choose_character(ren, character, running, selected, event);
+
+    // game process
 
     destroy(title, character, plate, token, sheet, track, card, win, ren);
     IMG_Quit();
