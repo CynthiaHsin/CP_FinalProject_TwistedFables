@@ -440,3 +440,29 @@ int32_t card_data_is_skill (int32_t idx){
     }
     return 0;
 }
+
+int32_t card_attach_calculate (int32_t idx, int32_t action_type){
+    sCardData card_data;
+    card_data_get (&card_data, idx);
+    int32_t level= 0;
+    level= card_data_get_level(card_data.type);
+    switch (action_type){
+        case ACTION_ATTACK:
+            if (card_data.type>=CARD_BASIC_ATTACK_L1 && card_data.type<=CARD_BASIC_ATTACK_L3) return level;
+            if (card_data.type==CARD_BASIC_COMMON) return 1;
+            break;
+        case ACTION_DEFENSE:
+            if (card_data.type>=CARD_BASIC_DEFENSE_L1 && card_data.type<=CARD_BASIC_DEFENSE_L3) return level;
+            if (card_data.type==CARD_BASIC_COMMON) return 1;
+            break;
+        case ACTION_MOVE:
+            if (card_data.type>=CARD_BASIC_MOVEMENT_L1 && card_data.type<=CARD_BASIC_MOVEMENT_L3) return level;
+            if (card_data.type==CARD_BASIC_COMMON) return 1;
+            break;
+        default:
+            debug_print ("error: undefined action\n");
+            return -1;
+            break;
+    }
+    return -1;
+}
