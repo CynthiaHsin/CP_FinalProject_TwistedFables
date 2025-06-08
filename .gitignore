@@ -3,3 +3,4 @@ test
 test.txt
 .vscode
 game
+*.o

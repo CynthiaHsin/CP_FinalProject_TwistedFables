@@ -13,9 +13,9 @@ OBJ := gui_game.o gui_opening.o gui_choose_character.o gui_destroy.o gui_img_ini
 all: TwitedFables
 	# - gcc game.c $(FUNC) -o game
 
-debug:
-	# - gcc -D _DEBUG_ game.c $(FUNC) -o game
-	- gcc -D _DEBUG_ test_main.c $(FUNC) -o test 
+debug: $(OBJ)
+	- $(CC) $(OBJ) $(FUNC) -D _DEBUG_ game.c  -o game $(LDFLAGS)
+	# - gcc -D _DEBUG_ test_main.c $(FUNC) -o test 
 
 TwitedFables: $(OBJ)
 	- $(CC) $(OBJ) -o TwitedFables $(LDFLAGS)
