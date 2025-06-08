@@ -200,6 +200,7 @@ void card_data_set(int32_t idx, int32_t num, int32_t space, int32_t type, int32_
         card_data[idx].space= space;
         if (type!=CARD_ORIGINAL) card_data[idx].type= type;
         if (player!=PLAYER_ORIGINAL) card_data[idx].player= player;
+        if (player!=PLAYER_ORIGINAL && space!=CARD_SPACE_SHOP) player_data_set_card (player, idx);
     }
 }
 
@@ -401,3 +402,41 @@ int32_t card_data_get_space_name (char card_space_name[], int32_t idx){
     
 }
 
+int32_t card_data_get_index (int32_t player, int32_t type){
+    return card_index[player][type];
+}
+
+int32_t card_data_get_level (int32_t type){
+    switch (type){
+        case CARD_BASIC_ATTACK_L1:
+        case CARD_BASIC_DEFENSE_L1:
+        case CARD_BASIC_MOVEMENT_L1:
+        case CARD_SKILL_ATTACK_BASE_L1:
+        case CARD_SKILL_DEFENSE_BASE_L1:
+        case CARD_SKILL_MOVEMENT_BASE_L1:
+            return 1;
+        case CARD_BASIC_ATTACK_L2:
+        case CARD_BASIC_DEFENSE_L2:
+        case CARD_BASIC_MOVEMENT_L2:
+        case CARD_SKILL_ATTACK_BASE_L2:
+        case CARD_SKILL_DEFENSE_BASE_L2:
+        case CARD_SKILL_MOVEMENT_BASE_L2:
+            return 2;
+        case CARD_BASIC_ATTACK_L3:
+        case CARD_BASIC_DEFENSE_L3:
+        case CARD_BASIC_MOVEMENT_L3:
+        case CARD_SKILL_ATTACK_BASE_L3:
+        case CARD_SKILL_DEFENSE_BASE_L3:
+        case CARD_SKILL_MOVEMENT_BASE_L3:
+            return 3;
+        default:
+            return 0;
+    }
+}
+
+int32_t card_data_is_skill (int32_t idx){
+    if (card_data[idx].type >= CARD_SKILL_ATTACK_BASE_L1 && card_data[idx].type <= CARD_SKILL_MOVEMENT_EVOLUTION_L2) {
+        return 1;
+    }
+    return 0;
+}

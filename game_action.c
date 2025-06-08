@@ -14,43 +14,6 @@ int32_t game_action_actions_allow (int32_t allow[], int32_t player){
     
 }
 
-int32_t game_action_use_basic_card (int32_t card_idx, int32_t card_type, int32_t token_num, int32_t move_direction, int32_t player_use, int32_t player_des){
-
-    sCardData card;
-    card_data_get (&card, card_idx);
-    if (card.type!=CARD_BASIC_COMMON && card.type!=card_type){
-        debug_print ("error: diferent type of the card (%d), input: %d, real: %d", card_idx, card_type, card.type);
-        return -1;
-    }
-    int32_t level= 0;
-    switch (card_type){
-        case CARD_BASIC_ATTACK_L1:
-        case CARD_BASIC_ATTACK_L2:
-        case CARD_BASIC_ATTACK_L3:
-            level= card_type - CARD_BASIC_ATTACK_L1 + 1;
-            action_attack (level, 1, player_use, player_des);
-            break;
-
-        case CARD_BASIC_DEFENSE_L1:
-        case CARD_BASIC_DEFENSE_L2:
-        case CARD_BASIC_DEFENSE_L3:
-            level= card_type - CARD_BASIC_DEFENSE_L1 + 1;
-            action_defense (level, player_use);
-            break;
-
-        case CARD_BASIC_MOVEMENT_L1:
-        case CARD_BASIC_MOVEMENT_L2:
-        case CARD_BASIC_MOVEMENT_L3: 
-            level= card_type - CARD_BASIC_MOVEMENT_L1 + 1;
-            action_move(level, move_direction, player_use);
-            break;
-    }
-    action_modefy_power (level, player_use);
-
-    card_data_set (card_idx, 1, CARD_SPACE_USE, CARD_ORIGINAL, PLAYER_ORIGINAL);
-    return 0;
-}
-
 int32_t game_action_buy_card (int32_t card_idx, int32_t player){
     
     sCardData card;
@@ -94,11 +57,15 @@ int32_t game_action_buy_card (int32_t card_idx, int32_t player){
     if (card_next.type==CARD_UNDEFINED) return 0;
     switch (card_next.type){
         case CARD_SKILL_ATTACK_EVOLUTION_L1:
-        case CARD_SKILL_ATTACK_EVOLUTION_L2:
         case CARD_SKILL_DEFENSE_EVOLUTION_L1:
-        case CARD_SKILL_DEFENSE_EVOLUTION_L2:
         case CARD_SKILL_MOVEMENT_EVOLUTION_L1:
+        case CARD_SKILL_ATTACK_EVOLUTION_L2:
+        case CARD_SKILL_DEFENSE_EVOLUTION_L2:
         case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
+            if (player_data.character==CHARACTER_RED_RIDING_HOOD){
+                card_data_set (card_next.index, 1, CARD_SPACE_USE_LASTING, CARD_ORIGINAL, PLAYER_ORIGINAL);
+                break;
+            }
             card_data_set (card_next.index, 1, CARD_SPACE_THROW, CARD_ORIGINAL, player);
             break;
         default:
@@ -131,5 +98,92 @@ int32_t game_action_focus (int32_t card_delete_hand, int32_t card_delete_throw, 
     // delete
     card_data_set (card_delete_hand, 1, CARD_SPACE_DELETE, CARD_ORIGINAL, PLAYER_ORIGINAL);
     card_data_set (card_delete_throw, 1, CARD_SPACE_DELETE, CARD_ORIGINAL, PLAYER_ORIGINAL);
+    return 0;
+}
+
+int32_t game_action_use_basic_card (int32_t card_idx, int32_t card_type, int32_t token_num, int32_t move_direction, int32_t player_use, int32_t player_des){
+
+    sCardData card;
+    card_data_get (&card, card_idx);
+    if (card.type!=CARD_BASIC_COMMON && card.type!=card_type){
+        debug_print ("error: diferent type of the card (%d), input: %d, real: %d\n", card_idx, card_type, card.type);
+        return -1;
+    }
+    int32_t level= 0;
+    switch (card_type){
+        case CARD_BASIC_ATTACK_L1:
+        case CARD_BASIC_ATTACK_L2:
+        case CARD_BASIC_ATTACK_L3:
+            level= card_type - CARD_BASIC_ATTACK_L1 + 1;
+            action_attack (level, 1, player_use, player_des);
+            break;
+
+        case CARD_BASIC_DEFENSE_L1:
+        case CARD_BASIC_DEFENSE_L2:
+        case CARD_BASIC_DEFENSE_L3:
+            level= card_type - CARD_BASIC_DEFENSE_L1 + 1;
+            action_defense (level, player_use);
+            break;
+
+        case CARD_BASIC_MOVEMENT_L1:
+        case CARD_BASIC_MOVEMENT_L2:
+        case CARD_BASIC_MOVEMENT_L3: 
+            level= card_type - CARD_BASIC_MOVEMENT_L1 + 1;
+            action_move(level, move_direction, player_use);
+            break;
+    }
+    action_modefy_power (level, player_use);
+
+    card_data_set (card_idx, 1, CARD_SPACE_USE, CARD_ORIGINAL, PLAYER_ORIGINAL);
+    return 0;
+}
+
+int32_t game_action_use_skill_card (int32_t card_idx[], int32_t card_num, int32_t token_num, int32_t move_direction, int32_t player_use, int32_t player_des){
+    
+    sPlayerData player_data_use;
+    player_data_get (&player_data_use, player_use);
+    sPlayerData player_data_des;
+    player_data_get (&player_data_des, player_des);
+
+    switch (player_data_use.character){
+        case CHARACTER_RED_RIDING_HOOD:
+            // 小紅帽
+            if (skill_red_riding_hood(card_idx, token_num, move_direction, player_use, player_des) < 0) {
+                debug_print ("error: skill_red_riding_hood failed\n");
+                return -1;
+            }
+            break;
+        case CHARACTER_SNOW_WHITE:
+            // 白雪公主
+            break;
+        case CHARACTER_SLEEPING_BEAUTY:
+            // 睡美人
+            break;
+        case CHARACTER_ALICE:
+            // 愛麗絲
+            break;
+        case CHARACTER_MULAN:
+            // 花木蘭
+            break;
+        case CHARACTER_KAGUYA:
+            // 輝夜姬
+            break;
+        case CHARACTER_LITTLE_MERMAID:
+            // 美人魚
+            break;
+        case CHARACTER_MATCH_GIRL:
+            // 火柴女孩
+            break;
+        case CHARACTER_DOROTHY:
+            // 桃樂絲
+            break;
+        case CHARACTER_SCHEHERAZADE:
+            // 山魯佐德
+            break;
+        default:
+            debug_print ("error: character (%d) not implemented\n", player_data_use.character);
+            return -1;
+    }
+    
     return 0;
 }

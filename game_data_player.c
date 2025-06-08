@@ -7,15 +7,25 @@ int32_t player_data_set_character (int32_t player, int32_t character){
     player_data[player].character= character;
 }
 
+int32_t player_data_set_card (int32_t player, int32_t card_idx){
+    player_data[player].card_on[card_idx]= 1;
+    return 0;
+}
+
 int32_t player_data_set (int32_t player, sPlayerData src){
     return player_data_cpy (&(player_data[player]), src);
 }
+
 
 int32_t player_data_init (int32_t mode){
 
     int32_t player= PLAYER1;
     int32_t player_max;
     if (mode==GAMEMODE_1V1) player_max= PLAYER2;
+    for (int32_t i=0; i<CARD_NUM; i++){
+        player_data[PLAYER1].card_on[i]= 0;
+        player_data[PLAYER2].card_on[i]= 0;
+    }
 
     for (int32_t i=player; i<=player_max; i++){
         player_data[i].player= i;
@@ -115,6 +125,18 @@ int32_t player_data_print (int32_t player){
     debug_print ("power:\t%d\n",        player_data[player].power);
     debug_print ("power_ma:\t%d\n",     player_data[player].power_max);
     debug_print ("pos:\t%d\n",          player_data[player].pos);
+}
+
+int32_t player_data_print_cardon (int32_t player){
+    debug_print ("player %d card_on:\n", player);
+    for (int32_t i=0; i<CARD_NUM; i++){
+        if (player_data[player].card_on[i]){
+            char card_type_name[CARD_TYPE_NAME_MAX]= {0};
+            card_data_get_type_name (card_type_name, i);
+            debug_print ("\t%s(%d)\n", card_type_name, i);
+        }
+    }
+    debug_print ("\n");
 }
 
 int32_t player_data_cpy (sPlayerData *pPlayerData, sPlayerData src){

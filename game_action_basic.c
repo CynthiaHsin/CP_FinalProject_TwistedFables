@@ -9,7 +9,7 @@ int32_t action_attack (int32_t delta, int32_t area, int32_t player_use, int32_t 
     if (player_data_get (&player_data_des, player_des)<0) return -1;
 
     if (abs(player_data_use.pos - player_data_des.pos) > area){
-        debug_print ("error: too long destination: use at %d, des at %d. attack area %d", player_data_use.pos, player_data_des.pos, area);
+        debug_print ("error: too long destination: use at %d, des at %d. attack area %d\n", player_data_use.pos, player_data_des.pos, area);
         return -1;
     }
     player_data_des.defense-= delta;

@@ -31,10 +31,11 @@ int32_t map_data_init (int32_t mode){
 
 int32_t map_data_cannot_move (int32_t road, int32_t pos, int32_t player){
     int32_t is_out= 0;
+    debug_print ("check move: road %d, pos %d, player %d\n", road, POS_CALCULATE(map_data.block_mid, pos), player);
     if (POS_CALCULATE(map_data.block_mid, pos) <= map_data.wall[WALL_LEFT]) is_out= 1;
     if (POS_CALCULATE(map_data.block_mid, pos) >= map_data.wall[WALL_RIGHT]) is_out= 1;
     if (road <= map_data.wall[WALL_UP]) is_out= 1;
-    if (road <= map_data.wall[WALL_BOTTOM]) is_out= 1;
+    if (road >= map_data.wall[WALL_BOTTOM]) is_out= 1;
     if (is_out){
         debug_print ("error: the block (%d, %d) is out of range\n", road, pos);
         return -1;
