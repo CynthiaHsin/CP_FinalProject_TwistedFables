@@ -24,6 +24,8 @@ int32_t status_data_init (int32_t mode){
     for (int32_t i=PLAYER1; i<PLAYER_NUM; i++){
         status_data.actions_num[i]= 0;
     }
+    status_red_riding_hood_init();
+    status_mulan_init();
     return 0;
 }
 

@@ -107,6 +107,7 @@ int32_t skill_red_riding_hood_attack_evolution (int32_t card_idx[RED_RIDING_HOOD
         debug_print("error: player (%d) does not have the skill card [CARD_SKILL_ATTACK_EVOLUTION_L1]\n", player_use);
         return -1;
     }
+    card_data_set (card_data.index, 1, CARD_SPACE_USE, CARD_ORIGINAL, PLAYER_ORIGINAL);
     return 0;
 }
 
@@ -130,6 +131,7 @@ int32_t skill_red_riding_hood_movement_evolution (int32_t card_idx[RED_RIDING_HO
         debug_print("error: player (%d) does not have the skill card [CARD_SKILL_MOVEMENT_EVOLUTION_L1]\n", player_use);
         return -1;
     }
+    card_data_set (card_data.index, 1, CARD_SPACE_USE, CARD_ORIGINAL, PLAYER_ORIGINAL);
     return attack_area;
 }
 
@@ -164,6 +166,7 @@ int32_t skill_red_riding_hood_finish (int32_t finish_card_idx, int32_t finish1_s
             debug_print ("error: wrong finish card\n");
             return -1;
     }
+    card_data_set (finish_card_idx, 1, CARD_SPACE_USE, CARD_ORIGINAL, PLAYER_ORIGINAL);
 }
 
 int32_t skill_red_riding_hood_finish1 (int32_t finish1_skill_type[2], int32_t player_use){
