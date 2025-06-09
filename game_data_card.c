@@ -408,6 +408,7 @@ int32_t card_data_get_index (int32_t player, int32_t type){
 
 int32_t card_data_get_level (int32_t type){
     switch (type){
+        case CARD_BASIC_COMMON:
         case CARD_BASIC_ATTACK_L1:
         case CARD_BASIC_DEFENSE_L1:
         case CARD_BASIC_MOVEMENT_L1:

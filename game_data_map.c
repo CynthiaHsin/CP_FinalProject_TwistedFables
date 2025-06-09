@@ -48,3 +48,11 @@ int32_t map_data_cannot_move (int32_t road, int32_t pos, int32_t player){
     }
     return 0;
 }
+
+
+int32_t map_data_is_at_edge (int32_t player){
+    sPlayerData player_data;
+    player_data_get (&player_data, player);
+    if (abs(player_data.pos) == map_data.block_mid) return 1;
+    return 0;
+}

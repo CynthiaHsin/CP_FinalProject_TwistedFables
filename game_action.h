@@ -3,6 +3,7 @@
 # include "main.h"
 # include "game_action_basic.h"
 # include "game_action_skill_red_riding_hood.h"
+# include "game_action_skill_mulan.h"
 
 // allow 陣列索引值為eAction中的各個動作，陣列儲存值: 1 true(可以執行此動作), 0 flase(不可執行)，目前設計只檢查專注
 int32_t game_action_actions_allow (int32_t allow[], int32_t player);

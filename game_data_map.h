@@ -29,3 +29,5 @@ int32_t map_data_init (int32_t mode);
 
 // -1: false, 0: true
 int32_t map_data_cannot_move (int32_t road, int32_t pos, int32_t player);
+
+int32_t map_data_is_at_edge (int32_t player);
