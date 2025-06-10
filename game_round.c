@@ -36,6 +36,9 @@ int32_t game_round_start (int32_t mode, int32_t player){
         case CHARACTER_RED_RIDING_HOOD:
             skill_red_riding_hood_round_start (player);
             break;
+        case CHARACTER_MULAN:
+            skill_mulan_round_start (player);
+            break;
         default:
             debug_print ("mark: undefined round start character: %d\n", player_data.character);
             break;

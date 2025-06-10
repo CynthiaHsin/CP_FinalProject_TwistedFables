@@ -242,6 +242,9 @@ int32_t skill_red_riding_hood_round_start (int32_t player){
     int32_t player_max= PLAYER2;
     if (player_data.defense){
         for (int32_t i=0; i<card_num; i++){
+            if (card_data_is_evolution (card_datas[i].index)) continue;
+            card_data_set (card_datas[i].index, 1, CARD_SPACE_USE, CARD_ORIGINAL, PLAYER_ORIGINAL);
+            if (!card_data_is_skill (card_datas[i].index)) continue;
             int32_t level = card_data_get_level (card_datas[i].type);
             for (int32_t p=PLAYER1; p<=PLAYER2; p++){
                 if (p==player) continue;

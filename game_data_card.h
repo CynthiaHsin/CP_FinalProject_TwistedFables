@@ -61,5 +61,7 @@ int32_t card_data_get_index (int32_t player, int32_t type);
 int32_t card_data_get_level (int32_t type);
 
 int32_t card_data_is_skill (int32_t idx);
+int32_t card_data_is_evolution (int32_t idx);
+int32_t card_data_is_evolution1 (int32_t idx);
 int32_t card_data_is_evolution2 (int32_t idx);
 int32_t card_attach_calculate (int32_t idx, int32_t action_type);

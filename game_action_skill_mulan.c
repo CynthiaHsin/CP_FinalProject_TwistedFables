@@ -135,6 +135,15 @@ int32_t skill_mulan_passive_attacked (int32_t attack_delta, int32_t player){
     return level;
 }
 
+int32_t skill_mulan_round_start (int32_t player){
+    sPlayerData player_data;
+    player_data_get (&player_data, player);
+    if (player_data.card_on[CARD_SKILL_ATTACK_EVOLUTION_L2]) status_mulan_token_add (1, player);
+    if (player_data.card_on[CARD_SKILL_DEFENSE_EVOLUTION_L2]) status_mulan_token_add (1, player);
+    if (player_data.card_on[CARD_SKILL_MOVEMENT_EVOLUTION_L2]) status_mulan_token_add (1, player);
+    return 0;
+}
+
 int32_t skill_mulan_round_end (int32_t defense_pull_token, int32_t defense_evolution1_card_idx_throw, int32_t player){
     sPlayerData player_data;
     player_data_get (&player_data, player);

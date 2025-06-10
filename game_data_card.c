@@ -442,6 +442,18 @@ int32_t card_data_is_skill (int32_t idx){
     return 0;
 }
 
+
+int32_t card_data_is_evolution (int32_t idx){
+    return (card_data_is_evolution1 (idx) || card_data_is_evolution2 (idx));
+}
+
+int32_t card_data_is_evolution1 (int32_t idx){
+    if (card_data[idx].type == CARD_SKILL_ATTACK_EVOLUTION_L1) return 1;
+    if (card_data[idx].type == CARD_SKILL_DEFENSE_EVOLUTION_L1) return 1;
+    if (card_data[idx].type == CARD_SKILL_MOVEMENT_EVOLUTION_L1) return 1;
+    return 0;
+}
+
 int32_t card_data_is_evolution2 (int32_t idx){
     if (card_data[idx].type == CARD_SKILL_ATTACK_EVOLUTION_L2) return 1;
     if (card_data[idx].type == CARD_SKILL_DEFENSE_EVOLUTION_L2) return 1;
