@@ -12,6 +12,12 @@ SDL_Texture* sheet[CHARACTER_NUM];
 SDL_Texture* track;
 SDL_Texture* basic_card[CARD_TYPE_NUM];
 SDL_Texture* card_back;
+SDL_Texture* rrh_card[CARD_TYPE_NUM];
+SDL_Texture* sw_card[CARD_TYPE_NUM];
+SDL_Texture* mulan_card[CARD_TYPE_NUM];
+SDL_Texture* kaguya_card[CARD_TYPE_NUM];
+SDL_Texture* mg_card[CARD_TYPE_NUM];
+SDL_Texture* dorothy_card[CARD_TYPE_NUM];
 
 int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
     *pMode= GAMEMODE_1V1;
@@ -39,7 +45,8 @@ int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
     }
     ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     
-    img_init(win, ren, character, plate, token, sheet, track, basic_card, card_back);
+    img_init(win, ren, character, plate, token, sheet, track, basic_card, card_back, 
+             rrh_card, sw_card, mulan_card, kaguya_card, mg_card, dorothy_card);
 
     // load title
     SDL_Texture* title = NULL;
@@ -57,7 +64,8 @@ int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
 }
 
 int32_t gui_game_end(){
-    destroy(title, character, plate, token, sheet, track, basic_card, card_back, win, ren);
+    destroy(title, character, plate, token, sheet, track, basic_card, card_back, 
+            rrh_card, sw_card, mulan_card, kaguya_card, mg_card, dorothy_card, win, ren);
     IMG_Quit();
     SDL_Quit();
     return 0;
