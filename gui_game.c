@@ -10,7 +10,8 @@ SDL_Texture* plate;
 SDL_Texture* token[4];
 SDL_Texture* sheet[CHARACTER_NUM];
 SDL_Texture* track;
-SDL_Texture* card[CARD_TYPE_NUM];
+SDL_Texture* basic_card[CARD_TYPE_NUM];
+SDL_Texture* card_back;
 
 int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
     *pMode= GAMEMODE_1V1;
@@ -38,7 +39,7 @@ int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
     }
     ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     
-    img_init(win, ren, character, plate, token, sheet, track, card);
+    img_init(win, ren, character, plate, token, sheet, track, basic_card, card_back);
 
     // load title
     SDL_Texture* title = NULL;
@@ -56,7 +57,7 @@ int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
 }
 
 int32_t gui_game_end(){
-    destroy(title, character, plate, token, sheet, track, card, win, ren);
+    destroy(title, character, plate, token, sheet, track, basic_card, card_back, win, ren);
     IMG_Quit();
     SDL_Quit();
     return 0;
