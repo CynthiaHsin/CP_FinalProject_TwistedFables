@@ -19,6 +19,7 @@
 void draw_board(int32_t characters[]);
 void draw_buttons(void);
 bool handle_button_click(SDL_Point p, int32_t characters[]);
+void draw_button_text(SDL_Rect rect, const char* text);
 void popup(enum BtnId id, bool upper, int32_t characters[]);
 
 void game_scene_loop(int32_t characters[])
@@ -77,12 +78,19 @@ void draw_board(int32_t characters[])
 
 void draw_buttons(void)
 {
+    const char* labels[BTN_NUM] = {
+        "CHARACTER", "TWISTED CARD", "DECK/DESCARD", "BASIC", "SKILL/EPIC"
+    };
     SDL_SetRenderDrawColor(ren, 160, 160, 160, 255);
     for (int i = 0; i < BTN_NUM; ++i) {
         SDL_Rect u = btn_rect(i, /*upper*/true);
         SDL_Rect d = btn_rect(i, /*upper*/false);
-        if(i != BTN_SUPPLY_BASIC){SDL_RenderFillRect(ren, &u);}
+        if(i != BTN_SUPPLY_BASIC){
+            SDL_RenderFillRect(ren, &u);
+            draw_button_text(u, labels[i]);
+        }
         SDL_RenderFillRect(ren, &d);
+        draw_button_text(d, labels[i]);
     }
 }
 
@@ -100,6 +108,30 @@ bool handle_button_click(SDL_Point p, int32_t characters[])
         }
     }
     return false;
+}
+
+void draw_button_text(SDL_Rect rect, const char* text) {
+    SDL_Color black = {0, 0, 0, 255};
+
+    SDL_Surface* text_surface = TTF_RenderUTF8_Blended(font_main, text, black);
+    if (!text_surface) {
+        printf("TTF_RenderUTF8 failed: %s\n", TTF_GetError());
+        return;
+    }
+
+    SDL_Texture* text_texture = SDL_CreateTextureFromSurface(ren, text_surface);
+    SDL_FreeSurface(text_surface);
+
+    if (!text_texture) return;
+
+    SDL_Rect dst = {
+        rect.x + (rect.w - text_surface->w) / 2,
+        rect.y + (rect.h - text_surface->h) / 2,
+        text_surface->w, text_surface->h
+    };
+
+    SDL_RenderCopy(ren, text_texture, NULL, &dst);
+    SDL_DestroyTexture(text_texture);
 }
 
 void popup(enum BtnId id, bool upper, int32_t characters[])

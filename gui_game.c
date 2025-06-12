@@ -19,6 +19,8 @@ SDL_Texture* kaguya_card[CARD_TYPE_NUM];
 SDL_Texture* mg_card[CARD_TYPE_NUM];
 SDL_Texture* dorothy_card[CARD_TYPE_NUM];
 
+TTF_Font* font_main = NULL;
+
 int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
     *pMode= GAMEMODE_1V1;
     // init
@@ -29,6 +31,18 @@ int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
     if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) == 0) {
         printf("IMG_Init Error: %s\n", IMG_GetError());
         SDL_Quit();
+        return 1;
+    }
+
+    // init font
+    if (TTF_Init() != 0) {
+        printf("TTF_Init error: %s\n", TTF_GetError());
+        return 1;
+    }
+
+    font_main = TTF_OpenFont("assets/fonts/NotoSansTC-ExtraBold.ttf", 16);
+    if (!font_main) {
+        printf("Failed to load font: %s\n", TTF_GetError());
         return 1;
     }
 
@@ -73,6 +87,11 @@ int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
 }
 
 int32_t gui_game_end(){
+    if (font_main) {
+        TTF_CloseFont(font_main);
+        font_main = NULL;
+    }
+    TTF_Quit();
     destroy(title, character, plate, token, sheet, track, basic_card, card_back, 
             rrh_card, sw_card, mulan_card, kaguya_card, mg_card, dorothy_card, win, ren);
     IMG_Quit();

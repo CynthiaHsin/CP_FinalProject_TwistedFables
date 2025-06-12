@@ -1,4 +1,5 @@
 # pragma once
+
 #include "gui_sdl_config.h"
 
 #define IMG_SIZE 150
@@ -24,12 +25,14 @@
 #define PLAY_H        140
 #define PLAY_P1_X     ((WINDOW_WIDTH  - PLAY_W)/2)
 #define PLAY_P2_X     PLAY_P1_X
-#define PLAY_P1_Y     (TRACK_Y - 40 - PLAY_H) // 上方
-#define PLAY_P2_Y     (TRACK_Y + TRACK_H + 40) // 下方
+#define PLAY_P1_Y     (TRACK_Y - 40 - PLAY_H) 
+#define PLAY_P2_Y     (TRACK_Y + TRACK_H + 40) 
 
 // button size
 #define BTN_W 120
 #define BTN_H 40
+
+extern TTF_Font* font_main;
 
 extern SDL_Renderer* ren; 
 extern SDL_Texture* track;
