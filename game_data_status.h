@@ -3,6 +3,7 @@
 # include "game_data_status_red_riding_hood.h"
 # include "game_data_status_mulan.h"
 # include "game_data_status_kaguya.h"
+# include "game_data_status_dorothy.h"
 
 typedef struct _sStatusData{
     int32_t mode;
