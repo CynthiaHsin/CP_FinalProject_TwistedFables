@@ -55,10 +55,16 @@ int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
 
     // choosing character
     int32_t selected = 0;
+    int32_t character_selected = 0;
     bool running = true;
     SDL_Event event;
-    selected= choose_character(ren, character, running, selected, event);
-    characters[PLAYER1]= selected;
+    character_selected = choose_character(ren, character, running, selected, event);
+    if(character_selected == 1){      characters[PLAYER1] = CHARACTER_RED_RIDING_HOOD; }
+    else if(character_selected == 2){ characters[PLAYER1] = CHARACTER_SNOW_WHITE; }
+    else if(character_selected == 3){ characters[PLAYER1] = CHARACTER_MULAN; }
+    else if(character_selected == 4){ characters[PLAYER1] = CHARACTER_KAGUYA; }
+    else if(character_selected == 5){ characters[PLAYER1] = CHARACTER_MATCH_GIRL; }
+    else if(character_selected == 6){ characters[PLAYER1] = CHARACTER_DOROTHY; }
 
     return 0;
 }
