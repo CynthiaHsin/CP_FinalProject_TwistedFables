@@ -66,6 +66,9 @@ int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
     else if(character_selected == 5){ characters[PLAYER1] = CHARACTER_MATCH_GIRL; }
     else if(character_selected == 6){ characters[PLAYER1] = CHARACTER_DOROTHY; }
 
+    // start game
+    game_scene_loop(characters);
+
     return 0;
 }
 

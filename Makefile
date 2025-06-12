@@ -8,7 +8,7 @@ FUNC := -lm $(GAME_DATA) $(GAME_ACTION) $(GAME_ROUND)
 CC := gcc
 CFLAGS := -Wall -Wextra -std=c99 -O2 `sdl2-config --cflags`
 LDFLAGS := `sdl2-config --libs` -lSDL2_ttf -lSDL2_image -lSDL2 -lm
-OBJ := gui_game.o gui_opening.o gui_choose_character.o gui_destroy.o gui_img_init.o
+OBJ := gui_game.o gui_opening.o gui_choose_character.o gui_destroy.o gui_img_init.o gui_game_render.o game.o
 
 all: TwitedFables
 	# - gcc game.c $(FUNC) -o game
@@ -18,7 +18,7 @@ debug: $(OBJ)
 	# - gcc -D _DEBUG_ test_main.c $(FUNC) -o test 
 
 TwitedFables: $(OBJ)
-	- $(CC) $(OBJ) -o TwitedFables $(LDFLAGS)
+	- $(CC) $(OBJ) $(FUNC) -o TwitedFables $(LDFLAGS)
 
 %.o: %.c
 	- $(CC) $(CFLAGS) -c $< -o $@
