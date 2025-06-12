@@ -32,7 +32,7 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
         for(int32_t i=0; i<end; i++)
         {
         card_data_get(&card_data[i], card_idx[i]);
-        //printf("%d,",card_idx[i]);
+        //printf("gg:%d,",card_idx[i]);
         }
         //printf("\n");
         // 每個可能的組合跑一遍
@@ -141,6 +141,7 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
             {
                 int32_t delta=card_data_get_level(card_data[i].type);
                 action_move ( delta,  1, player_use);
+                break;
             }
             }
             if(card_data[i].space==CARD_SPACE_HAND)
@@ -148,7 +149,10 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
                 card[0]=CARD_SKILL_ATTACK_EVOLUTION_L2;
                 card[3]=card[i];
                 skill_red_riding_hood (card, player_use, player_des);
-            }//開始比較
+            }
+            
+        }
+        //開始比較
             sPlayerData player_data_usecopy;
             player_data_get (&player_data_usecopy, player_use);
             sPlayerData player_data_descopy;
@@ -158,7 +162,9 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
             status.distance = abs(player_data_usecopy.pos-player_data_use.pos);
             status.shell = player_data_usecopy.defense;
             status.power = player_data_usecopy.power;
-            //printf("damage=%d,distance=%d,shell=%d,power=%d\n",status.damage,status.distance,status.shell,status.power);
+            // printf("%d,%d,%d,%d,%d,%d\n",card_idx[0],card_idx[1],card_idx[2],card_idx[3],card_idx[4],card_idx[5]);
+            // printf("damage=%d,distance=%d,shell=%d,power=%d\n",status.damage,status.distance,status.shell,status.power);
+            // printf("best_damage=%d,distance=%d,shell=%d,power=%d\n",best_status.damage,best_status.distance,best_status.shell,best_status.power);
             if(status.distance>=3)
             {
                 if(best_status.damage>=status.damage)
@@ -192,11 +198,10 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
             }
             player_data_set(player_use,player_data_use);
             player_data_set(player_des,player_data_des);
-            for(int32_t k=0;k<len;k++)
+            for(int32_t i=0;i<len;i++)
             {
                 card_data_set(card_data[0].index,1,CARD_SPACE_HAND , card_data[0].type, card_data[0].player);
             }
-        }
 }
 
 void generate_permutations(int *arr, int32_t n, int *best_card,int *best_card_skill,int *best_card_attack,int *best_card_movement,int32_t player_use,int32_t player_des) {
