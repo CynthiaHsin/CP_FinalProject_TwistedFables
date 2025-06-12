@@ -59,27 +59,24 @@ static inline SDL_Rect btn_rect(int idx, bool upper)
 {
     SDL_Rect r = {0};
     r.w = BTN_W; r.h = BTN_H;
-    switch (idx) {
-        case BTN_CHARACTER:
-            r.x = upper ? WINDOW_WIDTH - BTN_W - 20 : 20;
-            r.y = upper ? 60  : WINDOW_HEIGHT - BTN_H - 60;
-            break;
-        case BTN_TWIST:
-            r.x = (WINDOW_WIDTH - BTN_W)/2;
-            r.y = upper ? 20 : WINDOW_HEIGHT - BTN_H - 20;
-            break;
-        case BTN_DECK:
-            r.x = upper ? WINDOW_WIDTH - BTN_W - 20 : 20;
-            r.y = upper ? 120 : WINDOW_HEIGHT - BTN_H - 120;
-            break;
-        case BTN_SUPPLY_BASIC:
-            r.x = 20;
-            r.y = upper ? 120 : WINDOW_HEIGHT - BTN_H - 120;
-            break;
-        case BTN_SUPPLY_SKILL:
-            r.x = 20;
-            r.y = upper ? 60 : WINDOW_HEIGHT - BTN_H - 60;
-            break;
+
+    if (upper) {
+        // player2
+        switch (idx) {
+            case BTN_CHARACTER:        r.x = WINDOW_WIDTH - BTN_W - 20;          r.y = 60; break;
+            case BTN_TWIST:            r.x = ((WINDOW_WIDTH - BTN_W - 20)+20)/2; r.y = 60; break;
+            case BTN_SUPPLY_SKILL:     r.x = WINDOW_WIDTH - BTN_W - 20;          r.y = 110; break;
+            case BTN_DECK:             r.x = 20;                                 r.y = 60; break;
+        }
+    } else {
+        // player1
+        switch (idx) {
+            case BTN_CHARACTER:        r.x = WINDOW_WIDTH - BTN_W - 20;          r.y = WINDOW_HEIGHT - 110 - BTN_H; break;
+            case BTN_TWIST:            r.x = ((WINDOW_WIDTH - BTN_W - 20)+20)/2; r.y = WINDOW_HEIGHT - 110 - BTN_H; break;
+            case BTN_SUPPLY_SKILL:     r.x = 20;                                 r.y = WINDOW_HEIGHT - 110 - BTN_H; break;
+            case BTN_SUPPLY_BASIC:     r.x = 20;                                 r.y = (WINDOW_HEIGHT - BTN_H)/2; break;
+            case BTN_DECK:             r.x = WINDOW_WIDTH - BTN_W - 20;          r.y = WINDOW_HEIGHT - 160 - BTN_H; break;
+        }
     }
     return r;
 }

@@ -62,9 +62,6 @@ void draw_board(int32_t characters[])
             TRACK_Y,
             TRACK_W, TRACK_H
         };
-        if (!track) {
-            printf("❌ track is NULL at render time\n");
-        }
         SDL_RenderCopy(ren, track, NULL, &dst);
         SDL_RenderDrawRect(ren, &dst);
     }
@@ -84,9 +81,8 @@ void draw_buttons(void)
     for (int i = 0; i < BTN_NUM; ++i) {
         SDL_Rect u = btn_rect(i, /*upper*/true);
         SDL_Rect d = btn_rect(i, /*upper*/false);
-        SDL_RenderFillRect(ren, &u);
+        if(i != BTN_SUPPLY_BASIC){SDL_RenderFillRect(ren, &u);}
         SDL_RenderFillRect(ren, &d);
-        // 文字 (示意用，之後換 TTF)
     }
 }
 
