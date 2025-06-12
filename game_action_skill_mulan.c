@@ -136,11 +136,9 @@ int32_t skill_mulan_passive_attacked (int32_t attack_delta, int32_t player){
 }
 
 int32_t skill_mulan_round_start (int32_t player){
-    sPlayerData player_data;
-    player_data_get (&player_data, player);
-    if (player_data.card_on[CARD_SKILL_ATTACK_EVOLUTION_L2]) status_mulan_token_add (1, player);
-    if (player_data.card_on[CARD_SKILL_DEFENSE_EVOLUTION_L2]) status_mulan_token_add (1, player);
-    if (player_data.card_on[CARD_SKILL_MOVEMENT_EVOLUTION_L2]) status_mulan_token_add (1, player);
+    if (player_data_card_is_on (CARD_ORIGINAL, CARD_SKILL_ATTACK_EVOLUTION_L2, player)) status_mulan_token_add (1, player);
+    if (player_data_card_is_on (CARD_ORIGINAL, CARD_SKILL_DEFENSE_EVOLUTION_L2, player)) status_mulan_token_add (1, player);
+    if (player_data_card_is_on (CARD_ORIGINAL, CARD_SKILL_MOVEMENT_EVOLUTION_L2, player)) status_mulan_token_add (1, player);
     return 0;
 }
 

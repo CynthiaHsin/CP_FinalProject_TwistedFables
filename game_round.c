@@ -39,8 +39,11 @@ int32_t game_round_start (int32_t mode, int32_t player){
         case CHARACTER_MULAN:
             skill_mulan_round_start (player);
             break;
+        case CHARACTER_KAGUYA:
+            skill_kaguya_round_start (player);
+            break;
         default:
-            debug_print ("mark: undefined round start character: %d\n", player_data.character);
+            // debug_print ("mark: undefined round start character: %d\n", player_data.character);
             break;
     }
     game_data_search_cards (cards, &cards_num, player, CARD_SPACE_USE, CARD_ORIGINAL, CARD_COST_ORIGINAL);
@@ -53,6 +56,17 @@ int32_t game_round_start (int32_t mode, int32_t player){
 
 int32_t game_round_clear (int32_t mode, int32_t player){
     
+    // 特別規則
+    sPlayerData player_data;
+    player_data_get (&player_data, player);
+    switch (player_data.character){
+        case CHARACTER_KAGUYA:
+            skill_kaguya_round_clear (player);
+            break;
+        default:
+            break;
+    }
+
     // 棄掉所有出牌區的牌
     sCardData cards[CARD_NUM];
     int32_t cards_num= 0;
@@ -63,7 +77,6 @@ int32_t game_round_clear (int32_t mode, int32_t player){
     }
 
     // defense = 0
-    sPlayerData player_data;
     player_data_get (&player_data, player);
     player_data.defense= 0;
     player_data_set (player, player_data);
@@ -78,8 +91,24 @@ int32_t game_round_action (int32_t mode, int32_t player){
 
 int32_t game_round_end (int32_t mode, int32_t player){
 
-    // 能量重置為0
+    // 特別規則
     sPlayerData player_data;
+    player_data_get (&player_data, player);
+    switch (player_data.character){
+        case CHARACTER_MULAN:
+            // ------
+            printf ("木蘭決定要不要用技能");
+            // ------
+            // skill_mulan_round_end (player, );
+            break;
+        case CHARACTER_KAGUYA:
+            skill_kaguya_round_end (player);
+            break;
+        default:
+            break;
+    }
+
+    // 能量重置為0
     player_data_get (&player_data, player);
     player_data.power= 0;
     player_data_set (player, player_data);

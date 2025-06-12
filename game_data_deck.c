@@ -84,6 +84,7 @@ int32_t deck_data_get_card (sCardData *pCard, int32_t player, int32_t idx){
     return card_data_get (pCard, deck_data[player].cards[DECK_TOP(player, idx)]);
 }
 
+// 移動牌庫頂第idx張牌
 int32_t deck_data_move_card (int32_t player, int32_t idx, int32_t space){
     if (deck_data[player].card_num==0){ 
         debug_print ("error: no card to move, player (%d), idx (%d)\n", player, idx);

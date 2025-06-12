@@ -1,6 +1,7 @@
 # include "main.h"
 # include "game_data_player.h"
 # include "game_data_card.h"
+# include "game_action_basic.h"
 
 sPlayerData player_data[PLAYER_NUM];
 
@@ -14,7 +15,9 @@ int32_t player_data_set_card (int32_t player, int32_t card_idx){
 }
 
 int32_t player_data_set (int32_t player, sPlayerData src){
-    return player_data_cpy (&(player_data[player]), src);
+    int32_t re= player_data_cpy (&(player_data[player]), src);
+    action_gain_finish (player);
+    return re;
 }
 
 
@@ -152,4 +155,11 @@ int32_t player_data_cpy (sPlayerData *pPlayerData, sPlayerData src){
 int32_t player_data_get (sPlayerData *pPlayerData, int32_t player){
     if (player>=PLAYER_NUM) return -1;
     return player_data_cpy (pPlayerData, player_data[player]);
+}
+
+int32_t player_data_card_is_on (int32_t card_idx, int32_t card_type, int32_t player){
+    if (card_idx==CARD_ORIGINAL){
+        card_idx= card_data_get_index (player, card_type);
+    }
+    return player_data[player].card_on[card_idx];
 }
