@@ -45,7 +45,7 @@ int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
     }
     ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     
-    img_init(win, ren, character, plate, token, sheet, track, basic_card, card_back, 
+    img_init(win, ren, character, &plate, token, sheet, &track, basic_card, &card_back, 
              rrh_card, sw_card, mulan_card, kaguya_card, mg_card, dorothy_card);
 
     // load title

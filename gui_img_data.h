@@ -31,8 +31,29 @@
 #define BTN_W 120
 #define BTN_H 40
 
-enum BtnId { BTN_CHARACTER, BTN_TWIST, BTN_DECK, BTN_SUPPLY_BASIC,
-             BTN_SUPPLY_SKILL, BTN_NUM };
+extern SDL_Renderer* ren; 
+extern SDL_Texture* track;
+extern SDL_Texture* plate;
+extern SDL_Texture* sheet[];
+extern SDL_Texture* token[];
+extern SDL_Texture* card_back;
+extern SDL_Texture* character[];
+extern SDL_Texture* basic_card[];
+extern SDL_Texture* rrh_card[];
+extern SDL_Texture* sw_card[];
+extern SDL_Texture* mulan_card[];
+extern SDL_Texture* kaguya_card[];
+extern SDL_Texture* mg_card[];
+extern SDL_Texture* dorothy_card[];
+
+enum BtnId { 
+    BTN_CHARACTER, 
+    BTN_TWIST, 
+    BTN_DECK, 
+    BTN_SUPPLY_BASIC,
+    BTN_SUPPLY_SKILL, 
+    BTN_NUM 
+};
 
 static inline SDL_Rect btn_rect(int idx, bool upper)
 {

@@ -1,20 +1,20 @@
 #include "gui_sdl_config.h"
 #include "gui_img_data.h"
 
-extern SDL_Renderer* ren;   // 已在 gui_game.c 建立
-extern SDL_Texture* track;
-extern SDL_Texture* plate;
-extern SDL_Texture* sheet[];
-extern SDL_Texture* token[];
-extern SDL_Texture* card_back;
-extern SDL_Texture* character[];
-extern SDL_Texture* basic_card[];
-extern SDL_Texture* rrh_card[];
-extern SDL_Texture* sw_card[];
-extern SDL_Texture* mulan_card[];
-extern SDL_Texture* kaguya_card[];
-extern SDL_Texture* mg_card[];
-extern SDL_Texture* dorothy_card[];
+// extern SDL_Renderer* ren; 
+// extern SDL_Texture* track;
+// extern SDL_Texture* plate;
+// extern SDL_Texture* sheet[];
+// extern SDL_Texture* token[];
+// extern SDL_Texture* card_back;
+// extern SDL_Texture* character[];
+// extern SDL_Texture* basic_card[];
+// extern SDL_Texture* rrh_card[];
+// extern SDL_Texture* sw_card[];
+// extern SDL_Texture* mulan_card[];
+// extern SDL_Texture* kaguya_card[];
+// extern SDL_Texture* mg_card[];
+// extern SDL_Texture* dorothy_card[];
 
 void draw_board(int32_t characters[]);
 void draw_buttons(void);
@@ -62,6 +62,9 @@ void draw_board(int32_t characters[])
             TRACK_Y,
             TRACK_W, TRACK_H
         };
+        if (!track) {
+            printf("❌ track is NULL at render time\n");
+        }
         SDL_RenderCopy(ren, track, NULL, &dst);
         SDL_RenderDrawRect(ren, &dst);
     }

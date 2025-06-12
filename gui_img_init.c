@@ -1,8 +1,10 @@
 #include "gui_sdl_config.h"
+#include "gui_img_data.h"
+
 
 int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[], 
-                SDL_Texture* plate, SDL_Texture* token[], SDL_Texture* sheet[], 
-                SDL_Texture* track, SDL_Texture* basic_card[], SDL_Texture* card_back, 
+                SDL_Texture** plate, SDL_Texture* token[], SDL_Texture* sheet[], 
+                SDL_Texture** track, SDL_Texture* basic_card[], SDL_Texture** card_back, 
                 SDL_Texture* rrh_card[], SDL_Texture* sw_card[], SDL_Texture* mulan_card[], 
                 SDL_Texture* kaguya_card[], SDL_Texture* mg_card[], SDL_Texture* dorothy_card[]){
 
@@ -33,7 +35,7 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     }
 
     // load plate
-    plate = IMG_LoadTexture(ren, "assets/plate&token&track/plate.png");
+    *plate = IMG_LoadTexture(ren, "assets/plate_token_track/plate.png");
     if (!plate) {
         printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
         SDL_DestroyRenderer(ren);
@@ -44,10 +46,10 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     }
 
     // load token
-    token[0] = IMG_LoadTexture(ren, "assets/plate&token&track/defense_token.png");
-    token[1] = IMG_LoadTexture(ren, "assets/plate&token&track/epic_token.png");
-    token[2] = IMG_LoadTexture(ren, "assets/plate&token&track/hp_token.png");
-    token[3] = IMG_LoadTexture(ren, "assets/plate&token&track/power_token.png");
+    token[0] = IMG_LoadTexture(ren, "assets/plate_token_track/defense_token.png");
+    token[1] = IMG_LoadTexture(ren, "assets/plate_token_track/epic_token.png");
+    token[2] = IMG_LoadTexture(ren, "assets/plate_token_track/hp_token.png");
+    token[3] = IMG_LoadTexture(ren, "assets/plate_token_track/power_token.png");
     for (int i = 0; i < 4; i++) {
         if (!token[i]) {
             printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
@@ -86,7 +88,7 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     }
 
     // load track
-    track = IMG_LoadTexture(ren, "assets/plate&token&track/fight_track.png");
+    *track = IMG_LoadTexture(ren, "assets/plate_token_track/fight_track.png");
     if (!track) {
         printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
         SDL_DestroyRenderer(ren);
@@ -97,7 +99,7 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     }
 
     // load card back
-    card_back = IMG_LoadTexture(ren, "assets/card/card_back.png");
+    *card_back = IMG_LoadTexture(ren, "assets/card/card_back.png");
     if (!card_back) {
         printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
         SDL_DestroyRenderer(ren);
