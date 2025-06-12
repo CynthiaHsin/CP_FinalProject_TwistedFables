@@ -41,6 +41,7 @@ int32_t game_action_buy_card (int32_t card_idx, int32_t player){
         game_data_search_cards (cards+2, &n, player, CARD_SPACE_ORIGINAL, CARD_SKILL_FINISH3, CARD_COST_ORIGINAL);
         for (int32_t i=0; i<3; i++){
             if (cards[i].index==card_idx) continue;
+            if (cards[i].space != CARD_SPACE_SHOP) continue;
             card_data_set (cards[i].index, 1, CARD_SPACE_DELETE, CARD_ORIGINAL, PLAYER_ORIGINAL);
         }
     }
@@ -110,6 +111,8 @@ int32_t game_action_use_basic_card (int32_t card_idx, int32_t card_type, int32_t
         debug_print ("error: diferent type of the card (%d), input: %d, real: %d\n", card_idx, card_type, card.type);
         return -1;
     }
+    sPlayerData player_data;
+    player_data_get (&player_data, player_use);
     int32_t level= 0;
     switch (card_type){
         case CARD_BASIC_ATTACK_L1:
@@ -117,6 +120,9 @@ int32_t game_action_use_basic_card (int32_t card_idx, int32_t card_type, int32_t
         case CARD_BASIC_ATTACK_L3:
             level= card_type - CARD_BASIC_ATTACK_L1 + 1;
             action_attack (level, 1, player_use, player_des);
+            if (player_data.character == CHARACTER_DOROTHY){
+                skill_dorothy_basic (level, CARD_BASIC_ATTACK_L1, player_use);
+            }
             break;
 
         case CARD_BASIC_DEFENSE_L1:
@@ -124,6 +130,9 @@ int32_t game_action_use_basic_card (int32_t card_idx, int32_t card_type, int32_t
         case CARD_BASIC_DEFENSE_L3:
             level= card_type - CARD_BASIC_DEFENSE_L1 + 1;
             action_defense (level, player_use);
+            if (player_data.character == CHARACTER_DOROTHY){
+                skill_dorothy_basic (level, CARD_BASIC_DEFENSE_L1, player_use);
+            }
             break;
 
         case CARD_BASIC_MOVEMENT_L1:
@@ -131,6 +140,9 @@ int32_t game_action_use_basic_card (int32_t card_idx, int32_t card_type, int32_t
         case CARD_BASIC_MOVEMENT_L3: 
             level= card_type - CARD_BASIC_MOVEMENT_L1 + 1;
             action_move(level, move_direction, player_use);
+            if (player_data.character == CHARACTER_DOROTHY){
+                skill_dorothy_basic (level, CARD_BASIC_MOVEMENT_L1, player_use);
+            }
             break;
     }
     action_modefy_power (level, player_use);
