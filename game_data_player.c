@@ -163,3 +163,12 @@ int32_t player_data_card_is_on (int32_t card_idx, int32_t card_type, int32_t pla
     }
     return player_data[player].card_on[card_idx];
 }
+
+int32_t player_data_search_character (int32_t character){
+    int32_t player= PLAYER1;
+    int32_t player_max= PLAYER2;
+    for (int32_t p=player; p<=player_max; p++){
+        if (player_data[p].character==character) return p;
+    }
+    return PLAYER_UNDEFINED;
+}

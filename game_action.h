@@ -3,6 +3,7 @@
 # include "main.h"
 # include "game_action_basic.h"
 # include "game_action_skill_red_riding_hood.h"
+# include "game_action_skill_snow_white.h"
 # include "game_action_skill_mulan.h"
 # include "game_action_skill_kaguya.h"
 # include "game_action_skill_dorothy.h"

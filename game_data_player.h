@@ -32,3 +32,4 @@ int32_t player_data_print_cardon (int32_t player);
 
 int32_t player_data_get (sPlayerData *pPlayerData, int32_t player);
 int32_t player_data_card_is_on (int32_t card_idx, int32_t card_type, int32_t player);
+int32_t player_data_search_character (int32_t character);

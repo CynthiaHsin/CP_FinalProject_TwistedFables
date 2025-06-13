@@ -181,8 +181,10 @@ int32_t skill_snow_white_movement_evolution(int32_t player_use,int32_t player_de
     if((game_data_search_cards  (cards, &num,  player_use, CARD_SPACE_USE_LASTING, CARD_SKILL_MOVEMENT_EVOLUTION_L1, CARD_COST_ORIGINAL )>0&&later_distance<0&&early_distance>0)||(game_data_search_cards ( cards, &num,  player_use, CARD_SPACE_USE_LASTING, CARD_SKILL_MOVEMENT_EVOLUTION_L1, CARD_COST_ORIGINAL )>0&&later_distance>0&&early_distance<0))return 0;
 }
 
-int32_t snow_white_poison_count(int32_t *card,int32_t len,int32_t player_use,int32_t player_des)
+int32_t snow_white_poison_count(int32_t *card, int32_t len, int32_t player_des)
 {
+    int32_t player_use= player_data_search_character(CHARACTER_SNOW_WHITE);
+    if (player_use == PLAYER_UNDEFINED) return 0;
     int32_t posion_level=0,n=0,poison,num;
     sCardData *card_data;
     sCardData *cards[1];
