@@ -24,8 +24,8 @@ bool handle_button_click(SDL_Point p, int32_t characters[]);
 void draw_button_text(SDL_Rect rect, const char* text);
 void popup(enum BtnId id, bool upper, int32_t characters[]);
 void render_player_skills_only(SDL_Renderer* ren, int32_t player, int32_t characters[]);
-static void draw_token_row(SDL_Texture* tex, SDL_Rect rowStart,
-                           int tokenCnt, int tokenFilled);
+void draw_token_row(SDL_Texture* tex, SDL_Rect rowStart, int tokenCnt, int tokenFilled);
+void draw_stack(SDL_Renderer* ren, SDL_Texture** pool, const int types[], int n, int x, int y);
 
 void game_scene_loop(int32_t characters[])
 {
@@ -228,8 +228,8 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                 break;
             }
             case BTN_SUPPLY_BASIC: {
-                int start_x = 100;
-                int start_y = 200;
+                int start_x = 400;
+                int start_y = 100;
                 int offset_x = 120;
                 int offset_y = 160;
 
@@ -250,7 +250,7 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
 
                         if (count > 0) {
                             SDL_Rect dst = { start_x + col * offset_x, start_y + row * offset_y, CARD_W, CARD_H };
-                            SDL_RenderCopy(ren, basic_card[card_list[0].index], NULL, &dst);
+                            SDL_RenderCopy(ren, basic_card[card_list[0].type], NULL, &dst);
                         }
                     }
                 }
@@ -262,8 +262,8 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                     game_data_search_cards(card_list, &count, PLAYER_ORIGINAL, CARD_SPACE_SHOP, CARD_BASIC_COMMON, -1);
 
                     if (count > 0) {
-                        SDL_Rect dst = { start_x, start_y + 3 * offset_y, CARD_W, CARD_H };
-                        SDL_RenderCopy(ren, basic_card[card_list[0].index], NULL, &dst);
+                        SDL_Rect dst = { start_x + 3 * offset_x, start_y, CARD_W, CARD_H };
+                        SDL_RenderCopy(ren, basic_card[card_list[0].type], NULL, &dst);
                     }
                 }
 
@@ -271,20 +271,82 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
             }
             case BTN_SUPPLY_SKILL: {
                 int32_t player = upper ? PLAYER2 : PLAYER1;
-                render_player_skills_only(ren, player, characters);
+
+                SDL_Texture** tex = NULL;
+                switch (characters[player]) {
+                    case CHARACTER_RED_RIDING_HOOD: tex = rrh_card; break;
+                    case CHARACTER_SNOW_WHITE:      tex = sw_card; break;
+                    case CHARACTER_DOROTHY:         tex = dorothy_card; break;
+                    case CHARACTER_KAGUYA:          tex = kaguya_card; break;
+                    case CHARACTER_MATCH_GIRL:      tex = mg_card; break;
+                    case CHARACTER_MULAN:           tex = mulan_card; break;
+                    default: return;
+                }
+
+                const int attack[] = {
+                    CARD_SKILL_ATTACK_EVOLUTION_L2,
+                    CARD_SKILL_ATTACK_BASE_L3,
+                    CARD_SKILL_ATTACK_EVOLUTION_L1,
+                    CARD_SKILL_ATTACK_BASE_L2,
+                    CARD_SKILL_ATTACK_BASE_L1
+                };
+                const int defense[] = {
+                    CARD_SKILL_DEFENSE_EVOLUTION_L2,
+                    CARD_SKILL_DEFENSE_BASE_L3,
+                    CARD_SKILL_DEFENSE_EVOLUTION_L1,
+                    CARD_SKILL_DEFENSE_BASE_L2,
+                    CARD_SKILL_DEFENSE_BASE_L1
+                };
+                const int movement[] = {
+                    CARD_SKILL_MOVEMENT_EVOLUTION_L2,
+                    CARD_SKILL_MOVEMENT_BASE_L3,
+                    CARD_SKILL_MOVEMENT_EVOLUTION_L1,
+                    CARD_SKILL_MOVEMENT_BASE_L2,
+                    CARD_SKILL_MOVEMENT_BASE_L1
+                };
+                const int finish[] = {
+                    CARD_SKILL_FINISH1,
+                    CARD_SKILL_FINISH2,
+                    CARD_SKILL_FINISH3
+                };
+
+                int x0 = 330, y0 = 120, dx = CARD_W + 40, dy = CARD_H + 60;
+
+                // 顯示三疊技能牌（攻、防、移）
+                const int* stacks[] = {attack, defense, movement};
+                for (int col = 0; col < 3; col++) {
+                    for (int i = 0; i < 5; i++) {
+                        sCardData list[4];
+                        int32_t count = 0;
+                        game_data_search_cards(list, &count,
+                            PLAYER_ORIGINAL, CARD_SPACE_SHOP, stacks[col][i], -1);
+                        if (count > 0) {
+                            SDL_Rect dst = {
+                                x0 + col * dx + i * 2,   // 疊起來稍微偏移
+                                y0 + i * 2,
+                                CARD_W, CARD_H
+                            };
+                            SDL_RenderCopy(ren, tex[stacks[col][i]], NULL, &dst);
+                        }
+                    }
+                }
+
+                // 顯示三張必殺牌
+                for (int i = 0; i < 3; i++) {
+                    sCardData list[2];
+                    int32_t count = 0;
+                    game_data_search_cards(list, &count,
+                        PLAYER_ORIGINAL, CARD_SPACE_SHOP, finish[i], -1);
+                    if (count > 0) {
+                        SDL_Rect dst = {
+                            x0 + i * dx,
+                            y0 + dy,
+                            CARD_W, CARD_H
+                        };
+                        SDL_RenderCopy(ren, tex[finish[i]], NULL, &dst);
+                    }
+                }
                 break;
-                // int player = upper ? PLAYER2 : PLAYER1;
-                // SDL_Texture** pool = (player==PLAYER1)? rrh_card : sw_card; 
-                // int gap = 15, w = 105, h = 160, idx = 0;
-                // for (int row=0; row<3; ++row)
-                //     for (int col=0; col<3; ++col) {
-                //         int type = CARD_SKILL_ATTACK_BASE_L1 + idx++;
-                //         SDL_Rect d = { win.x+40 + col*(w+gap),
-                //                        win.y+40 + row*(h+gap),
-                //                        w, h };
-                //         SDL_RenderCopy(ren, pool[type], NULL, &d);
-                //     }
-                // break;
             }
             default: break;
         }
@@ -326,25 +388,33 @@ void render_player_skills_only(SDL_Renderer* ren, int32_t player, int32_t charac
         CARD_SKILL_FINISH1, CARD_SKILL_FINISH2, CARD_SKILL_FINISH3
     };
 
-    int x0 = 100, y0 = 200, dx = 110, dy = 150;
+    // int x0 = 100, y0 = 200, dx = 110, dy = 150;
+    const int dx = 140;          // 三疊彼此水平間距
+    const int dy = 190;          // Epic 與 Skill 疊之間縱向間距
+    const int x0 = 400;          // 左上角
+    const int y0 = 180;
 
-    for (int i = 0; i < 5; ++i) {
-        SDL_Rect ra = { x0 + i * dx, y0 + 0 * dy, CARD_W, CARD_H };
-        SDL_Rect rd = { x0 + i * dx, y0 + 1 * dy, CARD_W, CARD_H };
-        SDL_Rect rm = { x0 + i * dx, y0 + 2 * dy, CARD_W, CARD_H };
-        SDL_RenderCopy(ren, skill_cards[attack_cards[i]], NULL, &ra);
-        SDL_RenderCopy(ren, skill_cards[defense_cards[i]], NULL, &rd);
-        SDL_RenderCopy(ren, skill_cards[movement_cards[i]], NULL, &rm);
-    }
+    // for (int i = 0; i < 5; ++i) {
+    //     SDL_Rect ra = { x0 + i * dx, y0 + 0 * dy, CARD_W, CARD_H };
+    //     SDL_Rect rd = { x0 + i * dx, y0 + 1 * dy, CARD_W, CARD_H };
+    //     SDL_Rect rm = { x0 + i * dx, y0 + 2 * dy, CARD_W, CARD_H };
+    //     SDL_RenderCopy(ren, skill_cards[attack_cards[i]], NULL, &ra);
+    //     SDL_RenderCopy(ren, skill_cards[defense_cards[i]], NULL, &rd);
+    //     SDL_RenderCopy(ren, skill_cards[movement_cards[i]], NULL, &rm);
+    // }
+    // draw_stack(ren, skill_cards, attack_cards, 5, x0 + 0*dx, y0);
+    // draw_stack(ren, skill_cards, defense_cards, 5, x0 + 1*dx, y0);
+    // draw_stack(ren, skill_cards, movement_cards, 5, x0 + 2*dx, y0);
 
     for (int i = 0; i < 3; ++i) {
-        SDL_Rect rf = { x0 + i * dx, y0 + 3 * dy, CARD_W, CARD_H };
+        // SDL_Rect rf = { x0 + i * dx, y0 + 3 * dy, CARD_W, CARD_H };
+        SDL_Rect rf = { x0 + i*dx, y0 + dy, CARD_W, CARD_H };
         SDL_RenderCopy(ren, skill_cards[finish_cards[i]], NULL, &rf);
     }
 }
 
 // 把一種類型的 token 連續畫在一條水平列上
-static void draw_token_row(SDL_Texture* tex, SDL_Rect rowStart,
+void draw_token_row(SDL_Texture* tex, SDL_Rect rowStart,
                            int tokenCnt, int tokenFilled)
 {
     for (int i = 0; i < tokenCnt; ++i) {
@@ -352,5 +422,30 @@ static void draw_token_row(SDL_Texture* tex, SDL_Rect rowStart,
         r.x += i * TOKEN_W;
         if (i < tokenFilled)      // 已獲得/已損失 才顯示
             SDL_RenderCopy(ren, tex, NULL, &r);
+    }
+}
+
+void draw_stack(SDL_Renderer* ren, SDL_Texture** pool, const int types[], int n, int x, int y)
+{
+    const int offset = 3;      // 疊牌位移
+    SDL_Rect dst = { x, y, CARD_W, CARD_H };
+
+    /* 由上往下找商店裡還剩哪張就畫哪張 */
+    for (int i = 0; i < n; ++i) {
+        sCardData list[4];
+        int32_t cnt = 0;
+
+        if (types[i] < 0 || types[i] >= CARD_TYPE_NUM || pool[types[i]] == NULL) {
+            printf("Skipping invalid or missing texture at types[%d] = %d\n", i, types[i]);
+            continue;
+        }
+
+        game_data_search_cards(list, &cnt, PLAYER_ORIGINAL, CARD_SPACE_SHOP, types[i], -1);
+        if (cnt > 0) {
+            SDL_SetTextureAlphaMod(pool[types[i]], 255 - i*10);
+            SDL_RenderCopy(ren, pool[types[i]], NULL, &dst);
+            dst.x += offset;   // 下一張稍微往右下
+            dst.y += offset;
+        }
     }
 }

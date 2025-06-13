@@ -12,7 +12,7 @@ int main(){
     characters[PLAYER1]= CHARACTER_RED_RIDING_HOOD;
     characters[PLAYER2]= CHARACTER_SNOW_WHITE;
 
-    gui_game_start (characters, &mode);
+    // gui_game_start (characters, &mode);
 
     // UI CALL
     // ui_init
@@ -24,6 +24,8 @@ int main(){
     
     // game init
     game_data_init (mode, characters);
+
+    gui_game_start (characters, &mode);
 
     debug_print ("player1: %d\n", characters[0]);
     int32_t cards[4]= {0};

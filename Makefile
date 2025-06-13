@@ -15,7 +15,7 @@ LDFLAGS := `sdl2-config --libs` -lSDL2_ttf -lSDL2_image -lSDL2 -lm
 OBJ := $(OBJ_GAME) $(OBJ_GUI)
 
 all: TwitedFables
-	# - gcc game.c $(FUNC) -o game
+	# - gcc game.c $(OBJ) -o game
 
 debug:
 	- $(CC) $(OBJ) -D _DEBUG_ game.c  -o game $(LDFLAGS)
@@ -24,3 +24,4 @@ debug:
 clean:
 	- rm -f *.o TwitedFables
 	- rm test
+	- rm game
