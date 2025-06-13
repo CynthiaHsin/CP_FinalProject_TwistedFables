@@ -113,3 +113,11 @@ int32_t deck_data_draw_cards (int32_t player, int32_t num){
 
     return 0;
 }
+
+int32_t deck_data_card_put (int32_t card_idx, int32_t player){
+    int32_t deck_idx= deck_data[player].card_num;
+    deck_data[player].cards[deck_idx]= card_idx;
+    deck_data[player].card_num++;
+    card_data_set (card_idx, 1, CARD_SPACE_DECK, CARD_ORIGINAL, player);
+    return 0;
+}
