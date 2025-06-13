@@ -36,6 +36,18 @@
 #define BTN_W 120
 #define BTN_H 40
 
+// plate & token
+#define TOKEN_W          18      // 四種 token 都是 18×18px
+#define TOKEN_H          18
+#define PLATE_PADDING_X  40      // Plate 內左上角到第一格 token 的偏移
+#define PLATE_PADDING_Y  40
+#define PLATE_ROW_GAP    60      // 每一條(HP/DEF/POW)相隔多少像素
+/* 三條 token 列在 Plate 上的 Y 座標 */
+#define ROW_HP_Y(pdst)      ((pdst).y + PLATE_PADDING_Y)
+#define ROW_DEF_Y(pdst)     (ROW_HP_Y(pdst)  + PLATE_ROW_GAP)
+#define ROW_POW_Y(pdst)     (ROW_DEF_Y(pdst) + PLATE_ROW_GAP)
+
+
 extern TTF_Font* font_main;
 
 extern SDL_Renderer* ren; 
