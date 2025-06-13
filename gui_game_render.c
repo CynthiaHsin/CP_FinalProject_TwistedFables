@@ -1,5 +1,7 @@
 #include "gui_sdl_config.h"
 #include "gui_img_data.h"
+#include "game_data_card.h"
+#include "game_data.h"
 
 // extern SDL_Renderer* ren; 
 // extern SDL_Texture* track;
@@ -21,6 +23,7 @@ void draw_buttons(void);
 bool handle_button_click(SDL_Point p, int32_t characters[]);
 void draw_button_text(SDL_Rect rect, const char* text);
 void popup(enum BtnId id, bool upper, int32_t characters[]);
+void render_player_skills_only(SDL_Renderer* ren, int32_t player, int32_t characters[]);
 
 void game_scene_loop(int32_t characters[])
 {
@@ -184,40 +187,73 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                 break;
             }
             case BTN_DECK: {
-                int player = upper ? PLAYER2 : PLAYER1;
+                // int player = upper ? PLAYER2 : PLAYER1;
                 SDL_Rect back = { win.x+80, win.y+100, 105,160 };
                 SDL_RenderCopy(ren, card_back, NULL, &back);
                 SDL_Rect discard = { back.x+150, back.y, 105,160 };
-                SDL_RenderCopy(ren, basic_card[CARD_BASIC_ATTACK_L1], NULL, &discard); // top of discard
+                // SDL_RenderCopy(ren, basic_card[CARD_BASIC_ATTACK_L1], NULL, &discard); // top of discard
+                SDL_SetRenderDrawColor(ren, 0, 200, 255, 255);  // 藍色框
+                SDL_RenderDrawRect(ren, &discard);
                 break;
             }
             case BTN_SUPPLY_BASIC: {
-                int gap = 15, w = 105, h = 160;
-                for (int row=0; row<4; ++row)
-                    for (int col=0; col<3; ++col) {
-                        int type = CARD_BASIC_ATTACK_L1 + row; 
-                        SDL_Rect d = {
-                            win.x+40 + col*(w+gap),
-                            win.y+40 + row*(h+gap),
-                            w, h
-                        };
-                        SDL_RenderCopy(ren, basic_card[type], NULL, &d);
+                int start_x = 100;
+                int start_y = 200;
+                int offset_x = 120;
+                int offset_y = 160;
+
+                eCardType attack_lv[] = { CARD_BASIC_ATTACK_L1, CARD_BASIC_ATTACK_L2, CARD_BASIC_ATTACK_L3 };
+                eCardType defense_lv[] = { CARD_BASIC_DEFENSE_L1, CARD_BASIC_DEFENSE_L2, CARD_BASIC_DEFENSE_L3 };
+                eCardType movement_lv[] = { CARD_BASIC_MOVEMENT_L1, CARD_BASIC_MOVEMENT_L2, CARD_BASIC_MOVEMENT_L3 };
+
+                for (int row = 0; row < 3; row++) {
+                    for (int col = 0; col < 3; col++) {
+                        eCardType type;
+                        if (row == 0) type = attack_lv[col];
+                        else if (row == 1) type = defense_lv[col];
+                        else type = movement_lv[col];
+
+                        sCardData card_list[32];
+                        int32_t count = 0;
+                        game_data_search_cards(card_list, &count, PLAYER_ORIGINAL, CARD_SPACE_SHOP, type, -1);
+
+                        if (count > 0) {
+                            SDL_Rect dst = { start_x + col * offset_x, start_y + row * offset_y, CARD_W, CARD_H };
+                            SDL_RenderCopy(ren, basic_card[card_list[0].index], NULL, &dst);
+                        }
                     }
+                }
+
+                // 顯示通用卡（Common）
+                {
+                    sCardData card_list[32];
+                    int32_t count = 0;
+                    game_data_search_cards(card_list, &count, PLAYER_ORIGINAL, CARD_SPACE_SHOP, CARD_BASIC_COMMON, -1);
+
+                    if (count > 0) {
+                        SDL_Rect dst = { start_x, start_y + 3 * offset_y, CARD_W, CARD_H };
+                        SDL_RenderCopy(ren, basic_card[card_list[0].index], NULL, &dst);
+                    }
+                }
+
                 break;
             }
             case BTN_SUPPLY_SKILL: {
-                int player = upper ? PLAYER2 : PLAYER1;
-                SDL_Texture** pool = (player==PLAYER1)? rrh_card : sw_card; 
-                int gap = 15, w = 105, h = 160, idx = 0;
-                for (int row=0; row<3; ++row)
-                    for (int col=0; col<3; ++col) {
-                        int type = CARD_SKILL_ATTACK_BASE_L1 + idx++;
-                        SDL_Rect d = { win.x+40 + col*(w+gap),
-                                       win.y+40 + row*(h+gap),
-                                       w, h };
-                        SDL_RenderCopy(ren, pool[type], NULL, &d);
-                    }
+                int32_t player = upper ? PLAYER2 : PLAYER1;
+                render_player_skills_only(ren, player, characters);
                 break;
+                // int player = upper ? PLAYER2 : PLAYER1;
+                // SDL_Texture** pool = (player==PLAYER1)? rrh_card : sw_card; 
+                // int gap = 15, w = 105, h = 160, idx = 0;
+                // for (int row=0; row<3; ++row)
+                //     for (int col=0; col<3; ++col) {
+                //         int type = CARD_SKILL_ATTACK_BASE_L1 + idx++;
+                //         SDL_Rect d = { win.x+40 + col*(w+gap),
+                //                        win.y+40 + row*(h+gap),
+                //                        w, h };
+                //         SDL_RenderCopy(ren, pool[type], NULL, &d);
+                //     }
+                // break;
             }
             default: break;
         }
@@ -227,3 +263,52 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
     }
     SDL_SetRenderDrawBlendMode(ren, SDL_BLENDMODE_NONE);
 }
+
+void render_player_skills_only(SDL_Renderer* ren, int32_t player, int32_t characters[]) {
+    SDL_Texture** skill_cards = NULL;
+    switch (characters[player]) {
+        case CHARACTER_RED_RIDING_HOOD:     skill_cards = rrh_card; break;
+        case CHARACTER_SNOW_WHITE:          skill_cards = sw_card; break;
+        case CHARACTER_DOROTHY:             skill_cards = dorothy_card; break;
+        case CHARACTER_KAGUYA:              skill_cards = kaguya_card; break;
+        case CHARACTER_MATCH_GIRL:          skill_cards = mg_card; break;
+        case CHARACTER_MULAN:               skill_cards = mulan_card; break;
+        default: return;
+    }
+
+    const int attack_cards[5] = {
+        CARD_SKILL_ATTACK_BASE_L1, CARD_SKILL_ATTACK_BASE_L2,
+        CARD_SKILL_ATTACK_EVOLUTION_L1, CARD_SKILL_ATTACK_BASE_L3,
+        CARD_SKILL_ATTACK_EVOLUTION_L2
+    };
+    const int defense_cards[5] = {
+        CARD_SKILL_DEFENSE_BASE_L1, CARD_SKILL_DEFENSE_BASE_L2,
+        CARD_SKILL_DEFENSE_EVOLUTION_L1, CARD_SKILL_DEFENSE_BASE_L3,
+        CARD_SKILL_DEFENSE_EVOLUTION_L2
+    };
+    const int movement_cards[5] = {
+        CARD_SKILL_MOVEMENT_BASE_L1, CARD_SKILL_MOVEMENT_BASE_L2,
+        CARD_SKILL_MOVEMENT_EVOLUTION_L1, CARD_SKILL_MOVEMENT_BASE_L3,
+        CARD_SKILL_MOVEMENT_EVOLUTION_L2
+    };
+    const int finish_cards[3] = {
+        CARD_SKILL_FINISH1, CARD_SKILL_FINISH2, CARD_SKILL_FINISH3
+    };
+
+    int x0 = 100, y0 = 200, dx = 110, dy = 150;
+
+    for (int i = 0; i < 5; ++i) {
+        SDL_Rect ra = { x0 + i * dx, y0 + 0 * dy, CARD_W, CARD_H };
+        SDL_Rect rd = { x0 + i * dx, y0 + 1 * dy, CARD_W, CARD_H };
+        SDL_Rect rm = { x0 + i * dx, y0 + 2 * dy, CARD_W, CARD_H };
+        SDL_RenderCopy(ren, skill_cards[attack_cards[i]], NULL, &ra);
+        SDL_RenderCopy(ren, skill_cards[defense_cards[i]], NULL, &rd);
+        SDL_RenderCopy(ren, skill_cards[movement_cards[i]], NULL, &rm);
+    }
+
+    for (int i = 0; i < 3; ++i) {
+        SDL_Rect rf = { x0 + i * dx, y0 + 3 * dy, CARD_W, CARD_H };
+        SDL_RenderCopy(ren, skill_cards[finish_cards[i]], NULL, &rf);
+    }
+}
+

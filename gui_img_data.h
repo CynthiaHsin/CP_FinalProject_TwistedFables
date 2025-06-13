@@ -20,6 +20,10 @@
 #define TRACK_START_X (BOARD_X + (BOARD_W - 9*TRACK_W)/2)
 #define TRACK_Y       (WINDOW_HEIGHT/2 - TRACK_H/2)
 
+// card in pop up
+#define CARD_W        105
+#define CARD_H        160
+
 // Play Area
 #define PLAY_W        800
 #define PLAY_H        140
