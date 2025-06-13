@@ -59,3 +59,7 @@ int32_t game_data_deck_card_take (int32_t player, int32_t idx){
 int32_t game_data_get_player (sPlayerData *pPlayer_data, int32_t player){
     return player_data_get (pPlayer_data, player);
 }
+
+int32_t game_data_deck_card_fold (int32_t player, int32_t idx){
+    return deck_data_move_card (player, idx,CARD_SPACE_THROW);
+}
