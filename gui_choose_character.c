@@ -40,7 +40,24 @@ int32_t choose_character(SDL_Renderer* ren, SDL_Texture* character[], bool runni
                 dst.w = dst.h = scale;
             }
 
-            SDL_RenderCopy(ren, character[i], NULL, &dst);
+            if(i == 0){
+                SDL_RenderCopy(ren, character[CHARACTER_RED_RIDING_HOOD], NULL, &dst);
+            }
+            else if(i == 1){
+                SDL_RenderCopy(ren, character[CHARACTER_SNOW_WHITE], NULL, &dst);
+            }
+            else if(i == 2){
+                SDL_RenderCopy(ren, character[CHARACTER_MULAN], NULL, &dst);
+            }
+            else if(i == 3){
+                SDL_RenderCopy(ren, character[CHARACTER_KAGUYA], NULL, &dst);
+            }
+            else if(i == 4){
+                SDL_RenderCopy(ren, character[CHARACTER_MATCH_GIRL], NULL, &dst);
+            }
+            else if(i == 5){
+                SDL_RenderCopy(ren, character[CHARACTER_DOROTHY], NULL, &dst);
+            }
         }
 
         SDL_RenderPresent(ren);
