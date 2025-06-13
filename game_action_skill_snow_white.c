@@ -187,7 +187,7 @@ int32_t snow_white_poison_count(int32_t *card, int32_t len, int32_t player_des)
     if (player_use == PLAYER_UNDEFINED) return 0;
     int32_t posion_level=0,n=0,poison,num;
     sCardData *card_data;
-    sCardData *cards[1];
+    sCardData cards[1];
     card_data=malloc(len*sizeof(sCardData));
     for(int32_t i=0;i<len;i++)card_data_get(&card_data[i],card[i]);
     for(int32_t i=0;i < len;i++)

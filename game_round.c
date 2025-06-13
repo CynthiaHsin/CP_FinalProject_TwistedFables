@@ -118,8 +118,10 @@ int32_t game_round_end (int32_t mode, int32_t player){
     int32_t cards_num= 0;
     game_data_search_cards (cards, &cards_num, player, CARD_SPACE_HAND, CARD_ORIGINAL, CARD_COST_ORIGINAL);
 
+    int32_t card_idx[CARD_NUM];
+    for (int32_t i=0; i<cards_num; i++) card_idx[i]= cards[i].index;
     if (player_data.character == CHARACTER_SNOW_WHITE) 
-    snow_white_poison_count (cards, cards_num, player);
+    snow_white_poison_count (card_idx, cards_num, player);
 
     for (int32_t i=0; i<cards_num; i++){
         card_data_set (cards[i].index, 1, CARD_SPACE_THROW, CARD_ORIGINAL, PLAYER_ORIGINAL);
