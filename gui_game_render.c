@@ -163,13 +163,42 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                 SDL_Rect dst = { win.x+20, win.y+20, 540, 380 }; // Plate
                 SDL_RenderCopy(ren, plate, NULL, &dst);
 
-                // sheet
-                SDL_Rect dstSheet = dst;
-                dstSheet.x += 60; dstSheet.y += 60;
-                dstSheet.w = 420; dstSheet.h = 260;
-                SDL_RenderCopy(ren, sheet[characters[player]], NULL, &dstSheet);
+                // // sheet
+                // SDL_Rect dstSheet = dst;
+                // dstSheet.x += 60; dstSheet.y += 60;
+                // dstSheet.w = 420; dstSheet.h = 260;
+                // SDL_RenderCopy(ren, sheet[characters[player]], NULL, &dstSheet);
 
-                // TODO: hp/def/power/epic token 擺正確洞洞 (依角色初始值)
+                // 角色花紋／卡面
+                SDL_Rect dstSheet = { dst.x+60, dst.y+60, 420, 260 };
+                SDL_RenderCopy(ren, sheet[ characters[player] ], NULL, &dstSheet);
+
+                // 讀取玩家目前數值
+                sPlayerData pd;
+                player_data_get(&pd, player);   // 失敗回 -1，這裡簡化不檢查
+
+                // 畫四條 token 列
+                SDL_Rect start = { dst.x + PLATE_PADDING_X, ROW_HP_Y(dst),
+                                TOKEN_W, TOKEN_H };
+
+                // 1) HP：顯示「剩餘」生命；已損失的不畫
+                draw_token_row(token[2], start, pd.hp_max, pd.hp);
+
+                // 2) DEF：護甲 
+                start.y = ROW_DEF_Y(dst);
+                draw_token_row(token[0], start, pd.defense_max, pd.defense);
+
+                // 3) POW：能量（上限固定 25）
+                start.y = ROW_POW_Y(dst);
+                draw_token_row(token[3], start, POWER_MAX, pd.power);
+
+                // 4) Epic：當 hp ≤ hp_finish 時亮出 1 顆
+                if (pd.hp <= pd.hp_finish) {
+                    SDL_Rect epic = { dst.x + dst.w - PLATE_PADDING_X - TOKEN_W,
+                                    dst.y + dst.h - PLATE_PADDING_Y - TOKEN_H,
+                                    TOKEN_W, TOKEN_H };
+                    SDL_RenderCopy(ren, token[1], NULL, &epic);
+                }
                 break;
             }
             case BTN_TWIST: {
@@ -312,3 +341,14 @@ void render_player_skills_only(SDL_Renderer* ren, int32_t player, int32_t charac
     }
 }
 
+// 把一種類型的 token 連續畫在一條水平列上
+static void draw_token_row(SDL_Texture* tex, SDL_Rect rowStart,
+                           int tokenCnt, int tokenFilled)
+{
+    for (int i = 0; i < tokenCnt; ++i) {
+        SDL_Rect r = rowStart;
+        r.x += i * TOKEN_W;
+        if (i < tokenFilled)      // 已獲得/已損失 才顯示
+            SDL_RenderCopy(ren, tex, NULL, &r);
+    }
+}

@@ -18,10 +18,10 @@ debug: $(OBJ)
 	# - gcc -D _DEBUG_ test_main.c $(FUNC) -o test 
 
 TwitedFables: $(OBJ)
-	- $(CC) $(OBJ) $(FUNC) -o TwitedFables $(LDFLAGS)
+	$(CC) $(OBJ) $(FUNC) -o TwitedFables $(LDFLAGS)
 
 %.o: %.c
-	- $(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	- rm -f *.o TwitedFables
