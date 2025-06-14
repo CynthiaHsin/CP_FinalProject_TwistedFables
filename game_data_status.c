@@ -21,6 +21,7 @@ int32_t status_player_order_1v1[2][ORDER_PLAYERS]={
 int32_t status_data_init (int32_t mode){
     status_data.mode= mode;
     status_data.round= 0;
+    status_data.game_end= 0;
     for (int32_t i=PLAYER1; i<PLAYER_NUM; i++){
         status_data.actions_num[i]= 0;
     }
@@ -43,6 +44,12 @@ int32_t status_data_next_round(){
     for (int32_t i=PLAYER1; i<PLAYER_NUM; i++){
         status_data.actions_num[i]= 0;
     }
+    return 0;
+}
+
+int32_t status_data_end_game(){
+    status_data.game_end= 1;
+    debug_print ("status: %d\n", status_data.game_end);
     return 0;
 }
 

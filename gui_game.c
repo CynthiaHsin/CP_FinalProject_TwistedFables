@@ -84,7 +84,7 @@ int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
     memcpy(gCharacters, characters, sizeof(gCharacters));
 
     // start game
-    game_scene_loop(characters);
+    // game_scene_loop(characters);
 
     return 0;
 }

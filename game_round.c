@@ -146,10 +146,13 @@ int32_t game_round_end (int32_t mode, int32_t player){
     return 0;
 }
 
-// error: -1;  true: winner;  false: PLAYER_UNDEFINED
+// game_end: -1;  true: winner;  false: PLAYER_UNDEFINED
 int32_t game_round_gameend_parse (int32_t mode){
     sPlayerData player_data;
     int32_t winner= PLAYER_UNDEFINED;
+    sStatusData status_data;
+    status_data_get (&status_data);
+    if (status_data.game_end) return -1;
     // int32_t player= PLAYER1;
     // int32_t player_max= PLAYER2;
     if (mode==GAMEMODE_1V1){
@@ -164,8 +167,7 @@ int32_t game_round_gameend_parse (int32_t mode){
             debug_print ("GAME END!! winner is %d", winner);
         }
     }else{
-        
-        return -1; // not yet
+        return -1;
     }
     return winner;
 }

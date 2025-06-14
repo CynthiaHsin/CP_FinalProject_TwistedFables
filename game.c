@@ -22,20 +22,27 @@ int main(){
     // int32_t player_max;
     // if (mode==GAMEMODE_1V1) player_max= PLAYER2; 
     
+    gui_game_start (characters, &mode);
     // game init
     game_data_init (mode, characters);
 
-    gui_game_start (characters, &mode);
 
-    debug_print ("player1: %d\n", characters[0]);
+    debug_print ("player1: %d\n", characters[PLAYER1]);
+    debug_print ("player2: %d\n", characters[PLAYER2]);
     int32_t cards[4]= {0};
-    card_data_set (card_data_get_index(PLAYER1, CARD_SKILL_MOVEMENT_EVOLUTION_L1), 1, CARD_SPACE_USE_LASTING, CARD_ORIGINAL, PLAYER1);
-    player_data_print_cardon (PLAYER1);
-    cards[0]= card_data_get_index (PLAYER1, CARD_SKILL_ATTACK_BASE_L1);
-    cards[2]= card_data_get_index (PLAYER1, CARD_SKILL_MOVEMENT_BASE_L1);
-    cards[1]= -1;
-    cards[3]= -1;
-    game_action_use_skill_card (cards, CARD_SKILL_ATTACK_BASE_L1, 0, 0, PLAYER1, PLAYER2);
+
+    int32_t winner= PLAYER_UNDEFINED;
+    while (winner==PLAYER_UNDEFINED){
+        game_round();
+    }
+    debug_print ("Game End. The winner is: %d\n", winner);
+    // card_data_set (card_data_get_index(PLAYER1, CARD_SKILL_MOVEMENT_EVOLUTION_L1), 1, CARD_SPACE_USE_LASTING, CARD_ORIGINAL, PLAYER1);
+    // player_data_print_cardon (PLAYER1);
+    // cards[0]= card_data_get_index (PLAYER1, CARD_SKILL_ATTACK_BASE_L1);
+    // cards[2]= card_data_get_index (PLAYER1, CARD_SKILL_MOVEMENT_BASE_L1);
+    // cards[1]= -1;
+    // cards[3]= -1;
+    // game_action_use_skill_card (cards, CARD_SKILL_ATTACK_BASE_L1, 0, 0, PLAYER1, PLAYER2);
 
     gui_game_end();
     // game start
