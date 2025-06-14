@@ -372,6 +372,18 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                 debug_print ("end round\n");
                 break;
             }
+            case BTN_ACTION_FOCUS: {
+                debug_print ("action focus not done\n");
+                return;
+            }
+            case BTN_ACTION_BASIC: {
+                debug_print ("action use basic not done\n");
+                return;
+            }
+            case BTN_ACTION_SKILL: {
+                debug_print ("action use skill not done\n");
+                return;
+            }
             default: break;
         }
 
@@ -397,10 +409,10 @@ void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int3
     sCardData cards[CARD_NUM];  // 預設最多不會超過手牌上限
     int32_t num = 0;
 
-    debug_print("呼叫查詢手牌: player=%d\n", player);
+    // debug_print("呼叫查詢手牌: player=%d\n", player);
     // 查詢該玩家的手牌（space = CARD_SPACE_HAND）
     game_data_search_cards(cards, &num, player, CARD_SPACE_HAND, CARD_ORIGINAL, -1);
-    debug_print("查到張數 = %d\n", num);
+    // debug_print("查到張數 = %d\n", num);
 
     int gap = 20, w = 105, h = 160;
     int base_x = 50;
@@ -408,7 +420,7 @@ void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int3
 
     for (int i = 0; i < num; ++i) {
         int32_t card_id = cards[i].index;
-        debug_print("player %d hand[%d] = card_id %d\n", player, i, card_id);
+        // debug_print("player %d hand[%d] = card_id %d\n", player, i, card_id);
 
         SDL_Rect d = { base_x + i * (w + gap), base_y, w, h };
 
