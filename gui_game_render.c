@@ -10,14 +10,20 @@ void popup(enum BtnId id, bool upper, int32_t characters[]);
 void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int32_t characters[]);
 SDL_Texture* card_data_get_texture(int32_t card_id, int32_t characters[], int32_t player);
 
+bool gui_round_running;
+
 void game_scene_loop(int32_t characters[])
 {
-    bool running = true;
+    gui_round_running = true;
     SDL_Event e;
 
-    while (running) {
+    while (gui_round_running) {
         while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT) running = false;
+            if (e.type == SDL_QUIT){
+                gui_round_running = false;
+                status_data_end_game();
+                return;
+            }
             else if (e.type == SDL_MOUSEBUTTONDOWN) {
                 SDL_Point p = { e.button.x, e.button.y };
                 if (handle_button_click(p, characters))
@@ -67,7 +73,7 @@ void draw_board(int32_t characters[])
 void draw_buttons(void)
 {
     const char* labels[BTN_NUM] = {
-        "CHARACTER", "TWISTED CARD", "DECK/DESCARD", "BASIC", "SKILL/EPIC", "CARD USED"
+        "CHARACTER", "TWISTED CARD", "DECK/DESCARD", "BASIC", "SKILL/EPIC", "CARD USED", "END ROUND"
     };
     SDL_SetRenderDrawColor(ren, 160, 160, 160, 255);
     for (int i = 0; i < BTN_NUM; ++i) {
@@ -353,6 +359,12 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                         SDL_RenderCopy(ren, tex[type], NULL, &dst);
                     }
                 }
+                break;
+            }
+            case BTN_ROUND_END: {
+                gui_round_running= false;
+                open = false;
+                debug_print ("end round\n");
                 break;
             }
             default: break;

@@ -15,7 +15,8 @@ int32_t deck_data_init (int32_t mode){
     for (int32_t i=player; i<=player_max; i++){
         deck_data_refresh (i);
     }
-
+    deck_data_draw_cards (PLAYER1, 4);
+    deck_data_draw_cards (PLAYER2, 6);
     return 0;
 }
 

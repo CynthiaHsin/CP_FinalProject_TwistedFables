@@ -19,7 +19,7 @@ int32_t game_data_init (int32_t mode, int32_t characters[]){
         player_data_set_character (i, characters[i]);
     }
     player_data_init (mode);
-    // deck init
+    
     deck_data_init (mode);
     
     map_data_init (mode);

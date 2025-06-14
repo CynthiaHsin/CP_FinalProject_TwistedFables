@@ -21,8 +21,12 @@ int32_t status_player_order_1v1[2][ORDER_PLAYERS]={
 int32_t status_data_init (int32_t mode){
     status_data.mode= mode;
     status_data.round= 0;
+    status_data.game_end= 0;
     for (int32_t i=PLAYER1; i<PLAYER_NUM; i++){
         status_data.actions_num[i]= 0;
+    }
+    for (int32_t i=0; i<ORDER_PLAYERS; i++){
+        status_data.player_order[i]= status_player_order_1v1[0][i];
     }
     status_red_riding_hood_init();
     status_mulan_init();
@@ -40,18 +44,30 @@ int32_t status_data_next_round(){
             status_data.actions_num[i]= 0;
         }
     }
-    for (int32_t i=PLAYER1; i<PLAYER_NUM; i++){
-        status_data.actions_num[i]= 0;
-    }
+    return 0;
+}
+
+int32_t status_data_end_game(){
+    status_data.game_end= 1;
+    debug_print ("status: %d\n", status_data.game_end);
     return 0;
 }
 
 int32_t status_data_cpy (sStatusData *pStatusData, sStatusData src){
-    int8_t *pA= (int8_t*)pStatusData;
-    int8_t *pB= (int8_t*)(&src);
-    for (int32_t i=0; i<sizeof(sPlayerData); i++){
-        pA[i]= pB[i];
+    for (int32_t i=0 ;i<PLAYER_NUM; i++){
+        pStatusData->actions_num[i] = src.actions_num[i];
     }
+    pStatusData->game_end = src.game_end;
+    pStatusData->mode = src.mode;
+    for (int32_t i=0 ;i<ORDER_PLAYERS; i++){
+        pStatusData->player_order[i] = src.player_order[i];
+    }
+    pStatusData->round = src.round;
+    // int8_t *pA= (int8_t*)pStatusData;
+    // int8_t *pB= (int8_t*)(&src);
+    // for (int32_t i=0; i<sizeof(sPlayerData); i++){
+    //     pA[i]= pB[i];
+    // }
     return 0;
 }
 

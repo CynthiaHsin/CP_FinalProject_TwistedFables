@@ -11,18 +11,35 @@ int32_t game_round(){
 
     int32_t mode= status.mode;
     if (mode != GAMEMODE_1V1) return -1; // not yet
+    int32_t winner= PLAYER_UNDEFINED;
     for (int32_t i=0; i<2; i++){
+        // debug_print ("player_order %d: %d\n", i, status.player_order[i]);
         int32_t player= status.player_order[i];
         // 回合開始階段
         game_round_start (mode, player);
+        // 判斷是否結束
+        winner= game_round_gameend_parse (mode);
+        if (winner!=PLAYER_UNDEFINED){
+            return winner;
+        }
         // 清理階段
         game_round_clear (mode, player);
+        // 判斷是否結束
+        winner= game_round_gameend_parse (mode);
+        if (winner!=PLAYER_UNDEFINED){
+            return winner;
+        }
         // 行動階段
         game_round_action (mode, player);
+        // 判斷是否結束
+        winner= game_round_gameend_parse (mode);
+        if (winner!=PLAYER_UNDEFINED){
+            return winner;
+        }
         // 結束階段
         game_round_end (mode, player);
         // 判斷是否結束
-        int32_t winner= game_round_gameend_parse (mode);
+        winner= game_round_gameend_parse (mode);
         if (winner!=PLAYER_UNDEFINED){
             return winner;
         }
@@ -146,10 +163,13 @@ int32_t game_round_end (int32_t mode, int32_t player){
     return 0;
 }
 
-// error: -1;  true: winner;  false: PLAYER_UNDEFINED
+// game_end: -1;  true: winner;  false: PLAYER_UNDEFINED
 int32_t game_round_gameend_parse (int32_t mode){
     sPlayerData player_data;
     int32_t winner= PLAYER_UNDEFINED;
+    sStatusData status_data;
+    status_data_get (&status_data);
+    if (status_data.game_end) return -1;
     // int32_t player= PLAYER1;
     // int32_t player_max= PLAYER2;
     if (mode==GAMEMODE_1V1){
@@ -164,8 +184,7 @@ int32_t game_round_gameend_parse (int32_t mode){
             debug_print ("GAME END!! winner is %d", winner);
         }
     }else{
-        
-        return -1; // not yet
+        return -1;
     }
     return winner;
 }

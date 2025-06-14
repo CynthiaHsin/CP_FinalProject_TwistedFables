@@ -66,7 +66,8 @@ int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
     // load title
     SDL_Texture* title = NULL;
     // opening title
-    opening(ren, title, win);
+    // 先註解掉 有點浪費時間
+    // opening(ren, title, win);
 
     // choosing character
     int32_t selected = 0;
@@ -84,7 +85,7 @@ int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
     memcpy(gCharacters, characters, sizeof(gCharacters));
 
     // start game
-    game_scene_loop(characters);
+    // game_scene_loop(characters);
 
     return 0;
 }
