@@ -1,6 +1,7 @@
 #include "gui_sdl_config.h"
 #include "gui_img_data.h"
 #include "game_data.h"
+#include "game_action.h"
 
 void draw_board(int32_t characters[]);
 void draw_buttons(void);
@@ -10,6 +11,8 @@ void popup(enum BtnId id, bool upper, int32_t characters[]);
 void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int32_t characters[]);
 SDL_Texture* card_data_get_texture(int32_t card_id, int32_t characters[], int32_t player);
 void draw_stat_text(int x, int y, const char *utf8);
+int32_t detect_basic_stack(SDL_Point p);
+int32_t detect_skill_stack(SDL_Point p, int32_t player);
 
 bool gui_round_running;
 
@@ -156,6 +159,22 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
             if (e.type == SDL_QUIT) exit(0);
             else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)
                 open = false;
+            else if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) {
+                SDL_Point p = { e.button.x, e.button.y };
+
+                if (id == BTN_SUPPLY_BASIC) {
+                    int32_t cardType = detect_basic_stack(p);   // ← §2-A
+                    if (cardType >= 0 &&
+                        game_action_buy_basic(cardType, upper ? PLAYER2 : PLAYER1) == 0)
+                        open = false;        // 買完就關視窗
+                }
+                else if (id == BTN_SUPPLY_SKILL) {
+                    int32_t cardType = detect_skill_stack(p, upper ? PLAYER2 : PLAYER1);  // ← §2-B
+                    if (cardType >= 0 &&
+                        game_action_buy_skill(cardType, upper ? PLAYER2 : PLAYER1) == 0)
+                        open = false;
+                }
+            }
         }
         SDL_SetRenderDrawColor(ren, 0, 0, 0, 180);
         SDL_RenderFillRect(ren, NULL);
@@ -489,10 +508,80 @@ SDL_Texture* card_data_get_texture(int32_t card_id, int32_t characters[], int32_
     }
 }
 
-// int32_t card_data_get_owner(int32_t card_id, int32_t* player)
-// {
-//     if (card_id < 0 || card_id >= CARD_NUM || player == NULL) return -1;
+int32_t detect_basic_stack(SDL_Point p)
+{
+    const int start_x = 400, start_y = 100;
+    const int offset_x = 120, offset_y = 160;
 
-//     *player = card_data[card_id].player;
-//     return 0;
-// }
+    // 3×3 三列三行（攻/防/移 × L1~L3）
+    int col = (p.x - start_x) / offset_x;
+    int row = (p.y - start_y) / offset_y;
+    if (col < 0 || col > 2 || row < 0 || row > 2) goto check_common;
+
+    // 點在卡片矩形內才算
+    SDL_Rect rect = { start_x + col*offset_x, start_y + row*offset_y, CARD_W, CARD_H };
+    if (!SDL_PointInRect(&p, &rect)) goto check_common;
+
+    static const eCardType attack[]   = {CARD_BASIC_ATTACK_L1,   CARD_BASIC_ATTACK_L2,   CARD_BASIC_ATTACK_L3};
+    static const eCardType defense[]  = {CARD_BASIC_DEFENSE_L1,  CARD_BASIC_DEFENSE_L2,  CARD_BASIC_DEFENSE_L3};
+    static const eCardType movement[] = {CARD_BASIC_MOVEMENT_L1, CARD_BASIC_MOVEMENT_L2, CARD_BASIC_MOVEMENT_L3};
+
+    const eCardType* table[] = {attack, defense, movement};
+    return table[row][col];
+
+check_common:
+    /* 通用卡（Common）是在 attack 第 4 欄 */
+    SDL_Rect rectCommon = { start_x + 3*offset_x, start_y, CARD_W, CARD_H };
+    if (SDL_PointInRect(&p, &rectCommon)) return CARD_BASIC_COMMON;
+
+    return -1;   // 點到空白
+}
+
+int32_t detect_skill_stack(SDL_Point p, int32_t player)
+{
+    const int x0 = 330, y0 = 120;
+    const int dx = CARD_W + 40, dy = CARD_H + 60;
+
+    // 3 固定列 = 攻、防、移
+    int col = (p.x - x0) / dx;
+    int row = (p.y - y0) / dy;   // row==0 → 技能，row==1 → finish
+    if (col < 0 || col > 2) return -1;
+
+    /* ① 技能三疊（五等級） */
+    if (row == 0) {
+        SDL_Rect top = { x0 + col*dx, y0, CARD_W, CARD_H };
+        if (!SDL_PointInRect(&p, &top)) return -1;
+
+        const int attack[] = {CARD_SKILL_ATTACK_EVOLUTION_L2,
+                              CARD_SKILL_ATTACK_BASE_L3,
+                              CARD_SKILL_ATTACK_EVOLUTION_L1,
+                              CARD_SKILL_ATTACK_BASE_L2,
+                              CARD_SKILL_ATTACK_BASE_L1};
+        const int defense[] = {CARD_SKILL_DEFENSE_EVOLUTION_L2,
+                               CARD_SKILL_DEFENSE_BASE_L3,
+                               CARD_SKILL_DEFENSE_EVOLUTION_L1,
+                               CARD_SKILL_DEFENSE_BASE_L2,
+                               CARD_SKILL_DEFENSE_BASE_L1};
+        const int movement[] = {CARD_SKILL_MOVEMENT_EVOLUTION_L2,
+                                CARD_SKILL_MOVEMENT_BASE_L3,
+                                CARD_SKILL_MOVEMENT_EVOLUTION_L1,
+                                CARD_SKILL_MOVEMENT_BASE_L2,
+                                CARD_SKILL_MOVEMENT_BASE_L1};
+        const int* stacks[] = {attack, defense, movement};
+
+        /* 回傳「這疊頂牌」= i = 0 */
+        return stacks[col][0];
+    }
+
+    /* ② 必殺牌三張 */
+    if (row == 1) {
+        SDL_Rect top = { x0 + col*dx, y0 + dy, CARD_W, CARD_H };
+        if (!SDL_PointInRect(&p, &top)) return -1;
+
+        const int finish[] = {CARD_SKILL_FINISH1,
+                              CARD_SKILL_FINISH2,
+                              CARD_SKILL_FINISH3};
+        return finish[col];
+    }
+    return -1;
+}

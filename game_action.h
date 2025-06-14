@@ -22,3 +22,7 @@ int32_t game_action_use_basic_card (int32_t card_idx, int32_t card_type, int32_t
 
 // 玩家 player 使用技能，技能卡編號 card_idx, token_num: 用幾個token（沒有就0）, move_direction: 1 or -1 or 0, player_use: 使用者, player_des: 目標，沒有目標的話就用 PLAYER_ORIGINAL
 int32_t game_action_use_skill_card (int32_t card_idx[], int32_t card_num, int32_t token_num, int32_t move_direction, int32_t player_use, int32_t player_des);
+
+int32_t game_action_buy_basic(eCardType type, int32_t player);
+
+int32_t game_action_buy_skill(eCardType type, int32_t player);

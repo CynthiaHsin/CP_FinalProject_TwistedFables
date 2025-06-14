@@ -11,3 +11,5 @@ void popup(enum BtnId id, bool upper, int32_t characters[]);
 void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int32_t characters[]);
 SDL_Texture* card_data_get_texture(int32_t card_id, int32_t characters[], int32_t player);
 void draw_stat_text(int x, int y, const char *utf8);
+int32_t detect_basic_stack(SDL_Point p);
+int32_t detect_skill_stack(SDL_Point p, int32_t player);
