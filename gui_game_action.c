@@ -5,7 +5,7 @@
 # include "gui_img_data.h"
 # include "gui_game_render.h"
 
-// return i meaning cards[i], NULL pointer mean no return value needed
+// return card index, NULL pointer mean no return value needed
 int32_t gui_action_choose_card (int32_t *pCard_type, int32_t *pMove_direction, int32_t *pPlayer_des, sCardData cards[], int32_t card_num, char * text){
 
     // int gap = 20, w = 105, h = 160;
