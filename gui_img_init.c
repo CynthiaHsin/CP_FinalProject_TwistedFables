@@ -132,23 +132,23 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     }
 
     // load red riding hood's fable cards
+    int32_t skill_rrh = 11; int32_t evo_rrh = 135;
     for(int i = CARD_SKILL_ATTACK_BASE_L1; i <= CARD_SKILL_FINISH3; i++){
         char path[64];
-        int32_t j = 11; int32_t evo = 135;
         if(i == CARD_SKILL_ATTACK_EVOLUTION_L1 || i == CARD_SKILL_DEFENSE_EVOLUTION_L1 || 
            i == CARD_SKILL_MOVEMENT_EVOLUTION_L1){ 
-            snprintf(path, sizeof(path), "assets/card/%d.png", evo);
+            snprintf(path, sizeof(path), "assets/card/%d.png", evo_rrh);
             rrh_card[i] = IMG_LoadTexture(ren, path);
-            evo++;
+            evo_rrh++;
         }
         else if(i == CARD_SKILL_ATTACK_EVOLUTION_L2 || i == CARD_SKILL_DEFENSE_EVOLUTION_L2 || 
                 i == CARD_SKILL_MOVEMENT_EVOLUTION_L2){
             rrh_card[i] = IMG_LoadTexture(ren, "assets/card/138.png");
         }
         else{
-            snprintf(path, sizeof(path), "assets/card/%d.png", j);
+            snprintf(path, sizeof(path), "assets/card/%d.png", skill_rrh);
             rrh_card[i] = IMG_LoadTexture(ren, path);
-            j++;
+            skill_rrh++;
         }
         memset(path, '\0', sizeof(path));
     }
@@ -164,23 +164,23 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     }
 
     // load snow white's fable cards
+    int32_t skill_sw = 23; int32_t evo_sw = 139;
     for(int i = CARD_SKILL_ATTACK_BASE_L1; i <= CARD_SKILL_FINISH3; i++){
         char path[64];
-        int32_t j = 23; int32_t evo = 139;
         if(i == CARD_SKILL_ATTACK_EVOLUTION_L1 || i == CARD_SKILL_DEFENSE_EVOLUTION_L1 || 
            i == CARD_SKILL_MOVEMENT_EVOLUTION_L1){ 
-            snprintf(path, sizeof(path), "assets/card/%d.png", evo);
+            snprintf(path, sizeof(path), "assets/card/%d.png", evo_sw);
             sw_card[i] = IMG_LoadTexture(ren, path);
-            evo++;
+            evo_sw++;
         }
         else if(i == CARD_SKILL_ATTACK_EVOLUTION_L2 || i == CARD_SKILL_DEFENSE_EVOLUTION_L2 || 
                 i == CARD_SKILL_MOVEMENT_EVOLUTION_L2){
             sw_card[i] = IMG_LoadTexture(ren, "assets/card/142.png");
         }
         else{
-            snprintf(path, sizeof(path), "assets/card/%d.png", j);
+            snprintf(path, sizeof(path), "assets/card/%d.png", skill_sw);
             sw_card[i] = IMG_LoadTexture(ren, path);
-            j++;
+            skill_sw++;
         }
         memset(path, '\0', sizeof(path));
     }
@@ -196,23 +196,23 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     }
 
     // load mulan's fable cards
+    int32_t skill_mu = 59; int32_t evo_mu = 151;
     for(int i = CARD_SKILL_ATTACK_BASE_L1; i <= CARD_SKILL_FINISH3; i++){
         char path[64];
-        int32_t j = 59; int32_t evo = 151;
         if(i == CARD_SKILL_ATTACK_EVOLUTION_L1 || i == CARD_SKILL_DEFENSE_EVOLUTION_L1 || 
            i == CARD_SKILL_MOVEMENT_EVOLUTION_L1){ 
-            snprintf(path, sizeof(path), "assets/card/%d.png", evo);
+            snprintf(path, sizeof(path), "assets/card/%d.png", evo_mu);
             mulan_card[i] = IMG_LoadTexture(ren, path);
-            evo++;
+            evo_mu++;
         }
         else if(i == CARD_SKILL_ATTACK_EVOLUTION_L2 || i == CARD_SKILL_DEFENSE_EVOLUTION_L2 || 
                 i == CARD_SKILL_MOVEMENT_EVOLUTION_L2){
             mulan_card[i] = IMG_LoadTexture(ren, "assets/card/154.png");
         }
         else{
-            snprintf(path, sizeof(path), "assets/card/%d.png", j);
+            snprintf(path, sizeof(path), "assets/card/%d.png", skill_mu);
             mulan_card[i] = IMG_LoadTexture(ren, path);
-            j++;
+            skill_mu++;
         }
         memset(path, '\0', sizeof(path));
     }
@@ -228,23 +228,23 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     }
 
     // load kaguya's fable cards
+    int32_t skill_ka = 71; int32_t evo_ka = 155;
     for(int i = CARD_SKILL_ATTACK_BASE_L1; i <= CARD_SKILL_FINISH3; i++){
         char path[64];
-        int32_t j = 71; int32_t evo = 155;
         if(i == CARD_SKILL_ATTACK_EVOLUTION_L1 || i == CARD_SKILL_DEFENSE_EVOLUTION_L1 || 
            i == CARD_SKILL_MOVEMENT_EVOLUTION_L1){ 
-            snprintf(path, sizeof(path), "assets/card/%d.png", evo);
+            snprintf(path, sizeof(path), "assets/card/%d.png", evo_ka);
             kaguya_card[i] = IMG_LoadTexture(ren, path);
-            evo++;
+            evo_ka++;
         }
         else if(i == CARD_SKILL_ATTACK_EVOLUTION_L2 || i == CARD_SKILL_DEFENSE_EVOLUTION_L2 || 
                 i == CARD_SKILL_MOVEMENT_EVOLUTION_L2){
             kaguya_card[i] = IMG_LoadTexture(ren, "assets/card/158.png");
         }
         else{
-            snprintf(path, sizeof(path), "assets/card/%d.png", j);
+            snprintf(path, sizeof(path), "assets/card/%d.png", skill_ka);
             kaguya_card[i] = IMG_LoadTexture(ren, path);
-            j++;
+            skill_ka++;
         }
         memset(path, '\0', sizeof(path));
     }
@@ -260,25 +260,25 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     }
 
     // load match girl's fable cards
+    int32_t skill_mg = 95; int32_t evo_mg = 163; int32_t evo2_mg = 166;
     for(int i = CARD_SKILL_ATTACK_BASE_L1; i <= CARD_SKILL_FINISH3; i++){
         char path[64];
-        int32_t j = 95; int32_t evo = 163; int32_t evo2 = 166;
         if(i == CARD_SKILL_ATTACK_EVOLUTION_L1 || i == CARD_SKILL_DEFENSE_EVOLUTION_L1 || 
            i == CARD_SKILL_MOVEMENT_EVOLUTION_L1){ 
-            snprintf(path, sizeof(path), "assets/card/%d.png", evo);
+            snprintf(path, sizeof(path), "assets/card/%d.png", evo_mg);
             mg_card[i] = IMG_LoadTexture(ren, path);
-            evo++;
+            evo_mg++;
         }
         else if(i == CARD_SKILL_ATTACK_EVOLUTION_L2 || i == CARD_SKILL_DEFENSE_EVOLUTION_L2 || 
                 i == CARD_SKILL_MOVEMENT_EVOLUTION_L2){
-            snprintf(path, sizeof(path), "assets/card/%d.png", evo2);
+            snprintf(path, sizeof(path), "assets/card/%d.png", evo2_mg);
             mg_card[i] = IMG_LoadTexture(ren, path);
-            evo2++;
+            evo2_mg++;
         }
         else{
-            snprintf(path, sizeof(path), "assets/card/%d.png", j);
+            snprintf(path, sizeof(path), "assets/card/%d.png", skill_mg);
             mg_card[i] = IMG_LoadTexture(ren, path);
-            j++;
+            skill_mg++;
         }
         memset(path, '\0', sizeof(path));
     }
@@ -303,23 +303,23 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     }
 
     // load dorothy's fable cards
+    int32_t skill_do = 107; int32_t evo_do = 169;
     for(int i = CARD_SKILL_ATTACK_BASE_L1; i <= CARD_SKILL_FINISH3; i++){
         char path[64];
-        int32_t j = 107; int32_t evo = 169;
         if(i == CARD_SKILL_ATTACK_EVOLUTION_L1 || i == CARD_SKILL_DEFENSE_EVOLUTION_L1 || 
            i == CARD_SKILL_MOVEMENT_EVOLUTION_L1){ 
-            snprintf(path, sizeof(path), "assets/card/%d.png", evo);
+            snprintf(path, sizeof(path), "assets/card/%d.png", evo_do);
             dorothy_card[i] = IMG_LoadTexture(ren, path);
-            evo++;
+            evo_do++;
         }
         else if(i == CARD_SKILL_ATTACK_EVOLUTION_L2 || i == CARD_SKILL_DEFENSE_EVOLUTION_L2 || 
                 i == CARD_SKILL_MOVEMENT_EVOLUTION_L2){
             dorothy_card[i] = IMG_LoadTexture(ren, "assets/card/172.png");
         }
         else{
-            snprintf(path, sizeof(path), "assets/card/%d.png", j);
+            snprintf(path, sizeof(path), "assets/card/%d.png", skill_do);
             dorothy_card[i] = IMG_LoadTexture(ren, path);
-            j++;
+            skill_do++;
         }
         memset(path, '\0', sizeof(path));
     }

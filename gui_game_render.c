@@ -3,29 +3,14 @@
 #include "game_data_card.h"
 #include "game_data.h"
 
-// extern SDL_Renderer* ren; 
-// extern SDL_Texture* track;
-// extern SDL_Texture* plate;
-// extern SDL_Texture* sheet[];
-// extern SDL_Texture* token[];
-// extern SDL_Texture* card_back;
-// extern SDL_Texture* character[];
-// extern SDL_Texture* basic_card[];
-// extern SDL_Texture* rrh_card[];
-// extern SDL_Texture* sw_card[];
-// extern SDL_Texture* mulan_card[];
-// extern SDL_Texture* kaguya_card[];
-// extern SDL_Texture* mg_card[];
-// extern SDL_Texture* dorothy_card[];
-
 void draw_board(int32_t characters[]);
 void draw_buttons(void);
 bool handle_button_click(SDL_Point p, int32_t characters[]);
 void draw_button_text(SDL_Rect rect, const char* text);
 void popup(enum BtnId id, bool upper, int32_t characters[]);
-void render_player_skills_only(SDL_Renderer* ren, int32_t player, int32_t characters[]);
 void draw_token_row(SDL_Texture* tex, SDL_Rect rowStart, int tokenCnt, int tokenFilled);
-void draw_stack(SDL_Renderer* ren, SDL_Texture** pool, const int types[], int n, int x, int y);
+void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int32_t characters[]);
+SDL_Texture* card_data_get_texture(int32_t card_id, int32_t characters[], int32_t player);
 
 void game_scene_loop(int32_t characters[])
 {
@@ -205,16 +190,13 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
             }
             case BTN_TWIST: {
                 int player = upper ? PLAYER2 : PLAYER1;
-                int handCnt = 5;          
-                int gap = 20, w = 105, h = 160;
-                for (int i = 0; i < handCnt; ++i) {
-                    SDL_Rect d = { win.x+50 + i*(w+gap), win.y+80, w, h };
-                    if (player == PLAYER1) {
-                        SDL_RenderCopy(ren, basic_card[CARD_BASIC_ATTACK_L1], NULL, &d);
-                    } else {
-                        SDL_RenderCopy(ren, card_back, NULL, &d);
-                    }
-                }
+                // 清畫面，如果這邊是正式畫面主 loop 可以省略
+                SDL_RenderClear(ren);
+
+                // 渲染指定玩家的手牌
+                render_hand(ren, player, card_back, characters);
+
+                SDL_RenderPresent(ren);  // 顯示畫面
                 break;
             }
             case BTN_DECK: {
@@ -319,7 +301,7 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                         sCardData list[4];
                         int32_t count = 0;
                         game_data_search_cards(list, &count,
-                            PLAYER_ORIGINAL, CARD_SPACE_SHOP, stacks[col][i], -1);
+                            player, CARD_SPACE_SHOP, stacks[col][i], -1);
                         if (count > 0) {
                             SDL_Rect dst = {
                                 x0 + col * dx + i * 2,   // 疊起來稍微偏移
@@ -328,6 +310,9 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                             };
                             SDL_RenderCopy(ren, tex[stacks[col][i]], NULL, &dst);
                         }
+                        // if (count == 0) {
+                        //     printf("⚠️ 未找到卡牌: type = %d, player = %d\n", stacks[col][i], player);
+                        // }
                     }
                 }
 
@@ -336,7 +321,7 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                     sCardData list[2];
                     int32_t count = 0;
                     game_data_search_cards(list, &count,
-                        PLAYER_ORIGINAL, CARD_SPACE_SHOP, finish[i], -1);
+                        player, CARD_SPACE_SHOP, finish[i], -1);
                     if (count > 0) {
                         SDL_Rect dst = {
                             x0 + i * dx,
@@ -357,65 +342,8 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
     SDL_SetRenderDrawBlendMode(ren, SDL_BLENDMODE_NONE);
 }
 
-void render_player_skills_only(SDL_Renderer* ren, int32_t player, int32_t characters[]) {
-    SDL_Texture** skill_cards = NULL;
-    switch (characters[player]) {
-        case CHARACTER_RED_RIDING_HOOD:     skill_cards = rrh_card; break;
-        case CHARACTER_SNOW_WHITE:          skill_cards = sw_card; break;
-        case CHARACTER_DOROTHY:             skill_cards = dorothy_card; break;
-        case CHARACTER_KAGUYA:              skill_cards = kaguya_card; break;
-        case CHARACTER_MATCH_GIRL:          skill_cards = mg_card; break;
-        case CHARACTER_MULAN:               skill_cards = mulan_card; break;
-        default: return;
-    }
-
-    const int attack_cards[5] = {
-        CARD_SKILL_ATTACK_BASE_L1, CARD_SKILL_ATTACK_BASE_L2,
-        CARD_SKILL_ATTACK_EVOLUTION_L1, CARD_SKILL_ATTACK_BASE_L3,
-        CARD_SKILL_ATTACK_EVOLUTION_L2
-    };
-    const int defense_cards[5] = {
-        CARD_SKILL_DEFENSE_BASE_L1, CARD_SKILL_DEFENSE_BASE_L2,
-        CARD_SKILL_DEFENSE_EVOLUTION_L1, CARD_SKILL_DEFENSE_BASE_L3,
-        CARD_SKILL_DEFENSE_EVOLUTION_L2
-    };
-    const int movement_cards[5] = {
-        CARD_SKILL_MOVEMENT_BASE_L1, CARD_SKILL_MOVEMENT_BASE_L2,
-        CARD_SKILL_MOVEMENT_EVOLUTION_L1, CARD_SKILL_MOVEMENT_BASE_L3,
-        CARD_SKILL_MOVEMENT_EVOLUTION_L2
-    };
-    const int finish_cards[3] = {
-        CARD_SKILL_FINISH1, CARD_SKILL_FINISH2, CARD_SKILL_FINISH3
-    };
-
-    // int x0 = 100, y0 = 200, dx = 110, dy = 150;
-    const int dx = 140;          // 三疊彼此水平間距
-    const int dy = 190;          // Epic 與 Skill 疊之間縱向間距
-    const int x0 = 400;          // 左上角
-    const int y0 = 180;
-
-    // for (int i = 0; i < 5; ++i) {
-    //     SDL_Rect ra = { x0 + i * dx, y0 + 0 * dy, CARD_W, CARD_H };
-    //     SDL_Rect rd = { x0 + i * dx, y0 + 1 * dy, CARD_W, CARD_H };
-    //     SDL_Rect rm = { x0 + i * dx, y0 + 2 * dy, CARD_W, CARD_H };
-    //     SDL_RenderCopy(ren, skill_cards[attack_cards[i]], NULL, &ra);
-    //     SDL_RenderCopy(ren, skill_cards[defense_cards[i]], NULL, &rd);
-    //     SDL_RenderCopy(ren, skill_cards[movement_cards[i]], NULL, &rm);
-    // }
-    // draw_stack(ren, skill_cards, attack_cards, 5, x0 + 0*dx, y0);
-    // draw_stack(ren, skill_cards, defense_cards, 5, x0 + 1*dx, y0);
-    // draw_stack(ren, skill_cards, movement_cards, 5, x0 + 2*dx, y0);
-
-    for (int i = 0; i < 3; ++i) {
-        // SDL_Rect rf = { x0 + i * dx, y0 + 3 * dy, CARD_W, CARD_H };
-        SDL_Rect rf = { x0 + i*dx, y0 + dy, CARD_W, CARD_H };
-        SDL_RenderCopy(ren, skill_cards[finish_cards[i]], NULL, &rf);
-    }
-}
-
 // 把一種類型的 token 連續畫在一條水平列上
-void draw_token_row(SDL_Texture* tex, SDL_Rect rowStart,
-                           int tokenCnt, int tokenFilled)
+void draw_token_row(SDL_Texture* tex, SDL_Rect rowStart, int tokenCnt, int tokenFilled)
 {
     for (int i = 0; i < tokenCnt; ++i) {
         SDL_Rect r = rowStart;
@@ -425,27 +353,86 @@ void draw_token_row(SDL_Texture* tex, SDL_Rect rowStart,
     }
 }
 
-void draw_stack(SDL_Renderer* ren, SDL_Texture** pool, const int types[], int n, int x, int y)
+void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int32_t characters[])
 {
-    const int offset = 3;      // 疊牌位移
-    SDL_Rect dst = { x, y, CARD_W, CARD_H };
+    sCardData cards[CARD_SPACE_HAND];  // 預設最多不會超過手牌上限
+    int32_t num = 0;
 
-    /* 由上往下找商店裡還剩哪張就畫哪張 */
-    for (int i = 0; i < n; ++i) {
-        sCardData list[4];
-        int32_t cnt = 0;
+    printf("🔍 呼叫查詢手牌: player=%d\n", player);
+    // ✅ 查詢該玩家的手牌（space = CARD_SPACE_HAND）
+    game_data_search_cards(cards, &num, player, CARD_SPACE_HAND, CARD_ORIGINAL, CARD_ORIGINAL);
+    printf("📦 查到張數 = %d\n", num);
 
-        if (types[i] < 0 || types[i] >= CARD_TYPE_NUM || pool[types[i]] == NULL) {
-            printf("Skipping invalid or missing texture at types[%d] = %d\n", i, types[i]);
-            continue;
-        }
+    int gap = 20, w = 105, h = 160;
+    int base_x = 50;
+    int base_y = (player == PLAYER1) ? 500 : 100;  // 玩家在下面，對手在上面
 
-        game_data_search_cards(list, &cnt, PLAYER_ORIGINAL, CARD_SPACE_SHOP, types[i], -1);
-        if (cnt > 0) {
-            SDL_SetTextureAlphaMod(pool[types[i]], 255 - i*10);
-            SDL_RenderCopy(ren, pool[types[i]], NULL, &dst);
-            dst.x += offset;   // 下一張稍微往右下
-            dst.y += offset;
+    for (int i = 0; i < num; ++i) {
+        int32_t card_id = cards[i].index;
+        printf("player %d hand[%d] = card_id %d\n", player, i, card_id);
+
+        SDL_Rect d = { base_x + i * (w + gap), base_y, w, h };
+
+        if (player == PLAYER1) {
+            SDL_Texture* tex = card_data_get_texture(card_id, characters, player);
+            if (tex != NULL) SDL_RenderCopy(ren, tex, NULL, &d);
+        } else {
+            SDL_RenderCopy(ren, card_back, NULL, &d);
         }
     }
+    // sPlayerData pdata;
+    // if (player_data_get(&pdata, player) < 0) return;
+
+    // int gap = 20, w = 105, h = 160;
+    // int base_x = 50;
+    // int base_y = (player == PLAYER1) ? 500 : 100;  // 玩家在下面，對手在上面
+    // int count = 0;
+
+    // for (int i = 0; i < CARD_SPACE_HAND; ++i) {
+    //     int32_t card_id = pdata.card_on[i];
+    //     if (card_id == CARD_UNDEFINED) continue;
+    //     printf("player %d hand[%d] = card_id %d\n", player, i, card_id);
+
+    //     SDL_Rect d = { base_x + count * (w + gap), base_y, w, h };
+
+    //     if (player == PLAYER1) {
+    //         // 顯示卡片正面
+    //         SDL_Texture* tex = card_data_get_texture(card_id, characters, player);
+    //         if (tex != NULL) SDL_RenderCopy(ren, tex, NULL, &d);
+    //     } else {
+    //         // 顯示卡背
+    //         SDL_RenderCopy(ren, card_back, NULL, &d);
+    //     }
+    //     count++;
+    // }
 }
+
+SDL_Texture* card_data_get_texture(int32_t card_id, int32_t characters[], int32_t player)
+{
+    if (card_id < 0 || card_id >= CARD_NUM) return NULL;
+
+    if (card_id >= CARD_BASIC_ATTACK_L1 && card_id <= CARD_BASIC_DEFENSE_L3) {
+        return basic_card[card_id];  // 基本牌：ID 可當 index
+    }
+
+    // int32_t owner;
+    // if (card_data_get_owner(card_id, &owner) < 0) return NULL;
+
+    switch (characters[player]) {
+        case CHARACTER_RED_RIDING_HOOD:     return rrh_card[card_id];
+        case CHARACTER_SNOW_WHITE: return sw_card[card_id];
+        case CHARACTER_MULAN:   return mulan_card[card_id];
+        case CHARACTER_KAGUYA:  return kaguya_card[card_id];
+        case CHARACTER_DOROTHY: return dorothy_card[card_id];
+        case CHARACTER_MATCH_GIRL: return mg_card[card_id];
+        default: return NULL;
+    }
+}
+
+// int32_t card_data_get_owner(int32_t card_id, int32_t* player)
+// {
+//     if (card_id < 0 || card_id >= CARD_NUM || player == NULL) return -1;
+
+//     *player = card_data[card_id].player;
+//     return 0;
+// }
