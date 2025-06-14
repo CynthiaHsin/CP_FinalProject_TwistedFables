@@ -20,6 +20,7 @@ typedef struct _sPlayerData{
     int32_t card_on[CARD_NUM];
 } sPlayerData;
 
+int32_t player_data_write_back(int32_t player, sPlayerData src);
 
 int32_t player_data_set_character (int32_t player, int32_t character);
 int32_t player_data_set_card (int32_t player, int32_t card_idx);

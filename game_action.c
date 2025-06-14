@@ -12,6 +12,8 @@ int32_t game_action_actions_allow (int32_t allow[], int32_t player){
     // 檢查：專注
     if (status.actions_num[player]) allow[ACTION_FOCUS]= 0;
     
+    // 檢查：買牌
+    if (status.actions_num[player]) allow[ACTION_BUY] = 0;
 }
 
 int32_t game_action_buy_card (int32_t card_idx, int32_t player){
@@ -20,6 +22,12 @@ int32_t game_action_buy_card (int32_t card_idx, int32_t player){
     card_data_get (&card, card_idx);
     sPlayerData player_data;
     player_data_get (&player_data, player);
+
+    sStatusData st;  status_data_get(&st);
+    if (st.actions_num[player]) {
+        debug_print("already bought this turn\n");
+        return -1;
+    }
     
     // ensure correct card
     if (card.space==CARD_SPACE_DELETE){
@@ -49,7 +57,8 @@ int32_t game_action_buy_card (int32_t card_idx, int32_t player){
 
     player_data.power-= card.cost;
     card_data_set (card.index, 1, CARD_SPACE_THROW, CARD_ORIGINAL, player);
-    player_data_set (player, player_data);
+    // player_data_set (player, player_data);
+    player_data_write_back(player, player_data); 
 
     if (card_idx+1 >= CARD_NUM) return 0;
     if (card.type<CARD_SKILL_ATTACK_BASE_L1 || card.type>CARD_SKILL_MOVEMENT_EVOLUTION_L2) return 0;
