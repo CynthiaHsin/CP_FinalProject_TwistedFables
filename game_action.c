@@ -43,6 +43,7 @@ int32_t game_action_buy_card (int32_t card_idx, int32_t player){
 
     // ensure is the only finish card
     if (card.type>=CARD_SKILL_FINISH1 && card.type<=CARD_SKILL_FINISH3){
+        if (player_data.hp > player_data.hp_finish) return -1;
         sCardData cards[3];
         int32_t n= 0;
         game_data_search_cards (cards, &n, player, CARD_SPACE_ORIGINAL, CARD_SKILL_FINISH1, CARD_COST_ORIGINAL);
@@ -55,7 +56,9 @@ int32_t game_action_buy_card (int32_t card_idx, int32_t player){
         }
     }
 
-
+    char type_name[NAME_MAX];
+    card_data_get_type_name(type_name, card.index);
+    debug_print ("buy card: %s (cost: %d/%d)\n", type_name, card.cost, player_data.power);
     player_data.power-= card.cost;
     card_data_set (card.index, 1, CARD_SPACE_THROW, CARD_ORIGINAL, player);
     // player_data_set (player, player_data);

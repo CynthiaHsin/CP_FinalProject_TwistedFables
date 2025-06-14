@@ -255,6 +255,7 @@ int32_t card_data_get (sCardData *pCard, int32_t idx){
     pCard->space = card_data[idx].space;
     pCard->type  = card_data[idx].type;
     pCard->player = card_data[idx].player;
+    pCard->cost = card_data[idx].cost;
     return 0;
 }
 
