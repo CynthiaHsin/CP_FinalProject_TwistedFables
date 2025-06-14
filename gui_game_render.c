@@ -7,7 +7,6 @@ void draw_buttons(void);
 bool handle_button_click(SDL_Point p, int32_t characters[]);
 void draw_button_text(SDL_Rect rect, const char* text);
 void popup(enum BtnId id, bool upper, int32_t characters[]);
-void draw_token_row(SDL_Texture* tex, SDL_Rect rowStart, int tokenCnt, int tokenFilled);
 void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int32_t characters[]);
 SDL_Texture* card_data_get_texture(int32_t card_id, int32_t characters[], int32_t player);
 
@@ -171,11 +170,10 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                     start_hp.w = TOKEN_W;
                     start_hp.h = TOKEN_H;
                 }
-                // SDL_Rect start_finish  = { dst.x + PLATE_PADDING_X, ROW_HP_Y(dst)-18, TOKEN_W, TOKEN_H };
                 SDL_Rect start_finish  = { dst.x + PLATE_PADDING_X + pd.hp_finish*18, ROW_HP_Y(dst)-18, TOKEN_W, TOKEN_H };
-                // SDL_Rect start_def     = { dst.x + PLATE_PADDING_X+18*26, ROW_HP_Y(dst)+18*3, TOKEN_W, TOKEN_H };
+
                 SDL_Rect start_def     = { dst.x + PLATE_PADDING_X+18*26, ROW_HP_Y(dst)+18*3+pd.defense*18, TOKEN_W, TOKEN_H };
-                // SDL_Rect start_energy  = { dst.x + PLATE_PADDING_X-18, ROW_HP_Y(dst)+18*17, TOKEN_W, TOKEN_H };
+
                 SDL_Rect start_energy  = { dst.x + PLATE_PADDING_X-18+pd.power*18, ROW_HP_Y(dst)+18*17, TOKEN_W, TOKEN_H };
 
                 SDL_RenderCopy(ren, token[2], NULL, &start_hp);
@@ -307,7 +305,7 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                             SDL_RenderCopy(ren, tex[stacks[col][i]], NULL, &dst);
                         }
                         // if (count == 0) {
-                        //     printf("⚠️ 未找到卡牌: type = %d, player = %d\n", stacks[col][i], player);
+                        //     printf("未找到卡牌: type = %d, player = %d\n", stacks[col][i], player);
                         // }
                     }
                 }
@@ -364,17 +362,6 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
         SDL_Delay(16);
     }
     SDL_SetRenderDrawBlendMode(ren, SDL_BLENDMODE_NONE);
-}
-
-// 把一種類型的 token 連續畫在一條水平列上
-void draw_token_row(SDL_Texture* tex, SDL_Rect rowStart, int tokenCnt, int tokenFilled)
-{
-    for (int i = 0; i < tokenCnt; ++i) {
-        SDL_Rect r = rowStart;
-        r.x += i * TOKEN_W;
-        if (i < tokenFilled)      // 已獲得/已損失 才顯示
-            SDL_RenderCopy(ren, tex, NULL, &r);
-    }
 }
 
 void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int32_t characters[])
