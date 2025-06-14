@@ -1,4 +1,6 @@
 # pragma once
+# include "gui_sdl_config.h"
+# include "gui_img_data.h"
 
 void game_scene_loop(int32_t characters[]);
 void draw_board(int32_t characters[]);

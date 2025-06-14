@@ -1,6 +1,8 @@
 # include "main.h"
 # include "game_data.h"
 
+int32_t gCharacters[PLAYER_NUM];
+
 int32_t game_data_init (int32_t mode, int32_t characters[]){
 
     // status init

@@ -6,6 +6,8 @@
 # include "game_data_status.h"
 # include "game_data_map.h"
 
+extern int32_t gCharacters[PLAYER_NUM];
+
 int32_t game_data_init (int32_t mode, int32_t characters[]);
 
 // basic

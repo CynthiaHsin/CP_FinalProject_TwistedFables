@@ -1,6 +1,9 @@
 # include "game_round.h"
 # include "game_action.h"
 # include "game_data.h"
+# include "gui_game_render.h"
+
+extern int32_t gCharacters[];
 
 int32_t game_round(){
     sStatusData status;
@@ -86,7 +89,7 @@ int32_t game_round_clear (int32_t mode, int32_t player){
 
 int32_t game_round_action (int32_t mode, int32_t player){
     // int32_t ui_round (int32_t player);
-    game_scene_loop(characters);
+    game_scene_loop(gCharacters);
     return 0;
 }
 

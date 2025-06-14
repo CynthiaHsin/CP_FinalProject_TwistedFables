@@ -1,4 +1,5 @@
 # include "gui_game.h"
+# include "game_data.h"
 
 SDL_Window* win;
 SDL_Renderer* ren;
@@ -79,6 +80,8 @@ int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
     else if(character_selected == 4){ characters[PLAYER1] = CHARACTER_KAGUYA; }
     else if(character_selected == 5){ characters[PLAYER1] = CHARACTER_MATCH_GIRL; }
     else if(character_selected == 6){ characters[PLAYER1] = CHARACTER_DOROTHY; }
+
+    memcpy(gCharacters, characters, sizeof(gCharacters));
 
     // start game
     game_scene_loop(characters);
