@@ -15,7 +15,8 @@ int32_t game_action_actions_allow (int32_t allow[], int32_t player){
 }
 
 int32_t game_action_buy_card (int32_t card_idx, int32_t player){
-    
+    // debug_print ("action buy:\n");
+    // card_data_print (card_idx, 1);
     sCardData card;
     card_data_get (&card, card_idx);
     sPlayerData player_data;
