@@ -1,6 +1,5 @@
 #include "gui_sdl_config.h"
 #include "gui_img_data.h"
-#include "game_data_card.h"
 #include "game_data.h"
 
 void draw_board(int32_t characters[]);
@@ -329,6 +328,34 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                             CARD_W, CARD_H
                         };
                         SDL_RenderCopy(ren, tex[finish[i]], NULL, &dst);
+                    }
+                }
+                break;
+            }
+            case BTN_CARD_USED: {
+                int32_t player = upper ? PLAYER2 : PLAYER1;
+                int x0 = 0, y0 = 0;
+                int dx = CARD_W + 40, dy = CARD_H + 60;
+                int r_num_max= 5;
+                int c_num_max= 10;
+                SDL_Texture** tex;
+                sCardData cards[CARD_NUM];
+                int32_t card_num= 0;
+                int32_t count= 0;
+                game_data_search_cards (cards, &count, player, CARD_SPACE_USE, CARD_ORIGINAL, -1);
+                card_num+= count;
+                game_data_search_cards (cards+card_num, &count, player, CARD_SPACE_USE_LASTING, CARD_ORIGINAL, -1);
+                card_num+= count;
+                for (int32_t i=0; i<r_num_max; i++){
+                    for (int32_t j=0; i*c_num_max+j<card_num && j<c_num_max; j++){
+                        SDL_Rect dst = {
+                            x0 + j * dx ,   // 疊起來稍微偏移
+                            y0 + i * dy ,
+                            CARD_W, CARD_H
+                        };
+                        int32_t type= cards[i*c_num_max+j].type;
+                        gui_imd_data_texture_get (&tex, type, player);
+                        SDL_RenderCopy(ren, tex[type], NULL, &dst);
                     }
                 }
                 break;

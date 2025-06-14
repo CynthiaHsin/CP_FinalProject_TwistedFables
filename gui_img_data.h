@@ -71,6 +71,7 @@ enum BtnId {
     BTN_DECK, 
     BTN_SUPPLY_BASIC,
     BTN_SUPPLY_SKILL, 
+    BTN_CARD_USED,
     BTN_NUM 
 };
 
@@ -99,3 +100,5 @@ static inline SDL_Rect btn_rect(int idx, bool upper)
     }
     return r;
 }
+
+int gui_imd_data_texture_get (SDL_Texture*** pTex, int card_type, int32_t player);
