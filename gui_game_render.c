@@ -9,6 +9,7 @@ void draw_button_text(SDL_Rect rect, const char* text);
 void popup(enum BtnId id, bool upper, int32_t characters[]);
 void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int32_t characters[]);
 SDL_Texture* card_data_get_texture(int32_t card_id, int32_t characters[], int32_t player);
+void draw_stat_text(int x, int y, const char *utf8);
 
 bool gui_round_running;
 
@@ -128,6 +129,21 @@ void draw_button_text(SDL_Rect rect, const char* text) {
     SDL_DestroyTexture(text_texture);
 }
 
+void draw_stat_text(int x, int y, const char *utf8)
+{
+    SDL_Color white = {255, 255, 255, 255};           // 文字顏色
+    SDL_Surface *surf = TTF_RenderUTF8_Blended(font_main, utf8, white);
+    if (!surf) { printf("TTF_RenderUTF8 failed: %s\n", TTF_GetError()); return; }
+
+    SDL_Texture *tex = SDL_CreateTextureFromSurface(ren, surf);
+    SDL_Rect dst = {x, y, surf->w, surf->h};
+
+    SDL_FreeSurface(surf);                            // surface 用完就可以丟
+    SDL_RenderCopy(ren, tex, NULL, &dst);
+    SDL_DestroyTexture(tex);                          // texture 也記得釋放
+}
+
+
 void popup(enum BtnId id, bool upper, int32_t characters[])
 {
     bool open = true;
@@ -186,6 +202,27 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                 if(pd.hp > pd.hp_finish){SDL_RenderCopy(ren, token[1], NULL, &start_finish);}
                 SDL_RenderCopy(ren, token[3], NULL, &start_energy);
                 SDL_RenderCopy(ren, token[0], NULL, &start_def);
+
+                /* ==== 文字說明 ==== */
+                char buf[64];
+                int textX = dst.x + 30;              // 與 plate 左邊留一點 margin
+                int textY = dst.y + 400;             // token 區塊下面再往下 20~30px
+
+                // 血量
+                snprintf(buf, sizeof(buf), "HP: %d / %d", pd.hp, pd.hp_max);
+                draw_stat_text(textX, textY, buf);   textY += 24;
+
+                // 防禦
+                snprintf(buf, sizeof(buf), "DEFENSE: %d / %d", pd.defense, pd.defense_max);
+                draw_stat_text(textX, textY, buf);   textY += 24;
+
+                // 能量
+                snprintf(buf, sizeof(buf), "ENERGY: %d / %d", pd.power, pd.power_max);
+                draw_stat_text(textX, textY, buf);   textY += 24;
+
+                // 必殺閥值（這裡假設用 hp_finish，若你要用別的欄位就換）
+                snprintf(buf, sizeof(buf), "FINISH: %d", pd.hp_finish);
+                draw_stat_text(textX, textY, buf);
                 break;
             }
             case BTN_TWIST: {
