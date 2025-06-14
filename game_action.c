@@ -200,3 +200,15 @@ int32_t game_action_use_skill_card (int32_t card_idx[], int32_t card_num, int32_
     
     return 0;
 }
+
+int32_t game_action_buy_basic(eCardType type, int32_t player){
+    int32_t idx = game_data_get_shop_top(PLAYER_ORIGINAL, type);
+    if (idx < 0) return -1;      // 該疊空了
+    return game_action_buy_card(idx, player);
+}
+
+int32_t game_action_buy_skill(eCardType type, int32_t player){
+    int32_t idx = game_data_get_shop_top(player, type);
+    if (idx < 0) return -1;
+    return game_action_buy_card(idx, player);
+}

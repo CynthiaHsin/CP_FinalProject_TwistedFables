@@ -65,3 +65,15 @@ int32_t game_data_get_player (sPlayerData *pPlayer_data, int32_t player){
 int32_t game_data_deck_card_fold (int32_t player, int32_t idx){
     return deck_data_move_card (player, idx,CARD_SPACE_THROW);
 }
+
+int32_t game_data_get_shop_top(int32_t player, int32_t type){
+    sCardData c, answer = { .index = -1 };
+    for (int32_t i = 0; i < CARD_NUM; i++){
+        card_data_get(&c, i);
+        if (c.space != CARD_SPACE_SHOP)                        continue;
+        if (type != CARD_ORIGINAL && c.type != type)           continue;
+        if (player != PLAYER_ORIGINAL && c.player != player)   continue;
+        answer = c;                                            break;
+    }
+    return answer.index;
+}

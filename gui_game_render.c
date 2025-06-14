@@ -1,15 +1,19 @@
 #include "gui_sdl_config.h"
 #include "gui_img_data.h"
 #include "game_data.h"
+#include "game_action.h"
 
 void draw_board(int32_t characters[]);
 void draw_buttons(void);
 bool handle_button_click(SDL_Point p, int32_t characters[]);
 void draw_button_text(SDL_Rect rect, const char* text);
 void popup(enum BtnId id, bool upper, int32_t characters[]);
-void draw_token_row(SDL_Texture* tex, SDL_Rect rowStart, int tokenCnt, int tokenFilled);
 void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int32_t characters[]);
 SDL_Texture* card_data_get_texture(int32_t card_id, int32_t player);
+
+void draw_stat_text(int x, int y, const char *utf8);
+int32_t detect_basic_stack(SDL_Point p);
+int32_t detect_skill_stack(SDL_Point p, int32_t player);
 
 bool gui_round_running;
 
@@ -132,6 +136,21 @@ void draw_button_text(SDL_Rect rect, const char* text) {
     SDL_DestroyTexture(text_texture);
 }
 
+void draw_stat_text(int x, int y, const char *utf8)
+{
+    SDL_Color white = {255, 255, 255, 255};           // 文字顏色
+    SDL_Surface *surf = TTF_RenderUTF8_Blended(font_main, utf8, white);
+    if (!surf) { printf("TTF_RenderUTF8 failed: %s\n", TTF_GetError()); return; }
+
+    SDL_Texture *tex = SDL_CreateTextureFromSurface(ren, surf);
+    SDL_Rect dst = {x, y, surf->w, surf->h};
+
+    SDL_FreeSurface(surf);                            // surface 用完就可以丟
+    SDL_RenderCopy(ren, tex, NULL, &dst);
+    SDL_DestroyTexture(tex);                          // texture 也記得釋放
+}
+
+
 void popup(enum BtnId id, bool upper, int32_t characters[])
 {
     bool open = true;
@@ -144,6 +163,22 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
             if (e.type == SDL_QUIT) exit(0);
             else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)
                 open = false;
+            else if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) {
+                SDL_Point p = { e.button.x, e.button.y };
+
+                if (id == BTN_SUPPLY_BASIC) {
+                    int32_t cardType = detect_basic_stack(p);   // ← §2-A
+                    if (cardType >= 0 &&
+                        game_action_buy_basic(cardType, upper ? PLAYER2 : PLAYER1) == 0)
+                        open = false;        // 買完就關視窗
+                }
+                else if (id == BTN_SUPPLY_SKILL) {
+                    int32_t cardType = detect_skill_stack(p, upper ? PLAYER2 : PLAYER1);  // ← §2-B
+                    if (cardType >= 0 &&
+                        game_action_buy_skill(cardType, upper ? PLAYER2 : PLAYER1) == 0)
+                        open = false;
+                }
+            }
         }
         SDL_SetRenderDrawColor(ren, 0, 0, 0, 180);
         SDL_RenderFillRect(ren, NULL);
@@ -180,17 +215,37 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                     start_hp.w = TOKEN_W;
                     start_hp.h = TOKEN_H;
                 }
-                // SDL_Rect start_finish  = { dst.x + PLATE_PADDING_X, ROW_HP_Y(dst)-18, TOKEN_W, TOKEN_H };
                 SDL_Rect start_finish  = { dst.x + PLATE_PADDING_X + pd.hp_finish*18, ROW_HP_Y(dst)-18, TOKEN_W, TOKEN_H };
-                // SDL_Rect start_def     = { dst.x + PLATE_PADDING_X+18*26, ROW_HP_Y(dst)+18*3, TOKEN_W, TOKEN_H };
+
                 SDL_Rect start_def     = { dst.x + PLATE_PADDING_X+18*26, ROW_HP_Y(dst)+18*3+pd.defense*18, TOKEN_W, TOKEN_H };
-                // SDL_Rect start_energy  = { dst.x + PLATE_PADDING_X-18, ROW_HP_Y(dst)+18*17, TOKEN_W, TOKEN_H };
+
                 SDL_Rect start_energy  = { dst.x + PLATE_PADDING_X-18+pd.power*18, ROW_HP_Y(dst)+18*17, TOKEN_W, TOKEN_H };
 
                 SDL_RenderCopy(ren, token[2], NULL, &start_hp);
                 if(pd.hp > pd.hp_finish){SDL_RenderCopy(ren, token[1], NULL, &start_finish);}
                 SDL_RenderCopy(ren, token[3], NULL, &start_energy);
                 SDL_RenderCopy(ren, token[0], NULL, &start_def);
+
+                /* ==== 文字說明 ==== */
+                char buf[64];
+                int textX = dst.x + 30;              // 與 plate 左邊留一點 margin
+                int textY = dst.y + 400;             // token 區塊下面再往下 20~30px
+
+                // 血量
+                snprintf(buf, sizeof(buf), "HP: %d / %d", pd.hp, pd.hp_max);
+                draw_stat_text(textX, textY, buf);   textY += 24;
+
+                // 防禦
+                snprintf(buf, sizeof(buf), "DEFENSE: %d / %d", pd.defense, pd.defense_max);
+                draw_stat_text(textX, textY, buf);   textY += 24;
+
+                // 能量
+                snprintf(buf, sizeof(buf), "ENERGY: %d / %d", pd.power, pd.power_max);
+                draw_stat_text(textX, textY, buf);   textY += 24;
+
+                // 必殺閥值（這裡假設用 hp_finish，若你要用別的欄位就換）
+                snprintf(buf, sizeof(buf), "FINISH: %d", pd.hp_finish);
+                draw_stat_text(textX, textY, buf);
                 break;
             }
             case BTN_TWIST: {
@@ -393,17 +448,6 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
     SDL_SetRenderDrawBlendMode(ren, SDL_BLENDMODE_NONE);
 }
 
-// 把一種類型的 token 連續畫在一條水平列上
-void draw_token_row(SDL_Texture* tex, SDL_Rect rowStart, int tokenCnt, int tokenFilled)
-{
-    for (int i = 0; i < tokenCnt; ++i) {
-        SDL_Rect r = rowStart;
-        r.x += i * TOKEN_W;
-        if (i < tokenFilled)      // 已獲得/已損失 才顯示
-            SDL_RenderCopy(ren, tex, NULL, &r);
-    }
-}
-
 void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int32_t characters[])
 {
     sCardData cards[CARD_NUM];  // 預設最多不會超過手牌上限
@@ -467,10 +511,80 @@ SDL_Texture* card_data_get_texture(int32_t card_type, int32_t player)
     return tex[card_type];
 }
 
-// int32_t card_data_get_owner(int32_t card_id, int32_t* player)
-// {
-//     if (card_id < 0 || card_id >= CARD_NUM || player == NULL) return -1;
+int32_t detect_basic_stack(SDL_Point p)
+{
+    const int start_x = 400, start_y = 100;
+    const int offset_x = 120, offset_y = 160;
 
-//     *player = card_data[card_id].player;
-//     return 0;
-// }
+    // 3×3 三列三行（攻/防/移 × L1~L3）
+    int col = (p.x - start_x) / offset_x;
+    int row = (p.y - start_y) / offset_y;
+    if (col < 0 || col > 2 || row < 0 || row > 2) goto check_common;
+
+    // 點在卡片矩形內才算
+    SDL_Rect rect = { start_x + col*offset_x, start_y + row*offset_y, CARD_W, CARD_H };
+    if (!SDL_PointInRect(&p, &rect)) goto check_common;
+
+    static const eCardType attack[]   = {CARD_BASIC_ATTACK_L1,   CARD_BASIC_ATTACK_L2,   CARD_BASIC_ATTACK_L3};
+    static const eCardType defense[]  = {CARD_BASIC_DEFENSE_L1,  CARD_BASIC_DEFENSE_L2,  CARD_BASIC_DEFENSE_L3};
+    static const eCardType movement[] = {CARD_BASIC_MOVEMENT_L1, CARD_BASIC_MOVEMENT_L2, CARD_BASIC_MOVEMENT_L3};
+
+    const eCardType* table[] = {attack, defense, movement};
+    return table[row][col];
+
+check_common:
+    /* 通用卡（Common）是在 attack 第 4 欄 */
+    SDL_Rect rectCommon = { start_x + 3*offset_x, start_y, CARD_W, CARD_H };
+    if (SDL_PointInRect(&p, &rectCommon)) return CARD_BASIC_COMMON;
+
+    return -1;   // 點到空白
+}
+
+int32_t detect_skill_stack(SDL_Point p, int32_t player)
+{
+    const int x0 = 330, y0 = 120;
+    const int dx = CARD_W + 40, dy = CARD_H + 60;
+
+    // 3 固定列 = 攻、防、移
+    int col = (p.x - x0) / dx;
+    int row = (p.y - y0) / dy;   // row==0 → 技能，row==1 → finish
+    if (col < 0 || col > 2) return -1;
+
+    /* ① 技能三疊（五等級） */
+    if (row == 0) {
+        SDL_Rect top = { x0 + col*dx, y0, CARD_W, CARD_H };
+        if (!SDL_PointInRect(&p, &top)) return -1;
+
+        const int attack[] = {CARD_SKILL_ATTACK_EVOLUTION_L2,
+                              CARD_SKILL_ATTACK_BASE_L3,
+                              CARD_SKILL_ATTACK_EVOLUTION_L1,
+                              CARD_SKILL_ATTACK_BASE_L2,
+                              CARD_SKILL_ATTACK_BASE_L1};
+        const int defense[] = {CARD_SKILL_DEFENSE_EVOLUTION_L2,
+                               CARD_SKILL_DEFENSE_BASE_L3,
+                               CARD_SKILL_DEFENSE_EVOLUTION_L1,
+                               CARD_SKILL_DEFENSE_BASE_L2,
+                               CARD_SKILL_DEFENSE_BASE_L1};
+        const int movement[] = {CARD_SKILL_MOVEMENT_EVOLUTION_L2,
+                                CARD_SKILL_MOVEMENT_BASE_L3,
+                                CARD_SKILL_MOVEMENT_EVOLUTION_L1,
+                                CARD_SKILL_MOVEMENT_BASE_L2,
+                                CARD_SKILL_MOVEMENT_BASE_L1};
+        const int* stacks[] = {attack, defense, movement};
+
+        /* 回傳「這疊頂牌」= i = 0 */
+        return stacks[col][0];
+    }
+
+    /* ② 必殺牌三張 */
+    if (row == 1) {
+        SDL_Rect top = { x0 + col*dx, y0 + dy, CARD_W, CARD_H };
+        if (!SDL_PointInRect(&p, &top)) return -1;
+
+        const int finish[] = {CARD_SKILL_FINISH1,
+                              CARD_SKILL_FINISH2,
+                              CARD_SKILL_FINISH3};
+        return finish[col];
+    }
+    return -1;
+}
