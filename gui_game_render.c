@@ -68,7 +68,7 @@ void draw_board(int32_t characters[])
 void draw_buttons(void)
 {
     const char* labels[BTN_NUM] = {
-        "CHARACTER", "TWISTED CARD", "DECK/DESCARD", "BASIC", "SKILL/EPIC"
+        "CHARACTER", "TWISTED CARD", "DECK/DESCARD", "BASIC", "SKILL/EPIC", "CARD USED"
     };
     SDL_SetRenderDrawColor(ren, 160, 160, 160, 255);
     for (int i = 0; i < BTN_NUM; ++i) {

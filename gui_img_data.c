@@ -19,6 +19,10 @@ int gui_imd_data_texture_get (SDL_Texture*** pTex, int card_type, int32_t player
             case CHARACTER_MULAN:           *pTex = mulan_card;   break;
             default: return -1;
         }
-    }
+    }else if (card_type <= CARD_POISON_L3){
+        *pTex = sw_card;
+    }else if (card_type <= CARD_MATCH){
+        *pTex = mg_card;
+    }else return -1;
     return 0;
 }
