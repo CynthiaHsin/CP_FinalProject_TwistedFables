@@ -349,7 +349,7 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                 for (int32_t i=0; i<r_num_max; i++){
                     for (int32_t j=0; i*c_num_max+j<card_num && j<c_num_max; j++){
                         SDL_Rect dst = {
-                            x0 + j * dx ,   // 疊起來稍微偏移
+                            x0 + j * dx ,
                             y0 + i * dy ,
                             CARD_W, CARD_H
                         };
