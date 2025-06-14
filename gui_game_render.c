@@ -9,7 +9,7 @@ void draw_button_text(SDL_Rect rect, const char* text);
 void popup(enum BtnId id, bool upper, int32_t characters[]);
 void draw_token_row(SDL_Texture* tex, SDL_Rect rowStart, int tokenCnt, int tokenFilled);
 void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int32_t characters[]);
-SDL_Texture* card_data_get_texture(int32_t card_id, int32_t characters[], int32_t player);
+SDL_Texture* card_data_get_texture(int32_t card_id, int32_t player);
 
 bool gui_round_running;
 
@@ -425,7 +425,7 @@ void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int3
         SDL_Rect d = { base_x + i * (w + gap), base_y, w, h };
 
         if (player == PLAYER1) {
-            SDL_Texture* tex = card_data_get_texture(cards[i].type, characters, player);
+            SDL_Texture* tex = card_data_get_texture(cards[i].type, player);
             if (tex != NULL) SDL_RenderCopy(ren, tex, NULL, &d);
         } else {
             SDL_RenderCopy(ren, card_back, NULL, &d);
@@ -458,30 +458,13 @@ void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int3
     // }
 }
 
-SDL_Texture* card_data_get_texture(int32_t card_type, int32_t characters[], int32_t player)
+SDL_Texture* card_data_get_texture(int32_t card_type, int32_t player)
 {
     // if (card_id < 0 || card_id >= CARD_NUM) return NULL;
 
     SDL_Texture ** tex;
     gui_imd_data_texture_get(&tex, card_type, player);
     return tex[card_type];
-
-    // if (card_id >= CARD_BASIC_ATTACK_L1 && card_id <= CARD_BASIC_DEFENSE_L3) {
-    //     return basic_card[card_id];  // 基本牌：ID 可當 index
-    // }
-
-    // int32_t owner;
-    // if (card_data_get_owner(card_id, &owner) < 0) return NULL;
-
-    // switch (characters[player]) {
-    //     case CHARACTER_RED_RIDING_HOOD:     return rrh_card[card_id];
-    //     case CHARACTER_SNOW_WHITE: return sw_card[card_id];
-    //     case CHARACTER_MULAN:   return mulan_card[card_id];
-    //     case CHARACTER_KAGUYA:  return kaguya_card[card_id];
-    //     case CHARACTER_DOROTHY: return dorothy_card[card_id];
-    //     case CHARACTER_MATCH_GIRL: return mg_card[card_id];
-    //     default: return NULL;
-    // }
 }
 
 // int32_t card_data_get_owner(int32_t card_id, int32_t* player)
