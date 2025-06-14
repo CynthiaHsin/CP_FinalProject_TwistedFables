@@ -86,6 +86,7 @@ int32_t game_round_clear (int32_t mode, int32_t player){
 
 int32_t game_round_action (int32_t mode, int32_t player){
     // int32_t ui_round (int32_t player);
+    game_scene_loop(characters);
     return 0;
 }
 

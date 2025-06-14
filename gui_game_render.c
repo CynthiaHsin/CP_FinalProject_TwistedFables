@@ -355,13 +355,13 @@ void draw_token_row(SDL_Texture* tex, SDL_Rect rowStart, int tokenCnt, int token
 
 void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int32_t characters[])
 {
-    sCardData cards[CARD_SPACE_HAND];  // 預設最多不會超過手牌上限
+    sCardData cards[CARD_NUM];  // 預設最多不會超過手牌上限
     int32_t num = 0;
 
-    printf("🔍 呼叫查詢手牌: player=%d\n", player);
-    // ✅ 查詢該玩家的手牌（space = CARD_SPACE_HAND）
+    printf("呼叫查詢手牌: player=%d\n", player);
+    // 查詢該玩家的手牌（space = CARD_SPACE_HAND）
     game_data_search_cards(cards, &num, player, CARD_SPACE_HAND, CARD_ORIGINAL, CARD_ORIGINAL);
-    printf("📦 查到張數 = %d\n", num);
+    printf("查到張數 = %d\n", num);
 
     int gap = 20, w = 105, h = 160;
     int base_x = 50;
