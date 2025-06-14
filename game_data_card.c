@@ -224,13 +224,14 @@ void card_add (int32_t num, int32_t space, int32_t type, int32_t player){
 void card_data_print (int32_t idx, int32_t num){
     debug_print ("from id (%d) get %d datas\n", idx, num);
     for (int32_t i=0; i<num; i++, idx++){
+        // if (card_data[idx].type)
         char card_type_name[CARD_TYPE_NAME_MAX]= {0};
         card_data_get_type_name (card_type_name, idx);
         char card_space_name[CARD_SPACE_NAME_MAX]= {0};
         card_data_get_space_name (card_space_name, idx);
         // if (strstr(card_space_name, "SHOP")) continue;
         // if (strstr(card_space_name, "DELETE")) continue;
-        if (!strstr(card_space_name, "USE")) continue;
+        // if (!strstr(card_space_name, "USE")) continue;
         // if (!strstr(card_space_name, "DECK")) continue;
         debug_print ("card %d (%s), \tspace: %s, \tplayer: %d, \tcost: %d\n",
              idx, card_type_name, card_space_name, card_data[idx].player, card_data[idx].cost);
@@ -254,6 +255,7 @@ int32_t card_data_get (sCardData *pCard, int32_t idx){
     pCard->space = card_data[idx].space;
     pCard->type  = card_data[idx].type;
     pCard->player = card_data[idx].player;
+    pCard->cost = card_data[idx].cost;
     return 0;
 }
 

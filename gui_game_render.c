@@ -561,29 +561,20 @@ int32_t detect_skill_stack(SDL_Point p, int32_t player)
     if (col < 0 || col > 2) return -1;
 
     /* ① 技能三疊（五等級） */
+    int type_stack[3]= {CARD_SKILL_ATTACK_BASE_L1, CARD_SKILL_DEFENSE_BASE_L1, CARD_SKILL_MOVEMENT_BASE_L1};
+    int type_stack_max[3]= {CARD_SKILL_ATTACK_EVOLUTION_L2, CARD_SKILL_DEFENSE_EVOLUTION_L2, CARD_SKILL_MOVEMENT_EVOLUTION_L2};
     if (row == 0) {
         SDL_Rect top = { x0 + col*dx, y0, CARD_W, CARD_H };
         if (!SDL_PointInRect(&p, &top)) return -1;
-
-        const int attack[] = {CARD_SKILL_ATTACK_EVOLUTION_L2,
-                              CARD_SKILL_ATTACK_BASE_L3,
-                              CARD_SKILL_ATTACK_EVOLUTION_L1,
-                              CARD_SKILL_ATTACK_BASE_L2,
-                              CARD_SKILL_ATTACK_BASE_L1};
-        const int defense[] = {CARD_SKILL_DEFENSE_EVOLUTION_L2,
-                               CARD_SKILL_DEFENSE_BASE_L3,
-                               CARD_SKILL_DEFENSE_EVOLUTION_L1,
-                               CARD_SKILL_DEFENSE_BASE_L2,
-                               CARD_SKILL_DEFENSE_BASE_L1};
-        const int movement[] = {CARD_SKILL_MOVEMENT_EVOLUTION_L2,
-                                CARD_SKILL_MOVEMENT_BASE_L3,
-                                CARD_SKILL_MOVEMENT_EVOLUTION_L1,
-                                CARD_SKILL_MOVEMENT_BASE_L2,
-                                CARD_SKILL_MOVEMENT_BASE_L1};
-        const int* stacks[] = {attack, defense, movement};
-
-        /* 回傳「這疊頂牌」= i = 0 */
-        return stacks[col][0];
+        int idx= card_data_get_index (player, type_stack[col]);
+        sCardData cd;
+        while (1){
+            card_data_get (&cd, idx);
+            if (cd.type > type_stack_max[col]) return -1;
+            if (cd.space == CARD_SPACE_SHOP) break;
+            idx++;
+        }
+        return cd.type;
     }
 
     /* ② 必殺牌三張 */
