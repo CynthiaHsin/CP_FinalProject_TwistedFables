@@ -4,25 +4,8 @@
 # include "gui_sdl_config.h"
 # include "gui_img_data.h"
 # include "gui_game_render.h"
+# include "gui_game_choose.h"
 
-// return card index, NULL pointer mean no return value needed
-int32_t gui_action_choose_card (int32_t *pCard_type, int32_t *pMove_direction, int32_t *pPlayer_des, sCardData cards[], int32_t card_num, char * text){
-
-    // int gap = 20, w = 105, h = 160;
-    // int base_x = 50;
-    // int base_y = 50;
-
-    // for (int i = 0; i < num; ++i) {
-    //     int32_t card_id = cards[i].index;
-    //     SDL_Rect d = { base_x + i * (w + gap), base_y, w, h };
-    //     SDL_Texture* tex = card_data_get_texture(cards[i].type, cards[i].player);
-    //     if (tex != NULL) SDL_RenderCopy(ren, tex, NULL, &d);
-    // }
-}
-
-int32_t gui_action_choose_token (int32_t token_use_max, int32_t player, char * text){
-    
-}
 
 int32_t gui_action_focus (int32_t player){
     sCardData cards[CARD_NUM];
