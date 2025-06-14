@@ -73,34 +73,56 @@ enum BtnId {
     BTN_SUPPLY_SKILL, 
     BTN_CARD_USED,
     BTN_ROUND_END,
+    BTN_ACTION_FOCUS,
+    BTN_ACTION_SKILL,
+    BTN_ACTION_BASIC,
     BTN_NUM 
 };
+
+
+# define X_LEFT   (20)
+# define X_MID    (((WINDOW_WIDTH - BTN_W - 20)+20)/2)
+# define X_MID_L  (((WINDOW_WIDTH - BTN_W - 20)+20)/2 - (BTN_W + 20))
+# define X_MID_R  (((WINDOW_WIDTH - BTN_W - 20)+20)/2 + (BTN_W + 20))
+# define X_RIGHT  (WINDOW_WIDTH - BTN_W - 20)
+# define Y_UP_0   (60)
+# define Y_UP_1   (110)
+# define Y_MID    ((WINDOW_HEIGHT - BTN_H)/2)
+# define Y_DOWN_0 (WINDOW_HEIGHT - 110 - BTN_H)
+# define Y_DOWN_1 (WINDOW_HEIGHT - 160 - BTN_H)
+# define Y_DOWN_2 (WINDOW_HEIGHT - 210 - BTN_H)
+# define NO_BUTTON (-1)
 
 static inline SDL_Rect btn_rect(int idx, bool upper)
 {
     SDL_Rect r = {0};
     r.w = BTN_W; r.h = BTN_H;
-
+    r.x = r.y = NO_BUTTON;
+    switch (idx){
+        default: break;
+    }
     if (upper) {
         // player2
         switch (idx) {
-            case BTN_CHARACTER:        r.x = WINDOW_WIDTH - BTN_W - 20;          r.y = 60; break;
-            case BTN_TWIST:            r.x = ((WINDOW_WIDTH - BTN_W - 20)+20)/2; r.y = 60; break;
-            case BTN_SUPPLY_SKILL:     r.x = WINDOW_WIDTH - BTN_W - 20;          r.y = 110; break;
-            case BTN_DECK:             r.x = 20;                                 r.y = 60; break;
-            case BTN_CARD_USED:        r.x = ((WINDOW_WIDTH - BTN_W - 20)+20)/2; r.y = 110; break;
-            case BTN_ROUND_END:        r.x = WINDOW_WIDTH - BTN_W - 20;          r.y = (WINDOW_HEIGHT - BTN_H)/2; break;
+            case BTN_CHARACTER:        r.x = X_RIGHT;   r.y = Y_UP_0; break;
+            case BTN_TWIST:            r.x = X_MID;     r.y = Y_UP_0; break;
+            case BTN_SUPPLY_SKILL:     r.x = X_RIGHT;   r.y = Y_UP_1; break;
+            case BTN_DECK:             r.x = X_LEFT;    r.y = Y_UP_0; break;
+            case BTN_CARD_USED:        r.x = X_MID;     r.y = Y_UP_1; break;
         }
     } else {
         // player1
         switch (idx) {
-            case BTN_CHARACTER:        r.x = WINDOW_WIDTH - BTN_W - 20;          r.y = WINDOW_HEIGHT - 110 - BTN_H; break;
-            case BTN_TWIST:            r.x = ((WINDOW_WIDTH - BTN_W - 20)+20)/2; r.y = WINDOW_HEIGHT - 110 - BTN_H; break;
-            case BTN_SUPPLY_SKILL:     r.x = 20;                                 r.y = WINDOW_HEIGHT - 110 - BTN_H; break;
-            case BTN_SUPPLY_BASIC:     r.x = 20;                                 r.y = (WINDOW_HEIGHT - BTN_H)/2; break;
-            case BTN_ROUND_END:        r.x = WINDOW_WIDTH - BTN_W - 20;          r.y = (WINDOW_HEIGHT - BTN_H)/2; break;
-            case BTN_DECK:             r.x = WINDOW_WIDTH - BTN_W - 20;          r.y = WINDOW_HEIGHT - 160 - BTN_H; break;
-            case BTN_CARD_USED:        r.x = ((WINDOW_WIDTH - BTN_W - 20)+20)/2; r.y = WINDOW_HEIGHT - 160  - BTN_H; break;
+            case BTN_CHARACTER:        r.x = X_RIGHT;   r.y = Y_DOWN_0; break;
+            case BTN_TWIST:            r.x = X_MID;     r.y = Y_DOWN_0; break;
+            case BTN_SUPPLY_SKILL:     r.x = X_LEFT;    r.y = Y_DOWN_0; break;
+            case BTN_DECK:             r.x = X_RIGHT;   r.y = Y_DOWN_1; break;
+            case BTN_CARD_USED:        r.x = X_MID;     r.y = Y_DOWN_1; break;
+            case BTN_SUPPLY_BASIC:     r.x = X_LEFT;    r.y = Y_MID;    break;
+            case BTN_ROUND_END:        r.x = X_RIGHT;   r.y = Y_MID;    break;
+            case BTN_ACTION_FOCUS:     r.x = X_MID;     r.y = Y_DOWN_2; break;
+            case BTN_ACTION_SKILL:     r.x = X_MID_R;   r.y = Y_DOWN_2; break;
+            case BTN_ACTION_BASIC:     r.x = X_MID_L;   r.y = Y_DOWN_2; break;
         }
     }
     return r;
