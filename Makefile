@@ -6,7 +6,7 @@ GAME_ROUND := game_round.c
 OBJ_GAME := $(GAME_DATA) $(GAME_ACTION) $(GAME_ROUND)
 
 # ui
-OBJ_GUI := gui_game.c gui_opening.c gui_choose_character.c gui_destroy.c gui_img_init.c gui_game_render.c
+OBJ_GUI := gui_game.c gui_opening.c gui_choose_character.c gui_destroy.c gui_img_init.c gui_game_render.c gui_img_data.c
 
 # all
 CC := gcc
@@ -18,7 +18,7 @@ all: TwitedFables
 	# - gcc game.c $(OBJ) -o game
 
 debug:
-	- $(CC) $(OBJ) -D _DEBUG_ game.c  -o game $(LDFLAGS)
+	- $(CC) $(OBJ) $(LDFLAGS) -D _DEBUG_ game.c  -o game 
 	# - gcc -D _DEBUG_ test_main.c $(FUNC) -o test 
 
 clean:
