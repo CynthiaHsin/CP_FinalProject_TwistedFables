@@ -230,8 +230,8 @@ void card_data_print (int32_t idx, int32_t num){
         card_data_get_space_name (card_space_name, idx);
         // if (strstr(card_space_name, "SHOP")) continue;
         // if (strstr(card_space_name, "DELETE")) continue;
-        if (!strstr(card_space_name, "USE")) continue;
-        // if (!strstr(card_space_name, "DECK")) continue;
+        // if (strstr(card_space_name, "USE")) continue;
+        // if (strstr(card_space_name, "DECK")) continue;
         debug_print ("card %d (%s), \tspace: %s, \tplayer: %d, \tcost: %d\n",
              idx, card_type_name, card_space_name, card_data[idx].player, card_data[idx].cost);
     }
