@@ -56,23 +56,33 @@ void draw_board(int32_t characters[])
     SDL_RenderDrawRect(ren, &play1);
     SDL_RenderDrawRect(ren, &play2);
 
-    for (int i = 0; i < 9; ++i) {
+    // 1. 依據 map_data 畫出所有 block
+    const sMapData* md = map_data_get();
+    int blocks = md->block_mid * 2 + 1;          // 1v1 = 9 
+    for (int pos = -md->block_mid; pos <= md->block_mid; ++pos) {
+        int idx   = pos + md->block_mid;         // 0-based column
         SDL_Rect dst = {
-            TRACK_START_X + i*TRACK_W,
+            TRACK_START_X + idx * TRACK_W,
             TRACK_Y,
             TRACK_W, TRACK_H
         };
-        SDL_RenderCopy(ren, track, NULL, &dst);
-        SDL_RenderDrawRect(ren, &dst);
+        SDL_RenderCopy(ren, track, NULL, &dst);  // 賽道底圖 
+        SDL_RenderDrawRect(ren, &dst);           // 外框 
     }
 
-    SDL_Rect token_rect = {0, 0, 48, 48};
-    token_rect.x = TRACK_START_X + 3*TRACK_W + (TRACK_W-token_rect.w)/2;
-    token_rect.y = TRACK_Y + (TRACK_H-token_rect.h)/2;
-    SDL_RenderCopy(ren, character[characters[PLAYER1]], NULL, &token_rect); // player1
+    // 2. 依據 map_data 決定哪些格子有玩家
+    for (int pos = -md->block_mid; pos <= md->block_mid; ++pos) {
+        int player = map_data_get_player(/*road=*/0, pos);   // 1v1 只有 road 0 
+        if (player == PLAYER_UNDEFINED) continue;
 
-    token_rect.x = TRACK_START_X + 5*TRACK_W + (TRACK_W-token_rect.w)/2;
-    SDL_RenderCopy(ren, character[characters[PLAYER2]], NULL, &token_rect); // player2
+        int idx = pos + md->block_mid;
+        SDL_Rect token = {
+            TRACK_START_X + idx * TRACK_W + (TRACK_W - 48)/2,
+            TRACK_Y        + (TRACK_H - 48)/2,
+            48, 48
+        };
+        SDL_RenderCopy(ren, character[characters[player]], NULL, &token);
+    }
 }
 
 void draw_buttons(void)
