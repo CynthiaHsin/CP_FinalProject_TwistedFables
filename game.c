@@ -22,7 +22,7 @@ int main(){
     // int32_t player_max;
     // if (mode==GAMEMODE_1V1) player_max= PLAYER2; 
     
-    gui_game_start (characters, &mode);
+    if (gui_game_start (characters, &mode)==-1) return 0;
     // game init
     game_data_init (mode, characters);
 

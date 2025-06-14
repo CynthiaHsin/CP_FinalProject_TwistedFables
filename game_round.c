@@ -11,7 +11,11 @@ int32_t game_round(){
 
     int32_t mode= status.mode;
     if (mode != GAMEMODE_1V1) return -1; // not yet
-    int32_t winner= PLAYER_UNDEFINED;
+    int32_t winner= game_round_gameend_parse (mode);
+    debug_print ("winner: %d\n", winner);
+    if (winner!=PLAYER_UNDEFINED){
+        return winner;
+    }
     for (int32_t i=0; i<2; i++){
         // debug_print ("player_order %d: %d\n", i, status.player_order[i]);
         int32_t player= status.player_order[i];
