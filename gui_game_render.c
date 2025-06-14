@@ -164,7 +164,19 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                 player_data_get(&pd, player);   // 失敗回 -1，這裡簡化不檢查
 
                 // 每列 token 的起始座標
-                SDL_Rect start_hp      = { dst.x + PLATE_PADDING_X + pd.hp*18, ROW_HP_Y(dst), TOKEN_W, TOKEN_H };
+                SDL_Rect start_hp = {0};
+                if(pd.hp >= 26){
+                    start_hp.x = dst.x + PLATE_PADDING_X + (pd.hp-26)*18;
+                    start_hp.y = ROW_HP_Y(dst);
+                    start_hp.w = TOKEN_W;
+                    start_hp.h = TOKEN_H;
+                }
+                else{
+                    start_hp.x = dst.x + PLATE_PADDING_X + pd.hp*18;
+                    start_hp.y = ROW_HP_Y(dst)-18;
+                    start_hp.w = TOKEN_W;
+                    start_hp.h = TOKEN_H;
+                }
                 // SDL_Rect start_finish  = { dst.x + PLATE_PADDING_X, ROW_HP_Y(dst)-18, TOKEN_W, TOKEN_H };
                 SDL_Rect start_finish  = { dst.x + PLATE_PADDING_X + pd.hp_finish*18, ROW_HP_Y(dst)-18, TOKEN_W, TOKEN_H };
                 // SDL_Rect start_def     = { dst.x + PLATE_PADDING_X+18*26, ROW_HP_Y(dst)+18*3, TOKEN_W, TOKEN_H };
@@ -173,7 +185,7 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                 SDL_Rect start_energy  = { dst.x + PLATE_PADDING_X-18+pd.power*18, ROW_HP_Y(dst)+18*17, TOKEN_W, TOKEN_H };
 
                 SDL_RenderCopy(ren, token[2], NULL, &start_hp);
-                SDL_RenderCopy(ren, token[1], NULL, &start_finish);
+                if(pd.hp > pd.hp_finish){SDL_RenderCopy(ren, token[1], NULL, &start_finish);}
                 SDL_RenderCopy(ren, token[3], NULL, &start_energy);
                 SDL_RenderCopy(ren, token[0], NULL, &start_def);
                 break;
