@@ -29,9 +29,9 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
         for(int32_t i=0; i<end; i++)
         {
         card_data_get(&card_data[i], card_idx[i]);
-        printf("gg:%d,",card_idx[i]);
+        //printf("gg:%d,",card_idx[i]);
         }
-        printf("\n");
+        //printf("\n");
         // 每個可能的組合跑一遍
         for (int i = 0; i < len; i++) 
         {
@@ -194,8 +194,8 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
             status.distance = abs(player_data_usecopy.pos-player_data_use.pos);
             status.shell = player_data_usecopy.defense;
             status.power = player_data_usecopy.power;
-             printf("%d,%d,%d,%d,%d,%d\n",card_idx[0],card_idx[1],card_idx[2],card_idx[3],card_idx[4],card_idx[5]);
-             printf("damage=%d,distance=%d,shell=%d,power=%d\n",status.damage,status.distance,status.shell,status.power);
+             //printf("%d,%d,%d,%d,%d,%d\n",card_idx[0],card_idx[1],card_idx[2],card_idx[3],card_idx[4],card_idx[5]);
+             //printf("damage=%d,distance=%d,shell=%d,power=%d\n",status.damage,status.distance,status.shell,status.power);
             // printf("best_damage=%d,distance=%d,shell=%d,power=%d\n",best_status.damage,best_status.distance,best_status.shell,best_status.power);
             if(status.distance>=3)
             {
