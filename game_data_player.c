@@ -16,7 +16,11 @@ int32_t player_data_set_card (int32_t player, int32_t card_idx){
 
 int32_t player_data_set (int32_t player, sPlayerData src){
     int32_t re= player_data_cpy (&(player_data[player]), src);
-    action_gain_finish (player);
+    if (player_data[player].hp <= player_data[player].hp_finish){
+        // player_data_print (player);
+        // debug_print ("111111\n");
+        action_gain_finish (player);
+    }
     return re;
 }
 

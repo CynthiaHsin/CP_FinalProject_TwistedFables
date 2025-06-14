@@ -33,7 +33,7 @@ int main(){
 
     int32_t winner= PLAYER_UNDEFINED;
     while (winner==PLAYER_UNDEFINED){
-        game_round();
+        winner= game_round();
     }
     debug_print ("Game End. The winner is: %d\n", winner);
     // card_data_set (card_data_get_index(PLAYER1, CARD_SKILL_MOVEMENT_EVOLUTION_L1), 1, CARD_SPACE_USE_LASTING, CARD_ORIGINAL, PLAYER1);

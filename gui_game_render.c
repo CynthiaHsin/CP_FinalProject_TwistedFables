@@ -23,6 +23,7 @@ void game_scene_loop(int32_t characters[])
             if (e.type == SDL_QUIT){
                 gui_round_running = false;
                 status_data_end_game();
+                return;
             }
             else if (e.type == SDL_MOUSEBUTTONDOWN) {
                 SDL_Point p = { e.button.x, e.button.y };
