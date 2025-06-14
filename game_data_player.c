@@ -5,6 +5,10 @@
 
 sPlayerData player_data[PLAYER_NUM];
 
+int32_t player_data_write_back(int32_t player, sPlayerData src) {
+    return player_data_cpy(&(player_data[player]), src);
+}
+
 int32_t player_data_set_character (int32_t player, int32_t character){
     player_data[player].character= character;
 }
