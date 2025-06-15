@@ -54,6 +54,7 @@ int32_t action_move (int32_t delta, int32_t direction, int32_t player){
 
     player_data[player].pos= des;
     player_data_set (player, player_data[player]);
+    map_data_refresh ();
     return 0;
 }
 

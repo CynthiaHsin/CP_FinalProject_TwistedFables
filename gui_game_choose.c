@@ -6,14 +6,15 @@
 extern SDL_Renderer *ren;
 extern TTF_Font     *font_main;
 
-void draw_hint(const char *utf8)
+void draw_hint(const char *utf8, int line)
 {
     SDL_Color white = {255,255,255,255};
     SDL_Surface *surf = TTF_RenderUTF8_Blended(font_main, utf8, white);
     if (!surf) return;
     SDL_Texture *tex = SDL_CreateTextureFromSurface(ren, surf);
     SDL_FreeSurface(surf);
-    SDL_Rect dst = { 220, 100, surf->w, surf->h };
+    int line_delta = 50;
+    SDL_Rect dst = { 220, 100+line*line_delta, surf->w, surf->h };
     SDL_RenderCopy(ren, tex, NULL, &dst);
     SDL_DestroyTexture(tex);
 }
@@ -37,10 +38,10 @@ int32_t gui_choose_card (int32_t *pCard_type, sCardData cards[], int32_t card_nu
     const int gap = 20, w = 105, h = 160, base_x = 50, base_y = 500;
     SDL_Event ev;
 
-    for (;;) {
+    while (1) {
         SDL_SetRenderDrawColor(ren, 0, 0, 0, 200);
         SDL_RenderFillRect(ren, NULL);
-        draw_hint(text);
+        draw_hint(text, 0);
 
         for (int i = 0; i < card_num; ++i) {
             SDL_Rect d = { base_x + i*(w+gap), base_y, w, h };
@@ -70,12 +71,12 @@ int32_t gui_choose_move_direction (char * text){ // d/->: 1(right), a/<-: -1(lef
     int32_t dir = +1;          // 右
     SDL_Event ev;
 
-    for (;;) {
+    while (1) {
         SDL_SetRenderDrawColor(ren, 0, 0, 0, 200);
         SDL_RenderFillRect(ren, NULL);
-        draw_hint(text);
+        draw_hint(text, 0);
 
-        draw_hint(dir>0?  "向右": "向左");
+        draw_hint(dir>0?  "向右": "向左", 1);
         SDL_RenderPresent(ren);
 
         int s = wait_event(&ev);
@@ -83,11 +84,13 @@ int32_t gui_choose_move_direction (char * text){ // d/->: 1(right), a/<-: -1(lef
 
         if (ev.type == SDL_KEYDOWN) {
             switch (ev.key.keysym.sym) {
+                case SDLK_ESCAPE: return 0;
                 case SDLK_LEFT:
                 case SDLK_a: dir = -1; break;
                 case SDLK_RIGHT:
                 case SDLK_d: dir = +1; break;
                 case SDLK_RETURN: return dir;
+                default: break;
             }
         }
     }
@@ -98,13 +101,13 @@ int32_t gui_choose_des_player (char * text){ // 0: choose me, 1: choose componen
     int32_t cur = PLAYER2;
     SDL_Event ev;
 
-    for (;;) {
+    while (1) {
         SDL_SetRenderDrawColor(ren, 0, 0, 0, 200);
         SDL_RenderFillRect(ren, NULL);
-        draw_hint(text);
+        draw_hint(text, 0);
 
         const char *who = (cur == PLAYER1)? "你自己": "對手";
-        draw_hint(who);
+        draw_hint(who, 1);
         SDL_RenderPresent(ren);
 
         int s = wait_event(&ev);
@@ -128,19 +131,23 @@ int32_t gui_choose_token (int32_t token_use_max, int32_t player, char * text){
     sPlayerData pd;
     if (player_data_get(&pd, player) < 0)       return -1;
 
-    if (pd.power < token_use_max) {
-        draw_hint("能量不足！");
-        SDL_Delay(1200);
-        return -1;
-    }
+    // 這裡有問題
+    // token 就是 token 不是能量
+    // token_use_max 是輸入最多用多少
+
+    // if (pd.power < token_use_max) {
+    //     draw_hint("能量不足！", 0);
+    //     SDL_Delay(1200);
+    //     return -1;
+    // }
 
     SDL_SetRenderDrawColor(ren, 0, 0, 0, 200);
     SDL_RenderFillRect(ren, NULL);
 
     char buf[64];
-    snprintf(buf, sizeof(buf), "%s\n需要能量 %d 點\n(Enter 確認 / Esc 取消)",
+    snprintf(buf, sizeof(buf), "%s\n使用token %d 點\n(Enter 確認 / Esc 取消)",
              text, token_use_max);
-    draw_hint(buf);
+    draw_hint(buf, 0);
     SDL_RenderPresent(ren);
 
     SDL_Event ev;

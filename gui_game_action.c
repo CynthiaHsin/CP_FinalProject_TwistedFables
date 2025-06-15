@@ -87,7 +87,6 @@ int32_t gui_action_use_basic (int32_t player){
         case CARD_BASIC_MOVEMENT_L2:
         case CARD_BASIC_MOVEMENT_L3:
         {
-            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
             move_direction= gui_choose_move_direction (TEXT_CHOOSE_MOVE_DIRECTION);
             break;
         }    

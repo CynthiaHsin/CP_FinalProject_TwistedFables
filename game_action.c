@@ -132,7 +132,7 @@ int32_t game_action_use_basic_card (int32_t card_idx, int32_t card_type, int32_t
         case CARD_BASIC_ATTACK_L2:
         case CARD_BASIC_ATTACK_L3:
             level= card_type - CARD_BASIC_ATTACK_L1 + 1;
-            action_attack (level, 1, player_use, player_des);
+            if (action_attack (level, 1, player_use, player_des)<0) return -1;
             if (player_data.character == CHARACTER_DOROTHY){
                 skill_dorothy_basic (level, CARD_BASIC_ATTACK_L1, player_use);
             }
@@ -142,7 +142,7 @@ int32_t game_action_use_basic_card (int32_t card_idx, int32_t card_type, int32_t
         case CARD_BASIC_DEFENSE_L2:
         case CARD_BASIC_DEFENSE_L3:
             level= card_type - CARD_BASIC_DEFENSE_L1 + 1;
-            action_defense (level, player_use);
+            if (action_defense (level, player_use)<0) return -1;
             if (player_data.character == CHARACTER_DOROTHY){
                 skill_dorothy_basic (level, CARD_BASIC_DEFENSE_L1, player_use);
             }
@@ -152,7 +152,7 @@ int32_t game_action_use_basic_card (int32_t card_idx, int32_t card_type, int32_t
         case CARD_BASIC_MOVEMENT_L2:
         case CARD_BASIC_MOVEMENT_L3: 
             level= card_type - CARD_BASIC_MOVEMENT_L1 + 1;
-            action_move(level, move_direction, player_use);
+            if (action_move(level, move_direction, player_use)<0) return -1;
             if (player_data.character == CHARACTER_DOROTHY){
                 skill_dorothy_basic (level, CARD_BASIC_MOVEMENT_L1, player_use);
             }
