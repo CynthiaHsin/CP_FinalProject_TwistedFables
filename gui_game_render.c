@@ -6,9 +6,9 @@
 
 void draw_board(int32_t characters[]);
 void draw_buttons(void);
-bool handle_button_click(SDL_Point p, int32_t characters[]);
+bool handle_button_click(SDL_Event* ev, SDL_Point p, int32_t characters[]);
 void draw_button_text(SDL_Rect rect, const char* text);
-void popup(enum BtnId id, bool upper, int32_t characters[]);
+void popup(SDL_Event* ev, enum BtnId id, bool upper, int32_t characters[]);
 void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int32_t characters[]);
 SDL_Texture* card_data_get_texture(int32_t card_id, int32_t player);
 
@@ -16,10 +16,11 @@ void draw_stat_text(int x, int y, const char *utf8);
 int32_t detect_basic_stack(SDL_Point p);
 int32_t detect_skill_stack(SDL_Point p, int32_t player);
 bool detect_hand_card_click(SDL_Point p, int32_t player, int* outType);
+int detect_discard_card_click(SDL_Point p, sCardData cards[], SDL_Rect rects[], int32_t card_num, int* outType);
 
 bool gui_round_running;
-static bool   g_handZoomOpen = false; 
-static SDL_Texture* g_handZoomTex = NULL;
+bool   g_handZoomOpen = false; 
+SDL_Texture* g_handZoomTex = NULL;
 
 void game_scene_loop(int32_t characters[])
 {
@@ -43,7 +44,7 @@ void game_scene_loop(int32_t characters[])
             }
             else if (e.type == SDL_MOUSEBUTTONDOWN) {
                 SDL_Point p = { e.button.x, e.button.y };
-                if (handle_button_click(p, characters)) {continue;;}
+                if (handle_button_click(&e, p, characters)) {continue;;}
             }
         }
 
@@ -99,8 +100,8 @@ void draw_board(int32_t characters[])
 void draw_buttons(void)
 {
     const char* labels[BTN_NUM] = {
-        "CHARACTER", "TWISTED CARD", "DECK/DESCARD", "BASIC", "SKILL/EPIC", "CARD USED", "END ROUND",
-        "FOCUS", "USE SKILL", "USE BASIC"
+        "CHARACTER", "TWISTED CARD", "DECK", "BASIC", "SKILL/EPIC", "CARD USED", "END ROUND",
+        "FOCUS", "USE SKILL", "USE BASIC", "DISCARD"
     };
     SDL_SetRenderDrawColor(ren, 160, 160, 160, 255);
     for (int i = 0; i < BTN_NUM; ++i) {
@@ -117,7 +118,7 @@ void draw_buttons(void)
     }
 }
 
-bool handle_button_click(SDL_Point p, int32_t characters[])
+bool handle_button_click(SDL_Event* ev, SDL_Point p, int32_t characters[])
 {
     for (int i = 0; i < BTN_NUM; ++i) {
         SDL_Rect rUp = btn_rect(i, true);
@@ -126,7 +127,7 @@ bool handle_button_click(SDL_Point p, int32_t characters[])
         bool hitDown = SDL_PointInRect(&p, &rDown);
 
         if (hitUp || hitDown) {
-            popup((enum BtnId)i, hitUp, characters);
+            popup(ev, (enum BtnId)i, hitUp, characters);
             return true;
         }
     }
@@ -172,7 +173,7 @@ void draw_stat_text(int x, int y, const char *utf8)
 }
 
 
-void popup(enum BtnId id, bool upper, int32_t characters[])
+void popup(SDL_Event* ev, enum BtnId id, bool upper, int32_t characters[])
 {
     bool open = true;
     SDL_Event e;
@@ -182,8 +183,14 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
     while (open) {
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) exit(0);
-            else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)
-                open = false;
+            else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE){
+                // open = false;
+                if (g_handZoomOpen) {
+                    g_handZoomOpen = false; 
+                } else {
+                    open = false; 
+                }
+            }
             else if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) {
                 SDL_Point p = { e.button.x, e.button.y };
 
@@ -200,6 +207,7 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                         open = false;
                 }
             }
+            if (ev) *ev = e;
         }
         SDL_SetRenderDrawColor(ren, 0, 0, 0, 180);
         SDL_RenderFillRect(ren, NULL);
@@ -448,7 +456,7 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                             SDL_RenderCopy(ren, tex[stacks[col][i]], NULL, &dst);
                         }
                         // if (count == 0) {
-                        //     debug_print("⚠️ 未找到卡牌: type = %d, player = %d\n", stacks[col][i], player);
+                        //     debug_print("未找到卡牌: type = %d, player = %d\n", stacks[col][i], player);
                         // }
                     }
                 }
@@ -516,6 +524,62 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
             case BTN_ACTION_SKILL: {
                 gui_action_use_skill (upper ? PLAYER2 : PLAYER1);
                 return;
+            }
+            case BTN_CARD_THROW: {
+                int player = upper ? PLAYER2 : PLAYER1;
+
+                sCardData cards[CARD_NUM];
+                int card_num = 0;
+                game_data_search_cards(cards, &card_num,
+                    player, CARD_SPACE_THROW, CARD_ORIGINAL, -1);
+
+                const int x0 = win.x + 30, y0 = win.y + 30;
+                const int dx = CARD_W + 40, dy = CARD_H + 60;
+                const int col_max = 10;
+                SDL_Rect card_rects[CARD_NUM];
+
+                for (int i = 0; i < card_num; ++i) {
+                    int row = i / col_max;
+                    int col = i % col_max;
+                    card_rects[i] = (SDL_Rect){ x0 + col * dx, y0 + row * dy, CARD_W, CARD_H };
+                    SDL_Texture* tex = card_data_get_texture(cards[i].type, player);
+                    SDL_RenderCopy(ren, tex, NULL, &card_rects[i]);
+                }
+
+                // 使用 popup 的外部事件參數 ev，而非自己拉事件
+                if (ev && ev->type == SDL_MOUSEBUTTONDOWN &&
+                        ev->button.button == SDL_BUTTON_LEFT) {
+
+                    SDL_Point p = { ev->button.x, ev->button.y };
+                    if (g_handZoomOpen) {
+                        g_handZoomOpen = false;
+                    } else {
+                        int cardType = -1;
+                        if (detect_discard_card_click(p, cards, card_rects, card_num, &cardType)) {
+                            g_handZoomTex  = card_data_get_texture(cardType, player);
+                            g_handZoomOpen = (g_handZoomTex != NULL);
+                        }
+                    }
+                }
+
+                if (g_handZoomOpen && g_handZoomTex) {
+                    SDL_SetRenderDrawBlendMode(ren, SDL_BLENDMODE_BLEND);
+                    SDL_SetRenderDrawColor(ren, 0, 0, 0, 180);
+                    SDL_RenderFillRect(ren, NULL);
+
+                    const int bigW = CARD_W * 3;
+                    const int bigH = CARD_H * 3;
+                    SDL_Rect dst = {
+                        (WINDOW_WIDTH - bigW) / 2,
+                        (WINDOW_HEIGHT - bigH) / 2,
+                        bigW, bigH
+                    };
+                    SDL_RenderCopy(ren, g_handZoomTex, NULL, &dst);
+                    SDL_RenderDrawRect(ren, &dst);
+                    SDL_SetRenderDrawBlendMode(ren, SDL_BLENDMODE_NONE);
+                }
+
+                break;
             }
             default: break;
         }
@@ -598,12 +662,10 @@ int32_t detect_skill_stack(SDL_Point p, int32_t player)
     const int x0 = 330, y0 = 120;
     const int dx = CARD_W + 40, dy = CARD_H + 60;
 
-    // 3 固定列 = 攻、防、移
     int col = (p.x - x0) / dx;
-    int row = (p.y - y0) / dy;   // row==0 → 技能，row==1 → finish
+    int row = (p.y - y0) / dy; 
     if (col < 0 || col > 2) return -1;
 
-    /* ① 技能三疊（五等級） */
     int type_stack[3]= {CARD_SKILL_ATTACK_BASE_L1, CARD_SKILL_DEFENSE_BASE_L1, CARD_SKILL_MOVEMENT_BASE_L1};
     int type_stack_max[3]= {CARD_SKILL_ATTACK_EVOLUTION_L2, CARD_SKILL_DEFENSE_EVOLUTION_L2, CARD_SKILL_MOVEMENT_EVOLUTION_L2};
     if (row == 0) {
@@ -620,7 +682,6 @@ int32_t detect_skill_stack(SDL_Point p, int32_t player)
         return cd.type;
     }
 
-    /* ② 必殺牌三張 */
     if (row == 1) {
         SDL_Rect top = { x0 + col*dx, y0 + dy, CARD_W, CARD_H };
         if (!SDL_PointInRect(&p, &top)) return -1;
@@ -648,6 +709,17 @@ bool detect_hand_card_click(SDL_Point p, int32_t player, int* outType)
     for (int i = 0; i < num; ++i) {
         SDL_Rect r = { base_x + i*(w+gap), base_y, w, h };
         if (SDL_PointInRect(&p, &r)) {
+            *outType = cards[i].type;
+            return true;
+        }
+    }
+    return false;
+}
+
+int detect_discard_card_click(SDL_Point p, sCardData cards[], SDL_Rect rects[], int32_t card_num, int* outType)
+{
+    for (int i = 0; i < card_num; ++i) {
+        if (SDL_PointInRect(&p, &rects[i])) {
             *outType = cards[i].type;
             return true;
         }

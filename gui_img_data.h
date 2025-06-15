@@ -16,8 +16,8 @@
 #define BOARD_Y       ((WINDOW_HEIGHT - BOARD_H)/2)
 
 // track
-#define TRACK_W       80
-#define TRACK_H       120
+#define TRACK_W       100
+#define TRACK_H       150
 #define TRACK_START_X (BOARD_X + (BOARD_W - 9*TRACK_W)/2)
 #define TRACK_Y       (WINDOW_HEIGHT/2 - TRACK_H/2)
 
@@ -77,6 +77,7 @@ enum BtnId {
     BTN_ACTION_FOCUS,
     BTN_ACTION_SKILL,
     BTN_ACTION_BASIC,
+    BTN_CARD_THROW,
     BTN_NUM 
 };
 
@@ -110,6 +111,7 @@ static inline SDL_Rect btn_rect(int idx, bool upper)
             case BTN_SUPPLY_SKILL:     r.x = X_RIGHT;   r.y = Y_UP_1; break;
             case BTN_DECK:             r.x = X_LEFT;    r.y = Y_UP_0; break;
             case BTN_CARD_USED:        r.x = X_MID;     r.y = Y_UP_1; break;
+            case BTN_CARD_THROW:       r.x = X_LEFT;    r.y = Y_UP_1; break;
         }
     } else {
         // player1
@@ -124,6 +126,7 @@ static inline SDL_Rect btn_rect(int idx, bool upper)
             case BTN_ACTION_FOCUS:     r.x = X_MID;     r.y = Y_DOWN_2; break;
             case BTN_ACTION_SKILL:     r.x = X_MID_R;   r.y = Y_DOWN_2; break;
             case BTN_ACTION_BASIC:     r.x = X_MID_L;   r.y = Y_DOWN_2; break;
+            case BTN_CARD_THROW:       r.x = X_RIGHT;   r.y = Y_DOWN_2; break;
         }
     }
     return r;
