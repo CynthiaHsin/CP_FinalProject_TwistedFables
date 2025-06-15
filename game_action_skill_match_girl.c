@@ -29,7 +29,7 @@ int32_t skill_match_girl (int32_t card_idx[Match_Girl_CARD_IDX_NUM],  int32_t pl
             int32_t power_plus=(card_idx[Match_Girl_POWER_NUM_ATTACK]/3);
             if(card_idx[Match_Girl_POWER_NUM_ATTACK]<=0)power_plus=0;
             
-            player_data_use.power=player_data_use.power-(power_plus*3);
+            player_data_use.power-=card_idx[Match_Girl_POWER_NUM_ATTACK];
             attack_area = 1;
             int32_t damage_plus=0;
             damage_plus=skill_match_girl_attack_evolution( player_des);
@@ -175,13 +175,15 @@ int32_t skill_match_girl_movement_evolution(int32_t damage,int32_t player_des,in
     int32_t player_use= player_data_search_character(CHARACTER_MATCH_GIRL);
     sPlayerData player_data_use;
     player_data_get(&player_data_use, player_use);
-   
+    int32_t direction=0;
+    if(move_direction>0)direction=1;
+    else direction =-1;
     sCardData cards[30];
     int32_t n=0;
     if(player_data_use.defense<damage)
     {
         if(game_data_search_cards  (cards, &n,  player_use, CARD_SPACE_USE_LASTING, CARD_SKILL_MOVEMENT_EVOLUTION_L1, CARD_COST_ORIGINAL )>0)match_girl_match(player_des,1);
-        action_move (1, move_direction,  player_use);
+        action_move (1, direction,  player_use);
     }
     return 0;
 }
@@ -199,9 +201,9 @@ int32_t skill_match_girl_evolution2(int32_t player_des)
     if(game_data_search_cards  (cards, &n,  player_use, CARD_SPACE_USE_LASTING, CARD_SKILL_DEFENSE_EVOLUTION_L2, CARD_COST_ORIGINAL )>0)num+=1;
     if(game_data_search_cards  (cards, &n,  player_use, CARD_SPACE_USE_LASTING, CARD_SKILL_MOVEMENT_EVOLUTION_L2, CARD_COST_ORIGINAL )>0)num+=1;
     game_data_search_cards  (cards, &n,  player_des, CARD_SPACE_USE, CARD_MATCH, CARD_COST_ORIGINAL );
-    for(int32_t i=0;i<num;i++)
+    for(int32_t i=0;i<n;i++)
     {
-        player_data_use.power+=1;
+        player_data_use.power+=num;
     }
     player_data_set(player_use, player_data_use);
     return 0;
