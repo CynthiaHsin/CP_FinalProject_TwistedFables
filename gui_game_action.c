@@ -165,14 +165,49 @@ int32_t gui_skill_red_riding_hood (int32_t player, int32_t card_idx[CARD_IDX_NUM
             break;
         }
         case CARD_SKILL_FINISH1:
-            // ???????????
+        {
+            int32_t types[5]= {CARD_ORIGINAL, CARD_ORIGINAL, 0, 0, 0};
+            sCardData cards[3];
+            int32_t card_num= 3;
+            int32_t t;
+            card_data_get (cards + 0, card_data_get_index (player, CARD_SKILL_ATTACK_BASE_L1));
+            card_data_get (cards + 1, card_data_get_index (player, CARD_SKILL_DEFENSE_BASE_L1));
+            card_data_get (cards + 2, card_data_get_index (player, CARD_SKILL_MOVEMENT_BASE_L1));
+            types[0]= gui_choose_card (&t, cards, card_num, "Choose the deck you want to get card from (card 1).");
+            types[1]= gui_choose_card (&t, cards, card_num, "Choose the deck you want to get card from (card 2).");
+            return skill_red_riding_hood_finish (card_idx[CARD_IDX_SKILL], types, types, 0, player, player_des);
+        }
         case CARD_SKILL_FINISH2:
-            // ???????????
+        {
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+            int32_t actions[100][RED_RIDING_HOOD_CARD_IDX_NUM];
+            int32_t action_num;
+            status_red_riding_hood_get_action_used ((int32_t **)actions, &action_num);
+            sCardData cards[CARD_NUM];
+            int32_t card_num= 0;
+            for (int32_t i=0; i<action_num; i++){
+                card_data_get (cards+i, actions[i][0]);
+                card_num++;
+            }
+            int32_t type;
+            int32_t choose= gui_choose_card (&type, cards, card_num, "Choose the skill you want to do again.");
+            for (int32_t i=0; i<action_num; i++){
+                if (choose == actions[i][0]){
+                    return skill_red_riding_hood_finish (card_idx[CARD_IDX_SKILL], actions[i], actions[i], 0, player, player_des);
+                }
+            }
+        }
         case CARD_SKILL_FINISH3:
-            // ???????????
+        {
+            int32_t arr[5]= {0};
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+            int32_t delta= gui_choose_token (3, player, "choose how long you want knock the opponent back.");
+            return skill_red_riding_hood_finish (card_idx[CARD_IDX_SKILL], arr, arr, delta, player, player_des);
+        }
         default: break;
     }
-    skill_red_riding_hood (skilluse_card_idx, player, player_des);
+    if (skill_red_riding_hood (skilluse_card_idx, player, player_des)<0) return -1;
+    status_red_riding_hood_action (skilluse_card_idx);
 }
 
 int32_t gui_skill_mulan (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_t type[CARD_IDX_NUM]){
