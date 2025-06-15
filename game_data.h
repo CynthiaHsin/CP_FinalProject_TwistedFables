@@ -30,3 +30,6 @@ int32_t game_data_deck_card_fold (int32_t player, int32_t idx);
 
 // 回傳 -1 表示該疊已被買完
 int32_t game_data_get_shop_top(int32_t player, int32_t type);
+
+int32_t game_data_deck_card_deck (int32_t player, int32_t idx);
+
