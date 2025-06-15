@@ -1,5 +1,6 @@
 #include "gui_sdl_config.h"
 #include "gui_img_data.h"
+#include "gui_game_action.h"
 #include "game_data.h"
 #include "game_action.h"
 
@@ -428,15 +429,15 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                 break;
             }
             case BTN_ACTION_FOCUS: {
-                debug_print ("action focus not done\n");
+                gui_action_focus (upper ? PLAYER2 : PLAYER1);
                 return;
             }
             case BTN_ACTION_BASIC: {
-                debug_print ("action use basic not done\n");
+                gui_action_use_basic (upper ? PLAYER2 : PLAYER1);
                 return;
             }
             case BTN_ACTION_SKILL: {
-                debug_print ("action use skill not done\n");
+                gui_action_use_skill (upper ? PLAYER2 : PLAYER1);
                 return;
             }
             default: break;
