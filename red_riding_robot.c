@@ -6,7 +6,7 @@
 #include<stdint.h>
 sRed_Riding_Robot best_status;
 
-int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *best_card_attack,int *best_card_movement,int *best_card_keep, int32_t player_use,int32_t player_des) {
+int32_t red_riding_robot_process(int *card_idx, int end,int *best_card,int *best_card_skill,int *best_card_attack,int *best_card_movement,int *best_card_keep, int32_t player_use,int32_t player_des) {
     if(card_idx==NULL)return -1;
     int32_t len=end;
     sPlayerData player_data_use;
@@ -15,6 +15,7 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
     int32_t *card_attack;
     int32_t *card_movement;
     int32_t *card_keep;
+    int32_t *card_idx_tmp;
     player_data_get(&player_data_use, player_use);
     player_data_get(&player_data_des, player_des);
 
@@ -23,6 +24,15 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
     card_movement=(int32_t *)malloc(len*sizeof(int32_t));
     card_skill=(int32_t *)malloc(len*sizeof(int32_t));
     card_keep=(int32_t *)malloc(len*sizeof(int32_t));
+    card_idx_tmp=(int32_t *)malloc(len*sizeof(int32_t));
+    for(int32_t i=0;i<end;i++)
+    {
+        card_attack[i]=-1;
+        card_movement[i]=-1;
+        card_skill[i]=-1;
+        card_keep[i]=-1;
+        card_idx_tmp[i]=-1;
+    }
 
         sCardData *card_data;
         card_data=malloc(len*sizeof(sCardData));
@@ -39,6 +49,11 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
             for(int32_t i=0;i<RED_RIDING_HOOD_CARD_IDX_NUM;i++)card[i]=-1;
             sCardData cards[1];
             int n=0;
+            for(int k=0;k<len;k++)
+            {
+                if((card_skill[k]==card_idx[i])||(card_attack[k]==card_idx[i])||(card_movement[k]==card_idx[i]))n=1;
+            }
+            if(n==1)continue;
             switch(card_data[i].type)
             {
             case CARD_SKILL_ATTACK_BASE_L1:
@@ -48,6 +63,7 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
             case CARD_SKILL_MOVEMENT_BASE_L2:
             case CARD_SKILL_MOVEMENT_BASE_L3:
             {
+
             for(int32_t k=i+1;k<end;k++)
             {
                 card[0]=card_idx[i];
@@ -56,9 +72,10 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
                 
                 if(game_data_search_cards ( cards, &n,  player_use, CARD_SPACE_USE_LASTING, CARD_SKILL_ATTACK_EVOLUTION_L1, CARD_COST_ORIGINAL )==0)
                 {
-                    skill_red_riding_hood (card, player_use, player_des);
+                    if(card_attach_calculate(card_idx[k], ACTION_ATTACK)<0)continue;
+                    if(skill_red_riding_hood (card, player_use, player_des)<0)continue;
                     card_skill[i]=card_idx[k];
-                    card_idx[k]=-1;
+                    card_idx_tmp[i]=card_idx[i];
                     break;
                 }
                 else if(game_data_search_cards ( cards, &n,  player_use, CARD_SPACE_USE_LASTING, CARD_SKILL_ATTACK_EVOLUTION_L1, CARD_COST_ORIGINAL )>0)
@@ -71,11 +88,11 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
                         card[RED_RIDING_HOOD_CARD_IDX_ATTACK_EVOLUTION]=card_idx[j];
                         if(game_data_search_cards ( cards, &n,  player_use, CARD_SPACE_USE_LASTING, CARD_SKILL_MOVEMENT_EVOLUTION_L1, CARD_COST_ORIGINAL )==0)
                         {
-                            skill_red_riding_hood (card, player_use, player_des);
+                            if(card_attach_calculate(card_idx[k], ACTION_ATTACK)<0)continue;
+                            if(skill_red_riding_hood (card, player_use, player_des)<0)continue;
                             card_skill[i]=card_idx[k];
                             card_attack[i]=card_idx[j];
-                            card_idx[k]=-1;
-                            card_idx[j]=-1;
+                            card_idx_tmp[i]=card_idx[i];
                             break;
                         }
                         else if(game_data_search_cards ( cards, &n,  player_use, CARD_SPACE_USE_LASTING, CARD_SKILL_MOVEMENT_EVOLUTION_L1, CARD_COST_ORIGINAL )>0)
@@ -88,13 +105,12 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
                                 card[4]=card_idx[k];
                                 card[1]=card_idx[j];
                                 card[2]=card_idx[w];
-                                skill_red_riding_hood (card, player_use, player_des);
+                                if(card_attach_calculate(card_idx[k], ACTION_ATTACK)<0)continue;
+                                if(skill_red_riding_hood (card, player_use, player_des)<0)continue;
                                 card_skill[i]=card_idx[k];
                                 card_attack[i]=card_idx[j];
                                 card_movement[i]=card_idx[w];
-                                card_idx[k]=-1;
-                                card_idx[j]=-1;
-                                card_idx[w]=-1;
+                                card_idx_tmp[i]=card_idx[i];
                                 break;
                             }
                         }
@@ -109,16 +125,16 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
             case CARD_SKILL_DEFENSE_BASE_L2:
             case CARD_SKILL_DEFENSE_BASE_L3:
             {
+                
             for(int32_t k=i+1;k<end;k++)
             {
                 card[0]=card_idx[i];
                 card[4]=card_idx[k];
-                
+                if(card_attach_calculate(card_idx[k], ACTION_DEFENSE)<0)continue;
                 skill_red_riding_hood (card, player_use, player_des);
                 card_skill[i]=card_idx[k];
-                card_idx[k]=-1;
-                    
-                   
+                card_idx_tmp[i]=card_idx[i];
+                       
             }
             break;
             }
@@ -135,10 +151,17 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
             case CARD_BASIC_ATTACK_L1:
             case CARD_BASIC_ATTACK_L2:
             case CARD_BASIC_ATTACK_L3:
+            case CARD_BASIC_COMMON:
             {
+                
                 int32_t delta=card_data_get_level(card_data[i].type);
                 action_attack ( delta, 1, player_use,  player_des);
                 card_data[i].space=CARD_SPACE_USE;
+                card_idx_tmp[i]=card_idx[i];
+                sPlayerData player_date_use_tmp;
+                player_data_get(&player_date_use_tmp,player_use);
+                player_date_use_tmp.power+=delta;
+                player_data_set(player_use,player_date_use_tmp);
                 //printf("%d\n",card_data[i].space);
                 break;
             }
@@ -149,6 +172,11 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
                 int32_t delta=card_data_get_level(card_data[i].type);
                 action_defense ( delta,  player_use);
                 card_data[i].space=CARD_SPACE_USE;
+                card_idx_tmp[i]=card_idx[i];
+                sPlayerData player_date_use_tmp;
+                player_data_get(&player_date_use_tmp,player_use);
+                player_date_use_tmp.power+=delta;
+                player_data_set(player_use,player_date_use_tmp);
                 break;
             }
             case CARD_BASIC_MOVEMENT_L1:
@@ -158,6 +186,11 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
                 int32_t delta=card_data_get_level(card_data[i].type);
                 action_move ( delta,  1, player_use);
                 card_data[i].space=CARD_SPACE_USE;
+                card_idx_tmp[i]=card_idx[i];
+                sPlayerData player_date_use_tmp;
+                player_data_get(&player_date_use_tmp,player_use);
+                player_date_use_tmp.power+=delta;
+                player_data_set(player_use,player_date_use_tmp);
                 
                 break;
             }
@@ -194,38 +227,41 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
             status.distance = abs(player_data_usecopy.pos-player_data_use.pos);
             status.shell = player_data_usecopy.defense;
             status.power = player_data_usecopy.power;
-             //printf("%d,%d,%d,%d,%d,%d\n",card_idx[0],card_idx[1],card_idx[2],card_idx[3],card_idx[4],card_idx[5]);
+             printf("%d,%d,%d,%d,%d,%d\n",card_idx[0],card_idx[1],card_idx[2],card_idx[3],card_idx[4],card_idx[5]);
              //printf("damage=%d,distance=%d,shell=%d,power=%d\n",status.damage,status.distance,status.shell,status.power);
             // printf("best_damage=%d,distance=%d,shell=%d,power=%d\n",best_status.damage,best_status.distance,best_status.shell,best_status.power);
             if(status.distance>=3)
             {
-                if(best_status.damage>=status.damage)
+                if(best_status.damage==0)
+                if(best_status.damage>status.damage)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
                 {
-                     if(status.power>=best_status.power)
+                    if(best_status.damage>status.damage)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                    else if(status.power>=best_status.power)
                      {
-                        if(status.shell>=best_status.shell)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
-                        else if(status.power>best_status.power)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                        if(status.power>best_status.power)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                        else if(status.shell>=best_status.shell)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
                      }
-                     else if(best_status.damage>status.damage)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                     
                 }
             }
-            else if(status.damage>=best_status.damage&&best_status.distance<3)
+            else if(best_status.damage>status.damage&&best_status.distance<3)
             {
-                if(status.power>=best_status.power)
+                if(best_status.damage>status.damage)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                else if(status.power>=best_status.power)
                 {
-                    if(status.shell>=best_status.shell) red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
-                    else if(status.power>best_status.power)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                    if(status.power>best_status.power)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                    else if(status.shell>=best_status.shell)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
                 }
-                else if(best_status.damage>status.damage)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                     
             }
-            else if(status.power>=best_status.power&&best_status.distance<3&&best_status.damage==0)
+            else if(status.power>best_status.power&&status.damage==best_status.damage)
             {
-                if(status.shell>=best_status.shell)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
-                else if(status.power>best_status.power)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                if(status.power>best_status.power)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                else if(status.shell>=best_status.shell)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
             }
             else if(status.shell>=best_status.shell&&best_status.distance<3&&best_status.damage==0&&best_status.power==0)
             {
-               red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+               red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
                 
             }
             player_data_set(player_use,player_data_use);
@@ -242,12 +278,12 @@ int32_t process(int *card_idx, int end,int *best_card,int *best_card_skill,int *
         return 0;
 }
 
-int32_t generate_permutations(int *arr, int32_t n, int *best_card,int *best_card_skill,int *best_card_attack,int *best_card_movement,int *best_card_keep,int32_t player_use,int32_t player_des) {
+int32_t red_riding_robot(int *arr, int32_t n, int *best_card,int *best_card_skill,int *best_card_attack,int *best_card_movement,int *best_card_keep,int32_t player_use,int32_t player_des) {
     int c[n]; // 控制陣列（Heap's algorithm 的輔助用）
     for (int i = 0; i < n; i++) c[i] = 0;
 
     
-    if(process(arr, n,best_card,best_card_skill,best_card_attack,best_card_movement,best_card_keep, player_use, player_des)==-1)return -1; // 初始排列
+    if(red_riding_robot_process(arr, n,best_card,best_card_skill,best_card_attack,best_card_movement,best_card_keep, player_use, player_des)==-1)return -1; // 初始排列
     //printf("%d,%d,%d,%d,%d,%d\n",arr[0],arr[1],arr[2],arr[3],arr[4],arr[5]);
     int i = 0;
     while (i < n) {
@@ -263,7 +299,7 @@ int32_t generate_permutations(int *arr, int32_t n, int *best_card,int *best_card
                 arr[i] = tmp;
             }
 
-            if(process(arr, n,best_card,best_card_skill,best_card_attack,best_card_movement,best_card_keep, player_use, player_des)==-1)return -1;  // 每次新排列都處理一次
+            if(red_riding_robot_process(arr, n,best_card,best_card_skill,best_card_attack,best_card_movement,best_card_keep, player_use, player_des)==-1)return -1;  // 每次新排列都處理一次
 
             c[i] += 1;
             i = 0;
