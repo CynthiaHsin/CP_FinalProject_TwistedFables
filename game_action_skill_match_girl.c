@@ -29,7 +29,7 @@ int32_t skill_match_girl (int32_t card_idx[Match_Girl_CARD_IDX_NUM],  int32_t pl
             int32_t power_plus=(card_idx[Match_Girl_POWER_NUM_ATTACK]/3);
             if(card_idx[Match_Girl_POWER_NUM_ATTACK]<=0)power_plus=0;
             
-            player_data_use.power-=card_idx[Match_Girl_POWER_NUM_ATTACK];
+            player_data_use.power=player_data_use.power-(power_plus*3);
             attack_area = 1;
             int32_t damage_plus=0;
             damage_plus=skill_match_girl_attack_evolution( player_des);
