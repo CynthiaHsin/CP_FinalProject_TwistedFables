@@ -79,6 +79,12 @@ int32_t skill_red_riding_hood (int32_t card_idx[RED_RIDING_HOOD_CARD_IDX_NUM], i
             }
             break;
     }
+    for (int32_t i=0; i<RED_RIDING_HOOD_CARD_IDX_NUM; i++){
+        card_data_get(&card_data, card_idx[i]);
+        if (card_data.space == CARD_SPACE_HAND){
+            card_data_set (card_data.index, 1, CARD_SPACE_USE, CARD_ORIGINAL, PLAYER_ORIGINAL);
+        }
+    }
 }
 
 int32_t skill_red_riding_hood_attack_evolution (int32_t card_idx[RED_RIDING_HOOD_CARD_IDX_NUM], int32_t player_use, int32_t player_des, int32_t attack_area){
