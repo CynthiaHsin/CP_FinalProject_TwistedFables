@@ -29,12 +29,16 @@ int main(){
 
     debug_print ("player1: %d\n", characters[PLAYER1]);
     debug_print ("player2: %d\n", characters[PLAYER2]);
-    int32_t cards[4]= {0};
 
     int32_t winner= PLAYER_UNDEFINED;
     while (winner==PLAYER_UNDEFINED){
         winner= game_round();
     }
+
+    char mes[100];
+    sprintf (mes, "Game End. The winner is: %d", winner);
+    sCardData cards[1];
+    gui_show_card (cards, 0, mes);
     debug_print ("Game End. The winner is: %d\n", winner);
     // card_data_set (card_data_get_index(PLAYER1, CARD_SKILL_MOVEMENT_EVOLUTION_L1), 1, CARD_SPACE_USE_LASTING, CARD_ORIGINAL, PLAYER1);
     // player_data_print_cardon (PLAYER1);
@@ -54,6 +58,6 @@ int main(){
     // cards[3]= -1;
     // game_action_use_skill_card (cards, CARD_SKILL_ATTACK_BASE_L1, 0, 0, PLAYER1, PLAYER2);
 
-    // gui_game_end();
+    gui_game_end();
     // game start
 }

@@ -99,6 +99,7 @@ int32_t game_round_clear (int32_t mode, int32_t player){
     int32_t cards_num= 0;
     game_data_search_cards (cards, &cards_num, player, CARD_SPACE_USE_LASTING, CARD_ORIGINAL, CARD_COST_ORIGINAL);
     for (int32_t i=0; i<cards_num; i++){
+        if (card_data_is_evolution(cards[i].index)) continue;
         card_data_set (cards[i].index, 1, CARD_SPACE_THROW, CARD_ORIGINAL, PLAYER_ORIGINAL);
         debug_print ("throw: (%d)\n", cards[i].index);
     }

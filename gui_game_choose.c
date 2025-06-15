@@ -201,7 +201,7 @@ int32_t gui_choose_move_yes_or_no (char * text){
 }
 
 int32_t gui_show_card (sCardData cards[], int32_t card_num, char * text){
-    if (card_num <= 0) return -1;
+    if (card_num < 0) return -1;
 
     const int gap = 20, w = 105, h = 160, base_x = 50, base_y = 500;
     SDL_Event ev;
