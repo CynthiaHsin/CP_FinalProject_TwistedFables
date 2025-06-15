@@ -131,6 +131,58 @@ int32_t gui_action_use_skill (int32_t player){
     }
 }
 
+int32_t gui_evolution2_red_riding_hood (int32_t player){
+    int32_t stored[3], stored_on[3];
+    status_red_riding_hood_evolution2_card_get (stored);
+    status_red_riding_hood_evolution2_on_get (stored_on);
+    sCardData card_stored[CARD_IDX_NUM];
+    int32_t card_stored_num= 0;
+    for (int32_t i=0; i<3; i++){
+        if (stored[i]<0) continue;
+        card_data_get (card_stored + card_stored_num, stored[i]);
+        card_stored_num++;
+    }
+    gui_show_card (card_stored, card_stored_num, "Now you have stored these cards:");
+    
+    sCardData card_hand[CARD_NUM];
+    int32_t hand_num;
+    game_data_search_cards (card_hand, &hand_num, player, CARD_SPACE_HAND, CARD_ORIGINAL, -1);
+    for (int32_t i=0; i<3; i++){
+        if (stored_on[i] && stored[i]!=-1){
+            int32_t choose= gui_choose_move_yes_or_no ("Do you want to store another card?");
+            if (!choose) return 0;
+            int32_t card_idx[CARD_IDX_NUM];
+            int32_t card_type[CARD_IDX_NUM];
+            if (i==0){
+                card_type[0]= CARD_SKILL_ATTACK_EVOLUTION_L2;
+            }else if (i==2){
+                card_type[0]= CARD_SKILL_DEFENSE_EVOLUTION_L2;
+            }else{
+                card_type[0]= CARD_SKILL_MOVEMENT_EVOLUTION_L2;
+            }
+            card_idx[0]= card_data_get_index(player, card_type[0]);
+            return gui_skill_red_riding_hood (player, card_idx, card_type);
+        }
+    }
+    for (int32_t i=0; i<3; i++){
+        if (stored_on[i] && stored[i]!=-1){
+            int32_t choose= gui_choose_move_yes_or_no ("Do you want to get a stored card?");
+            if (!choose) return 0;
+            int32_t card_choose= gui_choose_card (&choose, card_stored, card_stored_num, "Choose the card you want to get.");
+            if (card_choose<0) return -1;
+            int32_t card_type[CARD_IDX_NUM];
+            if (i==0){
+                card_type[0]= CARD_SKILL_ATTACK_EVOLUTION_L2;
+            }else if (i==2){
+                card_type[0]= CARD_SKILL_DEFENSE_EVOLUTION_L2;
+            }else{
+                card_type[0]= CARD_SKILL_MOVEMENT_EVOLUTION_L2;
+            }
+            return status_red_riding_hood_evolution2_card_set (card_choose, card_type[0]);
+        }
+    }
+}
+
 int32_t gui_skill_red_riding_hood (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_t type[CARD_IDX_NUM]){
     int32_t skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_NUM];
     skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_SKILL]= card_idx[CARD_IDX_SKILL];
@@ -165,14 +217,60 @@ int32_t gui_skill_red_riding_hood (int32_t player, int32_t card_idx[CARD_IDX_NUM
             break;
         }
         case CARD_SKILL_FINISH1:
-            // ???????????
+        {
+            int32_t types[5]= {CARD_ORIGINAL, CARD_ORIGINAL, 0, 0, 0};
+            sCardData cards[3];
+            int32_t card_num= 3;
+            int32_t t;
+            card_data_get (cards + 0, card_data_get_index (player, CARD_SKILL_ATTACK_BASE_L1));
+            card_data_get (cards + 1, card_data_get_index (player, CARD_SKILL_DEFENSE_BASE_L1));
+            card_data_get (cards + 2, card_data_get_index (player, CARD_SKILL_MOVEMENT_BASE_L1));
+            types[0]= gui_choose_card (&t, cards, card_num, "Choose the deck you want to get card from (card 1).");
+            types[1]= gui_choose_card (&t, cards, card_num, "Choose the deck you want to get card from (card 2).");
+            return skill_red_riding_hood_finish (card_idx[CARD_IDX_SKILL], types, types, 0, player, player_des);
+        }
         case CARD_SKILL_FINISH2:
-            // ???????????
+        {
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+            int32_t actions[100][RED_RIDING_HOOD_CARD_IDX_NUM];
+            int32_t action_num;
+            status_red_riding_hood_get_action_used ((int32_t **)actions, &action_num);
+            sCardData cards[CARD_NUM];
+            int32_t card_num= 0;
+            for (int32_t i=0; i<action_num; i++){
+                card_data_get (cards+i, actions[i][0]);
+                card_num++;
+            }
+            int32_t type;
+            int32_t choose= gui_choose_card (&type, cards, card_num, "Choose the skill you want to do again.");
+            for (int32_t i=0; i<action_num; i++){
+                if (choose == actions[i][0]){
+                    return skill_red_riding_hood_finish (card_idx[CARD_IDX_SKILL], actions[i], actions[i], 0, player, player_des);
+                }
+            }
+        }
         case CARD_SKILL_FINISH3:
-            // ???????????
+        {
+            int32_t arr[5]= {0};
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+            int32_t delta= gui_choose_token (3, player, "choose how long you want knock the opponent back.");
+            return skill_red_riding_hood_finish (card_idx[CARD_IDX_SKILL], arr, arr, delta, player, player_des);
+        }
+        case CARD_SKILL_ATTACK_EVOLUTION_L2:
+        case CARD_SKILL_DEFENSE_EVOLUTION_L2:
+        case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
+        {
+            sCardData cards[CARD_NUM];
+            int32_t cnt;
+            game_data_search_cards (cards, &cnt, player, CARD_SPACE_HAND, CARD_ORIGINAL, -1);
+            int32_t type;
+            skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_EVOLUTION2]= gui_choose_card (&type, cards, cnt, "Choose the card you want to store.");
+            break;
+        }
         default: break;
     }
-    skill_red_riding_hood (skilluse_card_idx, player, player_des);
+    if (skill_red_riding_hood (skilluse_card_idx, player, player_des)<0) return -1;
+    status_red_riding_hood_action (skilluse_card_idx);
 }
 
 int32_t gui_skill_mulan (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_t type[CARD_IDX_NUM]){

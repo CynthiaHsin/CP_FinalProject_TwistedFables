@@ -1,6 +1,7 @@
 # include "game_action_skill_red_riding_hood.h"
 # include "game_data.h"
 # include "game_action_basic.h"
+# include "gui_game_choose.h"
 
 // card0: main skill, card1: attack evolution, card2: movement evolution, card3: evolution 2, for no card use: -1
 int32_t skill_red_riding_hood (int32_t card_idx[RED_RIDING_HOOD_CARD_IDX_NUM], int32_t player_use, int32_t player_des){
@@ -224,15 +225,19 @@ int32_t skill_red_riding_hood_finish3 (int32_t finish3_delta, int32_t player_use
     int32_t direction= player_data_des.pos - player_data_use.pos;
     action_move (finish3_delta, direction, player_des);
     // highlight call ui for throw card
-    int32_t card_throw_idx[3];
-    card_throw_idx[0]= card_throw_idx[1]= card_throw_idx[2]= -1;
+    int32_t card_throw_idx= -1;
     // ---------
-    printf ("in game_action_skill_red_riding_hood (228) || WARRINING: should call ui here!!!!\n");
-    // ---------
+    sCardData cards[CARD_NUM];
     for (int32_t i=0; i<3; i++){
-        if (card_throw_idx[i]<0) return -1;
-        card_data_set (card_throw_idx[i], 1, CARD_SPACE_THROW, CARD_ORIGINAL, PLAYER_ORIGINAL);
+        int32_t t;
+        int32_t cnt;
+        game_data_search_cards (cards, &cnt, player_des, CARD_SPACE_HAND, CARD_ORIGINAL, -1);
+        while (card_throw_idx<0) {
+            card_throw_idx= gui_choose_card (&t, cards, cnt, "Choose the card that you have to throw.");
+        }
+        card_data_set (card_throw_idx, 1, CARD_SPACE_THROW, CARD_ORIGINAL, PLAYER_ORIGINAL);
     }
+    // ---------
     return 0;
 }
 
