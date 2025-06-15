@@ -138,6 +138,7 @@ int32_t gui_evolution2_red_riding_hood (int32_t player){
     sCardData card_stored[CARD_IDX_NUM];
     int32_t card_stored_num= 0;
     for (int32_t i=0; i<3; i++){
+        debug_print ("%d, %d\n", stored[i], stored_on[i]);
         if (stored[i]<0) continue;
         card_data_get (card_stored + card_stored_num, stored[i]);
         card_stored_num++;
@@ -148,8 +149,8 @@ int32_t gui_evolution2_red_riding_hood (int32_t player){
     int32_t hand_num;
     game_data_search_cards (card_hand, &hand_num, player, CARD_SPACE_HAND, CARD_ORIGINAL, -1);
     for (int32_t i=0; i<3; i++){
-        if (stored_on[i] && stored[i]!=-1){
-            int32_t choose= gui_choose_move_yes_or_no ("Do you want to store another card?");
+        if (stored_on[i] && stored[i]==-1){
+            int32_t choose= gui_choose_move_yes_or_no ("Do you want to store a card?");
             if (!choose) return 0;
             int32_t card_idx[CARD_IDX_NUM];
             int32_t card_type[CARD_IDX_NUM];
@@ -384,6 +385,16 @@ int32_t gui_skill_kaguya (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_
         default: break;
     }
     return skill_kaguya (card_idx, skill_move_use_hp_card_idx, skill_move_evolution_direction, player, player_des);
+}
+
+// return card idx
+int32_t gui_passive_dorothy (int32_t player){
+    int32_t choose= gui_choose_move_yes_or_no ("Do you want to use the passive skill?");
+    if (!choose) return -1;
+    sCardData cards[CARD_NUM];
+    int32_t cnt;
+    gui_action_get_skill_card (cards, &cnt, player, CARD_SPACE_HAND);
+    return gui_choose_card (&cnt, cards, cnt, "Choose the skill you want to use.");
 }
 
 int32_t gui_skill_dorothy (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_t type[CARD_IDX_NUM]){

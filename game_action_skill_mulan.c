@@ -127,7 +127,6 @@ int32_t skill_mulan_finish (int32_t card_idx, int32_t finish2_direction, int32_t
 int32_t skill_mulan_passive_attacked (int32_t attack_delta, int32_t player){
     int32_t card_throw= CARD_ORIGINAL;
     // -----
-    printf ("game_action_mulan (130) || MARK: UI get card to throw here!!!!!!\n");
     sCardData cards[CARD_NUM];
     int32_t cnt;
     int32_t type;
@@ -150,10 +149,27 @@ int32_t skill_mulan_round_start (int32_t player){
     return 0;
 }
 
-int32_t skill_mulan_round_end (int32_t defense_pull_token, int32_t defense_evolution1_card_idx_throw, int32_t player){
+int32_t skill_mulan_round_end (int32_t player){
     sPlayerData player_data;
     player_data_get (&player_data, player);
     int32_t pull= status_mulan_use_finish1() * 4;
+
+    int32_t defense_pull_token= 0;
+    if (status_mulan_defense_token_accept_get ()) {
+        defense_pull_token= gui_choose_token (MIN(status_mulan_defense_token_accept_get (), player_data.token), player, 
+                                            "How much token you want to use for pulling cards.");
+    }
+    int32_t defense_evolution1_card_idx_throw= -1;
+    if (player_data_card_is_on(-1, CARD_SKILL_DEFENSE_EVOLUTION_L1, player)){
+        int32_t choose= gui_choose_move_yes_or_no("Dotou want to throw a card for pulling another?");
+        if (choose){
+            sCardData cards[CARD_NUM];
+            int32_t cnt;
+            int32_t type;
+            game_data_search_cards (cards, &cnt, player, CARD_SPACE_HAND, CARD_ORIGINAL, -1);
+            defense_evolution1_card_idx_throw= gui_choose_card (&type, cards, cnt, "Choose the card to throw.");
+        }
+    }
     if (defense_pull_token>0){
         pull+= status_mulan_token_add (-1*defense_pull_token, player);
     }

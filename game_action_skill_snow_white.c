@@ -22,7 +22,6 @@ int32_t skill_snow_white (int32_t card_idx[Snow_White_CARD_IDX_NUM], int32_t mov
         case CARD_SKILL_ATTACK_BASE_L2:
         case CARD_SKILL_ATTACK_BASE_L3:
         {
-            //printf("ddddddd\n");
             int32_t attach_level= card_attach_calculate(card_idx[Snow_White_CARD_IDX_ATTACH], ACTION_ATTACK);
             int32_t level=card_level+attach_level;
             attack_area = 1;

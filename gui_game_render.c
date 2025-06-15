@@ -181,7 +181,7 @@ void draw_stat_text(int x, int y, const char *utf8)
 {
     SDL_Color white = {255, 255, 255, 255};           // 文字顏色
     SDL_Surface *surf = TTF_RenderUTF8_Blended(font_main, utf8, white);
-    if (!surf) { printf("TTF_RenderUTF8 failed: %s\n", TTF_GetError()); return; }
+    if (!surf) { debug_print("TTF_RenderUTF8 failed: %s\n", TTF_GetError()); return; }
 
     SDL_Texture *tex = SDL_CreateTextureFromSurface(ren, surf);
     SDL_Rect dst = {x, y, surf->w, surf->h};
