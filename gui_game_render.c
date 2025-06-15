@@ -554,7 +554,7 @@ void popup(SDL_Event* ev, enum BtnId id, bool upper, int32_t characters[])
 
                 const int x0 = win.x + 30, y0 = win.y + 30;
                 const int dx = CARD_W + 40, dy = CARD_H + 60;
-                const int col_max = 10;
+                const int col_max = 5;
                 SDL_Rect card_rects[CARD_NUM];
 
                 for (int i = 0; i < card_num; ++i) {
