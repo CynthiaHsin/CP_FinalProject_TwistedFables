@@ -132,27 +132,47 @@ int32_t gui_action_use_skill (int32_t player){
 }
 
 int32_t gui_skill_red_riding_hood (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_t type[CARD_IDX_NUM]){
+    int32_t skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_NUM];
+    skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_SKILL]= card_idx[CARD_IDX_SKILL];
+    skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_ATTACH]= card_idx[CARD_IDX_ATTACH];
+    int32_t player_des= player;
+    sPlayerData pd;
+    player_data_get (&pd, player);
     switch (type[CARD_IDX_SKILL]){
         case CARD_SKILL_ATTACK_BASE_L1:
         case CARD_SKILL_ATTACK_BASE_L2:
         case CARD_SKILL_ATTACK_BASE_L3:
-        case CARD_SKILL_DEFENSE_BASE_L1:
-        case CARD_SKILL_DEFENSE_BASE_L2:
-        case CARD_SKILL_DEFENSE_BASE_L3:
         case CARD_SKILL_MOVEMENT_BASE_L1:
         case CARD_SKILL_MOVEMENT_BASE_L2:
         case CARD_SKILL_MOVEMENT_BASE_L3:
-        case CARD_SKILL_ATTACK_EVOLUTION_L1:
-        case CARD_SKILL_DEFENSE_EVOLUTION_L1:
-        case CARD_SKILL_MOVEMENT_EVOLUTION_L1:
-        case CARD_SKILL_ATTACK_EVOLUTION_L2:
-        case CARD_SKILL_DEFENSE_EVOLUTION_L2:
-        case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
+        {
+            sCardData cards[CARD_NUM];
+            int32_t card_num;
+            int32_t type;
+            gui_action_get_card (cards, &card_num, player, CARD_SPACE_HAND, CARD_SKILL_ATTACK_BASE_L1, CARD_SKILL_DEFENSE_EVOLUTION_L2);
+            if (player_data_card_is_on (CARD_ORIGINAL, CARD_SKILL_ATTACK_EVOLUTION_L1, player))
+                skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_ATTACK_EVOLUTION]= gui_choose_card (&type, cards, card_num, "Choose a card if you wand to use ATTACK EVOLUTION 1.");
+            while (player_data_card_is_on (CARD_ORIGINAL, CARD_SKILL_MOVEMENT_EVOLUTION_L1, player)
+                ||(skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_MOVEMENT_EVOLUTION]==skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_ATTACK_EVOLUTION] && skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_ATTACK_EVOLUTION]!=-1))
+                skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_MOVEMENT_EVOLUTION]= gui_choose_card (&type, cards, card_num, "Choose a card if you wand to use ATTACK EVOLUTION 1.");
+            // no break
+        }
+        case CARD_SKILL_DEFENSE_BASE_L1:
+        case CARD_SKILL_DEFENSE_BASE_L2:
+        case CARD_SKILL_DEFENSE_BASE_L3:
+        {
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+            break;
+        }
         case CARD_SKILL_FINISH1:
+            // ???????????
         case CARD_SKILL_FINISH2:
+            // ???????????
         case CARD_SKILL_FINISH3:
+            // ???????????
         default: break;
     }
+    skill_red_riding_hood (skilluse_card_idx, player, player_des);
 }
 
 int32_t gui_skill_mulan (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_t type[CARD_IDX_NUM]){
