@@ -18,14 +18,14 @@ CFLAGS := -Wall -Wextra -std=c99 -O2 `sdl2-config --cflags`
 LDFLAGS := `sdl2-config --libs` -lSDL2_ttf -lSDL2_image -lSDL2 -lm
 OBJ := $(OBJ_GAME) $(OBJ_GUI) $(OBJ_ROBOT)
 
-all: TwitedFables
-	# - gcc game.c $(OBJ) -o game
+all:
+	$(CC) $(OBJ) $(LDFLAGS) game.c -o game 
 
 debug:
 	- $(CC) $(OBJ) $(LDFLAGS) -D _DEBUG_ game.c  -o game 
 	# - gcc -D _DEBUG_ test_main.c $(FUNC) -o test 
 
 clean:
-	- rm -f *.o TwitedFables
+	# - rm -f *.o TwitedFables
 	- rm test
 	- rm game
