@@ -190,3 +190,44 @@ int32_t gui_choose_move_yes_or_no (char * text){
         }
     }
 }
+
+int32_t gui_show_card (sCardData cards[], int32_t card_num, char * text){
+    if (card_num <= 0) return -1;
+
+    const int gap = 20, w = 105, h = 160, base_x = 50, base_y = 500;
+    SDL_Event ev;
+
+    while (1) {
+        SDL_SetRenderDrawColor(ren, 0, 0, 0, 200);
+        SDL_RenderFillRect(ren, NULL);
+        draw_hint(text, 0);
+
+        for (int i = 0; i < card_num; ++i) {
+            SDL_Rect d = { base_x + i*(w+gap), base_y, w, h };
+            SDL_Texture **t;
+            gui_imd_data_texture_get(&t, cards[i].type, PLAYER1);
+            SDL_RenderCopy(ren, t[cards[i].type], NULL, &d);
+        }
+        SDL_RenderPresent(ren);
+
+        if (wait_event(&ev) != 0) return -1;
+
+        if (ev.type == SDL_KEYDOWN) {
+            switch (ev.key.keysym.sym) {
+                case SDLK_ESCAPE:
+                case SDLK_RETURN: 
+                    return 0;
+            }
+        }
+        // if (ev.type == SDL_MOUSEBUTTONDOWN && ev.button.button == SDL_BUTTON_LEFT) {
+        //     SDL_Point p = { ev.button.x, ev.button.y };
+        //     for (int i = 0; i < card_num; ++i) {
+        //         SDL_Rect d = { base_x + i*(w+gap), base_y, w, h };
+        //         if (SDL_PointInRect(&p, &d)) {
+        //             if (pCard_type) *pCard_type = cards[i].type;
+        //             return cards[i].index;
+        //         }
+        //     }
+        // }
+    }
+}

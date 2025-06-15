@@ -10,3 +10,4 @@ int32_t gui_choose_move_direction (char * text);
 int32_t gui_choose_des_player (char * text);
 int32_t gui_choose_token (int32_t token_use_max, int32_t player, char * text);
 int32_t gui_choose_move_yes_or_no (char * text);
+int32_t gui_show_card (sCardData cards[], int32_t card_num, char * text);

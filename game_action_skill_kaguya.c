@@ -29,17 +29,19 @@ int32_t skill_kaguya (int32_t card_idx[KAGUYA_CARD_IDX_NUM], int32_t skill_move_
         case CARD_SKILL_DEFENSE_BASE_L1:
         case CARD_SKILL_DEFENSE_BASE_L2:
         case CARD_SKILL_DEFENSE_BASE_L3:
-            //------
-            printf ("game_action_kaguya (30) || mark: display card");
-            //------
             action_defense (level_attach + level_skill, player_use);
+            sCardData cards[3];
             int32_t choose[3]= {0}; // 0: return, -1: throw, 1: defense
             for (int32_t i=0; i<level_skill; i++){
                 game_data_get_deck_card (&card_data, player_use, i);
-                //------
-                printf ("game_action_kaguya (36) || mark: display card");
-                //------
+                card_data_get (cards+i, card_data.index);
+                if (card_data.type>=CARD_BASIC_DEFENSE_L1 && card_data.type<=CARD_BASIC_DEFENSE_L3){
+                    choose[i]= 1;
+                }
             }
+            //------
+            gui_show_card (cards, level_skill, "Card in DECK:");
+            //------
             for (int32_t i=level_skill; i>=0; i--){
                 if (choose[i]==1){
                     deck_data_draw_cards (player_use, 1);
