@@ -17,6 +17,9 @@ typedef enum _eSkillCardIdx{
     CARD_IDX_NUM
 } eSkillCardIdx;
 
+extern SDL_Renderer *ren;
+extern TTF_Font     *font_main;
+
 int32_t gui_action_get_card (sCardData cards[], int32_t *pNum, int32_t player, int32_t space, int32_t type_min, int32_t type_max){
     int32_t card_num= 0;
     int32_t cnt= 0;

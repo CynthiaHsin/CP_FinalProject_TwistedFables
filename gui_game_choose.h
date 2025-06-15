@@ -1,5 +1,6 @@
 # pragma once
 # include "game_data_card.h"
+# include "gui_sdl_config.h"
 
 void draw_hint(const char *utf8);
 int wait_event(SDL_Event *ev) ;
