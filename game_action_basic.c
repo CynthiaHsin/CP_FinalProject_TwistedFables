@@ -2,6 +2,7 @@
 # include "game_action_basic.h"
 # include "game_data.h"
 # include "game_action_skill_kaguya.h"
+# include "gui_game_choose.h"
 
 int32_t action_attack (int32_t delta, int32_t area, int32_t player_use, int32_t player_des){
     sPlayerData player_data_use;
@@ -102,7 +103,17 @@ int32_t action_gain_finish (int32_t player){
     if (player_data_card_is_on (CARD_ORIGINAL, CARD_SKILL_FINISH3, player)) return 0;
     int32_t finish_card_idx= card_data_get_index (player, CARD_SKILL_FINISH1);
     // ------
-    printf ("game_action_basic (87) || mark: choose finish_card\n");
+    sCardData cards[CARD_NUM];
+    int32_t card_num= 0;
+    int32_t cnt;
+    game_data_search_cards (cards + card_num, &cnt, player, CARD_SPACE_SHOP, CARD_SKILL_FINISH1, -1);
+    card_num+= cnt;
+    game_data_search_cards (cards + card_num, &cnt, player, CARD_SPACE_SHOP, CARD_SKILL_FINISH2, -1);
+    card_num+= cnt;
+    game_data_search_cards (cards + card_num, &cnt, player, CARD_SPACE_SHOP, CARD_SKILL_FINISH3, -1);
+    card_num+= cnt;
+    int32_t type;
+    finish_card_idx= gui_choose_card (&type, cards, card_num, "Choose your finish skill.");
     // ------   
     card_data_set (finish_card_idx, 1 , CARD_SPACE_HAND, CARD_ORIGINAL, player);
     return 0;
