@@ -2,6 +2,7 @@
 # include "game_action_skill_dorothy.h"
 # include "game_action_basic.h"
 # include "game_data.h"
+# include "gui_game_action.h"
 
 int32_t skill_dorothy (int32_t card_idx[DOROTHY_CARD_IDX_NUM], int32_t defense_throw_idx[3], int32_t defense_throw_num, 
                        int32_t movement_evolution1_card_idx[], int32_t movement_evolution1_card_num, int32_t mevement_evolution1_des_direction,
@@ -84,9 +85,9 @@ int32_t skill_dorothy (int32_t card_idx[DOROTHY_CARD_IDX_NUM], int32_t defense_t
     // passive
     int32_t passive_card_idx[2]= {CARD_ORIGINAL, CARD_ORIGINAL};
     // -----
-    printf ("確認是否使用被動");
+    passive_card_idx[0]= gui_passive_dorothy (player_use);
     // -----
-    if (passive_card_idx<0) return 0;
+    if (passive_card_idx[0]<0) return 0;
     card_data_get (&card_data, card_idx[0]);
     level_skill= card_data_get_level (card_data.type);
     card_data_get (&card_data, passive_card_idx[0]);
