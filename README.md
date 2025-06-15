@@ -57,6 +57,6 @@
 
 ## 成員與分工
 
-- @CynthiaHsin  ：遊戲主體
-- @willyliki    ：遊戲介紹
-- @AndyShe-811  ：對戰機器人
+- [@CynthiaHsin](https://github.com/CynthiaHsin)  ：遊戲主體
+- [@willyliki  ](https://github.com/willyliki)      ：遊戲介紹
+- [@AndyShe-811](https://github.com/AndyShe-811)  ：對戰機器人
