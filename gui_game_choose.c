@@ -170,7 +170,7 @@ int32_t gui_choose_token (int32_t token_use_max, int32_t player, char * text){
     }
 }
 
-// return -1(yes), 0(no), else(error)
+// return 1(yes), 0(no), else(error)
 int32_t gui_choose_move_yes_or_no (char * text){
     int32_t dir = 1;          // 右
     SDL_Event ev;
