@@ -122,12 +122,12 @@ int32_t gui_action_use_skill (int32_t player){
     sPlayerData pd;
     player_data_get (&pd, player);
     switch (pd.character){
-        case CHARACTER_RED_RIDING_HOOD:     return -1;
-        case CHARACTER_MULAN:               return -1;
-        case CHARACTER_KAGUYA:              return -1;
+        case CHARACTER_RED_RIDING_HOOD:     return gui_skill_red_riding_hood (player, card_idx, type);
+        case CHARACTER_MULAN:               return gui_skill_mulan (player, card_idx, type);
+        case CHARACTER_KAGUYA:              return gui_skill_kaguya (player, card_idx, type);
         case CHARACTER_DOROTHY:             return gui_skill_dorothy (player, card_idx, type);
-        case CHARACTER_SNOW_WHITE:          return -1;
-        case CHARACTER_MATCH_GIRL:          return -1;
+        case CHARACTER_SNOW_WHITE:          return gui_skill_snow_white (player, card_idx, type);
+        case CHARACTER_MATCH_GIRL:          return gui_skill_match_girl (player, card_idx, type);
         default: return -1;
     }
 }

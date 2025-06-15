@@ -200,6 +200,7 @@ void card_data_set(int32_t idx, int32_t num, int32_t space, int32_t type, int32_
         card_data[idx].space= space;
         if (type!=CARD_ORIGINAL) card_data[idx].type= type;
         if (player!=PLAYER_ORIGINAL) card_data[idx].player= player;
+        // if (player==PLAYER1 && space!=CARD_SPACE_SHOP) card_data_print (idx, 1);
         if (player!=PLAYER_ORIGINAL && space!=CARD_SPACE_SHOP) player_data_set_card (player, idx);
     }
 }
@@ -234,6 +235,8 @@ void card_data_print (int32_t idx, int32_t num){
         // if (!strstr(card_space_name, "USE")) continue;
         // if (!strstr(card_space_name, "DECK")) continue;
 
+        // printf ("card %d (%s), \tspace: %s, \tplayer: %d, \tcost: %d\n",
+        //      idx, card_type_name, card_space_name, card_data[idx].player, card_data[idx].cost);
         debug_print ("card %d (%s), \tspace: %s, \tplayer: %d, \tcost: %d\n",
              idx, card_type_name, card_space_name, card_data[idx].player, card_data[idx].cost);
     }
