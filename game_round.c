@@ -121,12 +121,13 @@ int32_t game_round_action (int32_t mode, int32_t player){
         sCardData hand_card[CARD_NUM];
         game_data_search_cards (hand_card, &n, player, CARD_SPACE_HAND, CARD_ORIGINAL, -1);
         for (int32_t i=0; i<n; i++) arr[i]= hand_card[i].index;
-        int32_t best_card[n];
-        int32_t best_card_skill[n];
-        int32_t best_card_defense[n];
+        int32_t best_card[CARD_NUM];
+        int32_t best_card_skill[CARD_NUM];
+        int32_t best_card_defense[CARD_NUM];
         int32_t player_use= PLAYER2;
         int32_t player_des= PLAYER1;
         snow_white_robot (arr, n, best_card, best_card_skill, best_card_defense, player_use, player_des);
+        // return 0;
         map_data_refresh();
         player_data_print (player);
         int32_t skill_cards[Snow_White_CARD_IDX_NUM]= {-1, -1, -1, -1, -1, -1};
@@ -141,6 +142,7 @@ int32_t game_round_action (int32_t mode, int32_t player){
         if (map_data_is_at_edge(player)) direction*= -1;
 
         for (int32_t i=0; i<n; i++){
+            if (best_card[i]<0) continue;
             card_data_get (&card_data, best_card[i]);
             if (card_data.type>= CARD_BASIC_ATTACK_L1 && card_data.type <= CARD_BASIC_MOVEMENT_L3){
                 game_action_use_basic_card (card_data.index, card_data.type, 0, direction, player_use, player_des);
