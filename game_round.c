@@ -19,33 +19,35 @@ int32_t game_round(){
     for (int32_t i=0; i<2; i++){
         // debug_print ("player_order %d: %d\n", i, status.player_order[i]);
         int32_t player= status.player_order[i];
-        // 回合開始階段
-        game_round_start (mode, player);
-        // 判斷是否結束
-        winner= game_round_gameend_parse (mode);
-        if (winner!=PLAYER_UNDEFINED){
-            return winner;
-        }
-        // 清理階段
-        game_round_clear (mode, player);
-        // 判斷是否結束
-        winner= game_round_gameend_parse (mode);
-        if (winner!=PLAYER_UNDEFINED){
-            return winner;
-        }
-        // 行動階段
-        game_round_action (mode, player);
-        // 判斷是否結束
-        winner= game_round_gameend_parse (mode);
-        if (winner!=PLAYER_UNDEFINED){
-            return winner;
-        }
-        // 結束階段
-        game_round_end (mode, player);
-        // 判斷是否結束
-        winner= game_round_gameend_parse (mode);
-        if (winner!=PLAYER_UNDEFINED){
-            return winner;
+        if (player == PLAYER1){
+            // 回合開始階段
+            game_round_start (mode, player);
+            // 判斷是否結束
+            winner= game_round_gameend_parse (mode);
+            if (winner!=PLAYER_UNDEFINED){
+                return winner;
+            }
+            // 清理階段
+            game_round_clear (mode, player);
+            // 判斷是否結束
+            winner= game_round_gameend_parse (mode);
+            if (winner!=PLAYER_UNDEFINED){
+                return winner;
+            }
+            // 行動階段
+            game_round_action (mode, player);
+            // 判斷是否結束
+            winner= game_round_gameend_parse (mode);
+            if (winner!=PLAYER_UNDEFINED){
+                return winner;
+            }
+            // 結束階段
+            game_round_end (mode, player);
+            // 判斷是否結束
+            winner= game_round_gameend_parse (mode);
+            if (winner!=PLAYER_UNDEFINED){
+                return winner;
+            }
         }
     }
     status_data_next_round();

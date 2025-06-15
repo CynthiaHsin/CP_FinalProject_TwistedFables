@@ -439,7 +439,8 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                 break;
             }
             case BTN_ACTION_FOCUS: {
-                gui_action_focus (upper ? PLAYER2 : PLAYER1);
+                if (gui_action_focus (upper ? PLAYER2 : PLAYER1)<0) return;
+                gui_round_running= false;
                 return;
             }
             case BTN_ACTION_BASIC: {

@@ -22,3 +22,5 @@ int32_t status_data_end_game();
 int32_t status_data_cpy (sStatusData *pStatusData, sStatusData src);
 int32_t status_data_get (sStatusData *pStatusData);
 int32_t status_data_get_mode (int32_t *pMode);
+
+int32_t status_data_add_action (int32_t player);

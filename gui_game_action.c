@@ -40,6 +40,10 @@ int32_t gui_action_get_skill_card (sCardData cards[], int32_t *pNum, int32_t pla
 }
 
 int32_t gui_action_focus (int32_t player){
+    int32_t action_allow[ACTION_NUM];
+    game_action_actions_allow (action_allow, player);
+    if (!action_allow[ACTION_FOCUS]) return -1;
+    debug_print ("action_allow\n");
     sCardData cards[CARD_NUM];
     int32_t card_num= 0;
     int32_t card_type= CARD_UNDEFINED;

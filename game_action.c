@@ -86,6 +86,7 @@ int32_t game_action_buy_card (int32_t card_idx, int32_t player){
         default:
             break;
     }
+    status_data_add_action (player);
     return 0;
 }
 
@@ -104,7 +105,7 @@ int32_t game_action_focus (int32_t card_delete_hand, int32_t card_delete_throw, 
         debug_print ("error: card (%d) is not in hand\n", card.index);
         return -1;
     }
-    card_data_get (&card, card_delete_hand);
+    card_data_get (&card, card_delete_throw);
     if (card.space!=CARD_SPACE_THROW){
         debug_print ("error: card (%d) is not in throw\n", card.index);
         return -1;
@@ -113,6 +114,7 @@ int32_t game_action_focus (int32_t card_delete_hand, int32_t card_delete_throw, 
     // delete
     card_data_set (card_delete_hand, 1, CARD_SPACE_DELETE, CARD_ORIGINAL, PLAYER_ORIGINAL);
     card_data_set (card_delete_throw, 1, CARD_SPACE_DELETE, CARD_ORIGINAL, PLAYER_ORIGINAL);
+    status_data_add_action (player);
     return 0;
 }
 
@@ -159,8 +161,8 @@ int32_t game_action_use_basic_card (int32_t card_idx, int32_t card_type, int32_t
             break;
     }
     action_modefy_power (level, player_use);
-
     card_data_set (card_idx, 1, CARD_SPACE_USE, CARD_ORIGINAL, PLAYER_ORIGINAL);
+    status_data_add_action (player_use);
     return 0;
 }
 
@@ -211,6 +213,7 @@ int32_t game_action_use_skill_card (int32_t card_idx[], int32_t card_num, int32_
             return -1;
     }
     
+    status_data_add_action (player_use);
     return 0;
 }
 
