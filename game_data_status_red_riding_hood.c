@@ -1,5 +1,6 @@
 # include "game_data_status_red_riding_hood.h"
 # include "game_data_card.h"
+# include "game_data_player.h"
 # include "game_action_skill_red_riding_hood.h"
 # define EVOLUTION_MAX 3
 # define ROUND_ACTION_MAX 100
@@ -68,8 +69,21 @@ int32_t status_red_riding_hood_evolution2_card_get (int32_t card_storege_idx[EVO
 }
 
 int32_t status_red_riding_hood_evolution2_on_get (int32_t evolution_idx[EVOLUTION_MAX]){
+    int32_t player= PLAYER1;
+    sPlayerData pd;
+    player_data_get (&pd, player);
+    while (pd.character != CHARACTER_RED_RIDING_HOOD){
+        player++;
+        player_data_get (&pd, player);
+        if (player>PLAYER2) break;
+    }
+    int32_t type[EVOLUTION_MAX]= {
+        CARD_SKILL_ATTACK_EVOLUTION_L2,
+        CARD_SKILL_DEFENSE_EVOLUTION_L2,
+        CARD_SKILL_MOVEMENT_EVOLUTION_L2
+    };
     for (int32_t i=0; i<EVOLUTION_MAX; i++){
-        evolution_idx[i]= evolution2_storege_on[i];
+        evolution_idx[i]= evolution2_storege_on[i]= player_data_card_is_on(-1, type[i], player);
     }
     return 0;
 }
