@@ -54,10 +54,10 @@ int32_t choose_character(SDL_Renderer* ren, SDL_Texture* character[], bool runni
                         break;
                     case SDLK_RETURN:
                         if (selected == enemy) {
-                            printf("這個角色已被對手選擇，請選別的角色！\n");
+                            debug_print ("這個角色已被對手選擇，請選別的角色！\n");
                             break;
                         }
-                        printf("You selected image #%d\n", selected + 1);
+                        debug_print ("You selected image #%d\n", selected + 1);
                         running = false;
                         break;
                 }
