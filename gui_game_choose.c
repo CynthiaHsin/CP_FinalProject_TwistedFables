@@ -130,34 +130,43 @@ int32_t gui_choose_des_player (char * text){ // 0: choose me, 1: choose componen
 int32_t gui_choose_token (int32_t token_use_max, int32_t player, char * text){
     sPlayerData pd;
     if (player_data_get(&pd, player) < 0)       return -1;
-
-    // 這裡有問題
-    // token 就是 token 不是能量
-    // token_use_max 是輸入最多用多少
-
-    // if (pd.power < token_use_max) {
-    //     draw_hint("能量不足！", 0);
-    //     SDL_Delay(1200);
-    //     return -1;
-    // }
+    int32_t re= token_use_max;
 
     SDL_SetRenderDrawColor(ren, 0, 0, 0, 200);
     SDL_RenderFillRect(ren, NULL);
-
     char buf[64];
-    snprintf(buf, sizeof(buf), "%s\n使用token %d 點\n(Enter 確認 / Esc 取消)",
-             text, token_use_max);
-    draw_hint(buf, 0);
-    SDL_RenderPresent(ren);
-
     SDL_Event ev;
-    for (;;) {
+    while (1){
+        draw_hint (text, 0);
+        snprintf (buf, sizeof(buf), "選擇數量: %d / %d", re, token_use_max);
+        draw_hint (buf, 1);
+        draw_hint ("a/left: 減少, d/right: 增加", 2);
+        draw_hint ("(Enter 確認 / Esc 取消)", 3);
+        SDL_RenderPresent(ren);
         if (SDL_WaitEvent(&ev) == 0) continue;
-        if (ev.type == SDL_QUIT)  return -1;
-        if (ev.type == SDL_KEYDOWN) {
-            if (ev.key.keysym.sym == SDLK_ESCAPE)  return -1;
-            if (ev.key.keysym.sym == SDLK_RETURN)  return token_use_max;
+        if (ev.type == SDL_QUIT)  return 0;
+
+        if (ev.type == SDL_KEYDOWN){
+            switch (ev.key.keysym.sym) {
+                case SDLK_ESCAPE: return 0;
+                case SDLK_RETURN: return re;
+                case SDLK_LEFT:
+                case SDLK_a:
+                {
+                    re--;
+                    if (re<0) re= token_use_max;
+                    break;
+                }
+                case SDLK_RIGHT:
+                case SDLK_d:
+                {
+                    re++;
+                    if (re>token_use_max) re= 0;
+                    break;
+                }
+            }
         }
+        SDL_RenderClear (ren);
     }
 }
 
