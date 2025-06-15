@@ -127,9 +127,8 @@ int32_t game_round_action (int32_t mode, int32_t player){
         int32_t player_use= PLAYER2;
         int32_t player_des= PLAYER1;
         snow_white_robot (arr, n, best_card, best_card_skill, best_card_defense, player_use, player_des);
-        // return 0;
+        // player_data_print (player);
         map_data_refresh();
-        player_data_print (player);
         int32_t skill_cards[Snow_White_CARD_IDX_NUM]= {-1, -1, -1, -1, -1, -1};
         sCardData card_data;
 

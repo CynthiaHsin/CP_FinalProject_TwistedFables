@@ -137,6 +137,7 @@ int32_t player_data_print (int32_t player){
     debug_print ("power:\t%d\n",        player_data[player].power);
     debug_print ("power_ma:\t%d\n",     player_data[player].power_max);
     debug_print ("pos:\t%d\n",          player_data[player].pos);
+    debug_print ("---\n");
 }
 
 int32_t player_data_print_cardon (int32_t player){
