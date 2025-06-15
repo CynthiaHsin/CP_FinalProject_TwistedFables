@@ -280,17 +280,11 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                 // SDL_RenderPresent(ren);  // 顯示畫面
                 while (open) {
 
-                /* ① 這兩行請放在 while 迴圈最開頭 (宣告一次即可) */
                 static bool         zoom_open = false;
                 static SDL_Texture *zoom_tex  = NULL;
 
-                /*-------------- 事件處理 ----------------*/
                 while (SDL_PollEvent(&e)) {
 
-                    /* ← 保留你原本處理 quit 或其它事件的程式碼 → */
-
-                    /* ② 把下列「Esc / 點擊」判斷插在原本的
-                        SDL_MOUSEBUTTONDOWN 與 SDL_KEYDOWN 判斷 *之前或之後* 均可 */
                     if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
                         if (zoom_open) {
                             zoom_open = false;          // 關閉放大
@@ -303,7 +297,7 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                     {
                         SDL_Point p = { e.button.x, e.button.y };
 
-                        if (zoom_open) {                // 已放大 → 任何點擊都關閉
+                        if (zoom_open) {                // 已放大 任何點擊都關閉
                             zoom_open = false;
                         } else {
                             int type = -1;
@@ -314,23 +308,18 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                         }
                     }
 
-                    /* ← 這裡接著是你原本的其它事件處理 → */
                 }
 
-                /*-------------- 畫面渲染 ----------------*/
                 SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
                 SDL_RenderClear(ren);
 
-                render_hand(ren, player, card_back, characters);  // <== 你原本的手牌渲染
+                render_hand(ren, player, card_back, characters);
 
-                /* ③ 這段放在 render_hand() 之後，SDL_RenderPresent() 之前 */
                 if (zoom_open && zoom_tex) {
-                    /* 半透明黑底 */
                     SDL_SetRenderDrawBlendMode(ren, SDL_BLENDMODE_BLEND);
                     SDL_SetRenderDrawColor(ren, 0, 0, 0, 180);
                     SDL_RenderFillRect(ren, NULL);
 
-                    /* 居中放大 3 倍 */
                     const int bigW = CARD_W * 3;
                     const int bigH = CARD_H * 3;
                     SDL_Rect dst = {
