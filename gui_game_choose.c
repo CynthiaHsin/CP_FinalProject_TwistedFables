@@ -160,3 +160,33 @@ int32_t gui_choose_token (int32_t token_use_max, int32_t player, char * text){
         }
     }
 }
+
+// return -1(yes), 0(no), else(error)
+int32_t gui_choose_move_yes_or_no (char * text){
+    int32_t dir = 1;          // 右
+    SDL_Event ev;
+
+    while (1) {
+        SDL_SetRenderDrawColor(ren, 0, 0, 0, 200);
+        SDL_RenderFillRect(ren, NULL);
+        draw_hint(text, 0);
+
+        draw_hint(dir?  "YES": "NO", 1);
+        SDL_RenderPresent(ren);
+
+        int s = wait_event(&ev);
+        if (s) return 0;
+
+        if (ev.type == SDL_KEYDOWN) {
+            switch (ev.key.keysym.sym) {
+                case SDLK_ESCAPE: return -1;
+                case SDLK_LEFT:
+                case SDLK_a: dir = !dir; break;
+                case SDLK_RIGHT:
+                case SDLK_d: dir = !dir; break;
+                case SDLK_RETURN: return dir;
+                default: break;
+            }
+        }
+    }
+}
