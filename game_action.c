@@ -11,9 +11,7 @@ int32_t game_action_actions_allow (int32_t allow[], int32_t player){
 
     // 檢查：專注
     if (status.actions_num[player]) allow[ACTION_FOCUS]= 0;
-    
-    // 檢查：買牌
-    if (status.actions_num[player]) allow[ACTION_BUY] = 0;
+    return 0;
 }
 
 int32_t game_action_buy_card (int32_t card_idx, int32_t player){
@@ -25,7 +23,7 @@ int32_t game_action_buy_card (int32_t card_idx, int32_t player){
     player_data_get (&player_data, player);
 
     sStatusData st;  status_data_get(&st);
-    if (st.actions_num[player]) {
+    if (!st.actions_num[player]) {
         debug_print("already bought this turn\n");
         return -1;
     }
