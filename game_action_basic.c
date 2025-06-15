@@ -3,13 +3,15 @@
 # include "game_data.h"
 # include "game_action_skill_kaguya.h"
 # include "gui_game_choose.h"
+# include "game_action_skill_snow_white.h"
+# include "game_action_skill_match_girl.h"
 
 int32_t action_attack (int32_t delta, int32_t area, int32_t player_use, int32_t player_des){
     sPlayerData player_data_use;
     sPlayerData player_data_des;
     if (player_data_get (&player_data_use, player_use)<0) return -1;
     if (player_data_get (&player_data_des, player_des)<0) return -1;
-
+    
     if (abs(player_data_use.pos - player_data_des.pos) > area){
         debug_print ("error: too long destination: use at %d, des at %d. attack area %d\n", player_data_use.pos, player_data_des.pos, area);
         return -1;
@@ -18,6 +20,13 @@ int32_t action_attack (int32_t delta, int32_t area, int32_t player_use, int32_t 
         case CHARACTER_KAGUYA:
             delta= skill_kaguya_passive_attacked (delta, 0, player_use, player_des);
             break;
+
+        case CHARACTER_MATCH_GIRL:
+            {
+                int32_t move_direction=0;
+                if(delta>player_data_des.defense)move_direction=gui_choose_move_direction ("輸入你想要移動的方向：");
+                skill_match_girl_movement_evolution(delta, player_des,move_direction);
+            }
         default:
             break;
     }
@@ -46,7 +55,7 @@ int32_t action_move (int32_t delta, int32_t direction, int32_t player){
     }
     direction/= abs(direction);
     int32_t des= player_data[player].pos + direction*delta;
-
+    skill_snow_white_movement_evolution(player,direction, delta);
     while (map_data_cannot_move(0, des, player)){
         int32_t stay= player_data[player].pos - des;
         stay/= abs(stay);

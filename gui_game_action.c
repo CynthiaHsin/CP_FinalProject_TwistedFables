@@ -6,6 +6,7 @@
 # include "gui_game_render.h"
 # include "gui_game_choose.h"
 # include "gui_game_action.h"
+# include "game_action_skill_match_girl.h"
 
 # define TEXT_CHOOSE_DES_PLAYER "Choose the destination player."
 # define TEXT_CHOOSE_MOVE_DIRECTION "Choose the moving direction."
@@ -396,7 +397,6 @@ int32_t gui_passive_dorothy (int32_t player){
     gui_action_get_skill_card (cards, &cnt, player, CARD_SPACE_HAND);
     return gui_choose_card (&cnt, cards, cnt, "Choose the skill you want to use.");
 }
-
 int32_t gui_skill_dorothy (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_t type[CARD_IDX_NUM]){
     
     int32_t defense_throw_idx[3]= {0};
@@ -468,49 +468,103 @@ int32_t gui_skill_dorothy (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32
 }
 
 int32_t gui_skill_snow_white (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_t type[CARD_IDX_NUM]){
+
+    int32_t snow_white_action[Snow_White_CARD_IDX_NUM];
+    snow_white_action[Snow_White_CARD_IDX_SKILL]=card_idx[CARD_IDX_SKILL];
+    snow_white_action[Snow_White_CARD_IDX_ATTACH]= card_idx[CARD_IDX_ATTACH];
+    int32_t player_des= player;
+    int32_t player_use= player_data_search_character(CHARACTER_SNOW_WHITE);
+    int32_t move_direction=0;
     switch (type[CARD_IDX_SKILL]){
         case CARD_SKILL_ATTACK_BASE_L1:
         case CARD_SKILL_ATTACK_BASE_L2:
         case CARD_SKILL_ATTACK_BASE_L3:
+        {
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+        }
         case CARD_SKILL_DEFENSE_BASE_L1:
         case CARD_SKILL_DEFENSE_BASE_L2:
         case CARD_SKILL_DEFENSE_BASE_L3:
+        {
+            sCardData cards[CARD_NUM];
+            int32_t card_num;
+            int32_t type;
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+            if (player_data_card_is_on (CARD_ORIGINAL, CARD_SKILL_DEFENSE_EVOLUTION_L1, player))
+            {
+                snow_white_action[Snow_White_CARD_IDX_POISON]= gui_choose_card (&type, cards, card_num, "Choose a card if you wand to use DEFENSE EVOLUTION 1.");
+            }
+        }
         case CARD_SKILL_MOVEMENT_BASE_L1:
         case CARD_SKILL_MOVEMENT_BASE_L2:
         case CARD_SKILL_MOVEMENT_BASE_L3:
-        case CARD_SKILL_ATTACK_EVOLUTION_L1:
-        case CARD_SKILL_DEFENSE_EVOLUTION_L1:
-        case CARD_SKILL_MOVEMENT_EVOLUTION_L1:
-        case CARD_SKILL_ATTACK_EVOLUTION_L2:
-        case CARD_SKILL_DEFENSE_EVOLUTION_L2:
-        case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
+        {
+         player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER); 
+         move_direction=gui_choose_move_direction("Choose the direction you want to move(the oppenment right side or left side)? ")  ;
+        }
         case CARD_SKILL_FINISH1:
         case CARD_SKILL_FINISH2:
+        {
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER); 
+        }
         case CARD_SKILL_FINISH3:
+        {
+            sCardData cards[CARD_NUM];
+            int32_t card_num;
+            int32_t type;
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+            snow_white_action[Snow_White_CARD_IDX_FINISH1]= gui_choose_card (&type, cards, card_num, "Choose a card you want to put into your oppenment deck?(first one)");
+            snow_white_action[Snow_White_CARD_IDX_FINISH2]= gui_choose_card (&type, cards, card_num, "Choose a card you want to put into your oppenment deck?(secend one)");
+            snow_white_action[Snow_White_CARD_IDX_FINISH3]= gui_choose_card (&type, cards, card_num, "Choose a card you want to put into your oppenment deck?(last one)");
+        }
         default: break;
+        return skill_snow_white ( snow_white_action, move_direction, player_use, player_des);
+
     }
 }
 
 int32_t gui_skill_match_girl (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_t type[CARD_IDX_NUM]){
+
+    int32_t match_girl_action[Match_Girl_CARD_IDX_NUM];
+    match_girl_action[Match_Girl_CARD_IDX_SKILL]=card_idx[CARD_IDX_SKILL];
+    match_girl_action[Match_Girl_CARD_IDX_ATTACH]= card_idx[CARD_IDX_ATTACH];
+    int32_t player_des= player;
+    int32_t player_use= player_data_search_character(CHARACTER_MATCH_GIRL);
+    sPlayerData pd;
+    player_data_get (&pd, player);
     switch (type[CARD_IDX_SKILL]){
         case CARD_SKILL_ATTACK_BASE_L1:
         case CARD_SKILL_ATTACK_BASE_L2:
         case CARD_SKILL_ATTACK_BASE_L3:
+        {
+            int32_t energy= gui_choose_token (pd.power, player, "想要花費的能量值(3的倍數)");
+            if(energy<0)energy=0;
+            energy=(energy/3)*3;
+            match_girl_action[Match_Girl_POWER_NUM_ATTACK]=energy;
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER); 
+        }
         case CARD_SKILL_DEFENSE_BASE_L1:
         case CARD_SKILL_DEFENSE_BASE_L2:
         case CARD_SKILL_DEFENSE_BASE_L3:
+         {
+            int32_t level= card_data_get_level (type[CARD_IDX_SKILL]);
+            int32_t HP= gui_choose_token (MIN(level, pd.hp), player, "想要花費的HP值");
+            if(HP<0)HP=0;
+            match_girl_action[Match_Girl_HP_NUM_DEFENSE]=HP;
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER); 
+        }
         case CARD_SKILL_MOVEMENT_BASE_L1:
         case CARD_SKILL_MOVEMENT_BASE_L2:
         case CARD_SKILL_MOVEMENT_BASE_L3:
-        case CARD_SKILL_ATTACK_EVOLUTION_L1:
-        case CARD_SKILL_DEFENSE_EVOLUTION_L1:
-        case CARD_SKILL_MOVEMENT_EVOLUTION_L1:
-        case CARD_SKILL_ATTACK_EVOLUTION_L2:
-        case CARD_SKILL_DEFENSE_EVOLUTION_L2:
-        case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
         case CARD_SKILL_FINISH1:
         case CARD_SKILL_FINISH2:
         case CARD_SKILL_FINISH3:
+        {
+             player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER); 
+        }
+        
+
         default: break;
+         return skill_match_girl (match_girl_action,   player_use,  player_des);
     }
 }

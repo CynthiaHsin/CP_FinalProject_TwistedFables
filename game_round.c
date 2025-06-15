@@ -4,6 +4,7 @@
 # include "gui_game_render.h"
 # include "red_riding_robot.h"
 # include "snow_white_robot.h"
+# include "game_action_skill_match_girl.h"
 
 extern int32_t gCharacters[];
 
@@ -179,8 +180,17 @@ int32_t game_round_end (int32_t mode, int32_t player){
 
     int32_t card_idx[CARD_NUM];
     for (int32_t i=0; i<cards_num; i++) card_idx[i]= cards[i].index;
-    if (player_data.character == CHARACTER_SNOW_WHITE) 
-    snow_white_poison_count (card_idx, cards_num, player);
+    switch (player_data.character)
+    {
+        case CHARACTER_SNOW_WHITE:
+        if(PLAYER1==player)snow_white_poison_count(card_idx, cards_num, PLAYER2);
+        else snow_white_poison_count(card_idx, cards_num, PLAYER1);
+        break;
+        case CHARACTER_MATCH_GIRL:
+        if(PLAYER1==player)skill_match_girl_evolution2(PLAYER2);
+        else skill_match_girl_evolution2(PLAYER1);
+        break;
+    }
 
     for (int32_t i=0; i<cards_num; i++){
         card_data_set (cards[i].index, 1, CARD_SPACE_THROW, CARD_ORIGINAL, PLAYER_ORIGINAL);
@@ -190,6 +200,22 @@ int32_t game_round_end (int32_t mode, int32_t player){
     // 棄掉所有出牌區域內除了有持續效果的牌(如果為技能牌，其搭配的基本牌也不用棄掉)
     cards_num= 0;
     game_data_search_cards (cards, &cards_num, player, CARD_SPACE_USE, CARD_ORIGINAL, CARD_COST_ORIGINAL);
+    switch (player_data.character)
+    {
+        case CHARACTER_SNOW_WHITE:
+        {
+            int32_t *card_snow_white;
+            card_snow_white=malloc(cards_num*sizeof(int32_t));
+            for(int32_t i=0;i<cards_num;i++)card_snow_white[i]=cards[i].index;
+            if(PLAYER1==player)snow_white_poison_count(card_snow_white, cards_num, PLAYER2);
+            else snow_white_poison_count(card_snow_white, cards_num, PLAYER1);
+        }
+        break;
+        case CHARACTER_MATCH_GIRL:
+        if(PLAYER1==player)skill_match_girl_evolution2(PLAYER2);
+        else skill_match_girl_evolution2(PLAYER1);
+        break;
+    }
     for (int32_t i=0; i<cards_num; i++){
         card_data_set (cards[i].index, 1, CARD_SPACE_THROW, CARD_ORIGINAL, PLAYER_ORIGINAL);
         debug_print ("throw: (%d)\n", cards[i].index);
