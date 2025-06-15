@@ -78,6 +78,7 @@ enum BtnId {
     BTN_ACTION_SKILL,
     BTN_ACTION_BASIC,
     BTN_CARD_THROW,
+    BTN_EVO_RRH,
     BTN_NUM 
 };
 
@@ -93,6 +94,7 @@ enum BtnId {
 # define Y_DOWN_0 (WINDOW_HEIGHT - 110 - BTN_H)
 # define Y_DOWN_1 (WINDOW_HEIGHT - 160 - BTN_H)
 # define Y_DOWN_2 (WINDOW_HEIGHT - 210 - BTN_H)
+# define X_RRH    ((WINDOW_WIDTH - BTN_W - 20)- (BTN_W + 20))
 # define NO_BUTTON (-1)
 
 static inline SDL_Rect btn_rect(int idx, bool upper)
@@ -127,6 +129,7 @@ static inline SDL_Rect btn_rect(int idx, bool upper)
             case BTN_ACTION_SKILL:     r.x = X_MID_R;   r.y = Y_DOWN_2; break;
             case BTN_ACTION_BASIC:     r.x = X_MID_L;   r.y = Y_DOWN_2; break;
             case BTN_CARD_THROW:       r.x = X_RIGHT;   r.y = Y_DOWN_2; break;
+            case BTN_EVO_RRH:          r.x = X_RRH;     r.y = Y_DOWN_1; break;
         }
     }
     return r;

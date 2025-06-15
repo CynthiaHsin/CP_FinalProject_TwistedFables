@@ -5,7 +5,7 @@
 #include "game_action.h"
 
 void draw_board(int32_t characters[]);
-void draw_buttons(void);
+void draw_buttons(int32_t characters[]);
 bool handle_button_click(SDL_Event* ev, SDL_Point p, int32_t characters[]);
 void draw_button_text(SDL_Rect rect, const char* text);
 void popup(SDL_Event* ev, enum BtnId id, bool upper, int32_t characters[]);
@@ -53,7 +53,7 @@ void game_scene_loop(int32_t characters[])
 
         draw_board(characters);
 
-        draw_buttons();
+        draw_buttons(characters);
 
         SDL_RenderPresent(ren);
         SDL_Delay(16);
@@ -97,16 +97,25 @@ void draw_board(int32_t characters[])
     }
 }
 
-void draw_buttons(void)
+void draw_buttons(int32_t characters[])
 {
     const char* labels[BTN_NUM] = {
         "CHARACTER", "TWISTED CARD", "DECK", "BASIC", "SKILL/EPIC", "CARD USED", "END ROUND",
-        "FOCUS", "USE SKILL", "USE BASIC", "DISCARD"
+        "FOCUS", "USE SKILL", "USE BASIC", "DISCARD", "EVOLUTION"
     };
     SDL_SetRenderDrawColor(ren, 160, 160, 160, 255);
     for (int i = 0; i < BTN_NUM; ++i) {
         SDL_Rect u = btn_rect(i, /*upper*/true);
         SDL_Rect d = btn_rect(i, /*upper*/false);
+        if(i == BTN_EVO_RRH){
+            if(characters[PLAYER1] == CHARACTER_RED_RIDING_HOOD){
+                if (d.x>=0 && d.y>=0){
+                    SDL_RenderFillRect(ren, &d);
+                    draw_button_text(d, labels[i]);
+                }
+            }
+            else{continue;}
+        }
         if (u.x>=0 && u.y>=0){
             SDL_RenderFillRect(ren, &u);
             draw_button_text(u, labels[i]);
@@ -125,6 +134,16 @@ bool handle_button_click(SDL_Event* ev, SDL_Point p, int32_t characters[])
         SDL_Rect rDown = btn_rect(i, false);
         bool hitUp   = SDL_PointInRect(&p, &rUp);
         bool hitDown = SDL_PointInRect(&p, &rDown);
+
+        if(i == BTN_EVO_RRH){
+            if(characters[PLAYER1] == CHARACTER_RED_RIDING_HOOD){
+                if (hitUp || hitDown) {
+                    popup(ev, (enum BtnId)i, hitUp, characters);
+                    return true;
+                }
+            }
+            else{continue;}
+        }
 
         if (hitUp || hitDown) {
             popup(ev, (enum BtnId)i, hitUp, characters);
@@ -580,6 +599,10 @@ void popup(SDL_Event* ev, enum BtnId id, bool upper, int32_t characters[])
                 }
 
                 break;
+            }
+            case BTN_EVO_RRH: {
+                gui_evolution2_red_riding_hood (upper ? PLAYER2 : PLAYER1);
+                return;
             }
             default: break;
         }
