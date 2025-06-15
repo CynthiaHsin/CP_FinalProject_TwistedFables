@@ -25,3 +25,4 @@ int32_t game_data_deck_card_take (int32_t player, int32_t idx);
 // player
 int32_t game_data_get_player (sPlayerData *pPlayer_data, int32_t player);
 int32_t game_data_deck_card_fold (int32_t player, int32_t idx);
+int32_t game_data_deck_card_deck (int32_t player, int32_t idx);

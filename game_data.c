@@ -31,6 +31,7 @@ int32_t game_data_get_card (sCardData *pCard, int32_t idx){
 int32_t game_data_search_cards (sCardData cards[], int32_t *pGet_num, int32_t player, int32_t space, int32_t type, int32_t cost){
     int32_t cnt= 0;
     sCardData card;
+
     for (int32_t i=0; i<CARD_NUM; i++){
         if (card_data_get (&card, i)<0) return -1;
         if (player!=PLAYER_ORIGINAL && card.player!=player) continue;
@@ -41,6 +42,7 @@ int32_t game_data_search_cards (sCardData cards[], int32_t *pGet_num, int32_t pl
         cnt++;
     }
     *pGet_num= cnt;
+    
     return cnt;
 }
 
@@ -62,4 +64,8 @@ int32_t game_data_get_player (sPlayerData *pPlayer_data, int32_t player){
 
 int32_t game_data_deck_card_fold (int32_t player, int32_t idx){
     return deck_data_move_card (player, idx,CARD_SPACE_THROW);
+}
+
+int32_t game_data_deck_card_deck (int32_t player, int32_t idx){
+    return deck_data_move_card (player, idx,CARD_SPACE_DECK);
 }
