@@ -1,16 +1,7 @@
-#include"game_action_skill_snow_white.h"
-#include"main.h"
+# include "game_action_skill_snow_white.h"
+# include "main.h"
 # include "game_data.h"
-# include "game_action_basic.h"
-#include"game_data_player.h"
-#include"game_data_card.h"
-
-#include"game_action.h"
-#include"game_data_deck.h"
-#include"game_data_map.h"
-#include<math.h>
-#include<stdio.h>
-#include<stdint.h>
+# include "game_action.h"
 int32_t poison_card_top;
 sSnowWhite_Status snow_white;//這可能可以寫進去初始化裡面
 sStatus player;
