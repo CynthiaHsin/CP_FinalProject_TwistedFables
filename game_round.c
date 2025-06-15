@@ -123,12 +123,6 @@ int32_t game_round_end (int32_t mode, int32_t player){
     sPlayerData player_data;
     player_data_get (&player_data, player);
     switch (player_data.character){
-        case CHARACTER_MULAN:
-            // ------
-            printf ("木蘭決定要不要用技能");
-            // ------
-            // skill_mulan_round_end (player, );
-            break;
         case CHARACTER_KAGUYA:
             skill_kaguya_round_end (player);
             break;
@@ -167,6 +161,13 @@ int32_t game_round_end (int32_t mode, int32_t player){
     // 抽出六張牌
     deck_data_draw_cards (player, HAND_CARDS_ROUND);
     
+    // 木蘭的被動要最後用
+    switch (player_data.character){
+        case CHARACTER_MULAN:
+            skill_mulan_round_end (player);
+            break;
+        default: break;
+    }
     return 0;
 }
 
