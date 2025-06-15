@@ -15,8 +15,11 @@ SDL_Texture* card_data_get_texture(int32_t card_id, int32_t player);
 void draw_stat_text(int x, int y, const char *utf8);
 int32_t detect_basic_stack(SDL_Point p);
 int32_t detect_skill_stack(SDL_Point p, int32_t player);
+bool detect_hand_card_click(SDL_Point p, int32_t player, int* outType);
 
 bool gui_round_running;
+static bool   g_handZoomOpen = false; 
+static SDL_Texture* g_handZoomTex = NULL;
 
 void game_scene_loop(int32_t characters[])
 {
@@ -25,6 +28,14 @@ void game_scene_loop(int32_t characters[])
 
     while (gui_round_running) {
         while (SDL_PollEvent(&e)) {
+            if (g_handZoomOpen &&
+                e.type == SDL_KEYDOWN &&
+                e.key.keysym.sym == SDLK_ESCAPE) {
+
+                g_handZoomOpen = false;
+                continue; 
+            }
+
             if (e.type == SDL_QUIT){
                 gui_round_running = false;
                 status_data_end_game();
@@ -32,8 +43,7 @@ void game_scene_loop(int32_t characters[])
             }
             else if (e.type == SDL_MOUSEBUTTONDOWN) {
                 SDL_Point p = { e.button.x, e.button.y };
-                if (handle_button_click(p, characters))
-                    continue;;
+                if (handle_button_click(p, characters)) {continue;;}
             }
         }
 
@@ -261,20 +271,87 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
             }
             case BTN_TWIST: {
                 int player = upper ? PLAYER2 : PLAYER1;
-                // 清畫面，如果這邊是正式畫面主 loop 可以省略
+                // // 清畫面，如果這邊是正式畫面主 loop 可以省略
+                // SDL_RenderClear(ren);
+
+                // // 渲染指定玩家的手牌
+                // render_hand(ren, player, card_back, characters);
+
+                // SDL_RenderPresent(ren);  // 顯示畫面
+                while (open) {
+
+                /* ① 這兩行請放在 while 迴圈最開頭 (宣告一次即可) */
+                static bool         zoom_open = false;
+                static SDL_Texture *zoom_tex  = NULL;
+
+                /*-------------- 事件處理 ----------------*/
+                while (SDL_PollEvent(&e)) {
+
+                    /* ← 保留你原本處理 quit 或其它事件的程式碼 → */
+
+                    /* ② 把下列「Esc / 點擊」判斷插在原本的
+                        SDL_MOUSEBUTTONDOWN 與 SDL_KEYDOWN 判斷 *之前或之後* 均可 */
+                    if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
+                        if (zoom_open) {
+                            zoom_open = false;          // 關閉放大
+                        } else {
+                            open = false;               // 關閉整個手牌視窗
+                        }
+                    }
+                    else if (e.type == SDL_MOUSEBUTTONDOWN &&
+                            e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        SDL_Point p = { e.button.x, e.button.y };
+
+                        if (zoom_open) {                // 已放大 → 任何點擊都關閉
+                            zoom_open = false;
+                        } else {
+                            int type = -1;
+                            if (detect_hand_card_click(p, player, &type)) {
+                                zoom_tex  = card_data_get_texture(type, player);
+                                zoom_open = (zoom_tex != NULL);
+                            }
+                        }
+                    }
+
+                    /* ← 這裡接著是你原本的其它事件處理 → */
+                }
+
+                /*-------------- 畫面渲染 ----------------*/
+                SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
                 SDL_RenderClear(ren);
 
-                // 渲染指定玩家的手牌
-                render_hand(ren, player, card_back, characters);
+                render_hand(ren, player, card_back, characters);  // <== 你原本的手牌渲染
 
-                SDL_RenderPresent(ren);  // 顯示畫面
+                /* ③ 這段放在 render_hand() 之後，SDL_RenderPresent() 之前 */
+                if (zoom_open && zoom_tex) {
+                    /* 半透明黑底 */
+                    SDL_SetRenderDrawBlendMode(ren, SDL_BLENDMODE_BLEND);
+                    SDL_SetRenderDrawColor(ren, 0, 0, 0, 180);
+                    SDL_RenderFillRect(ren, NULL);
+
+                    /* 居中放大 3 倍 */
+                    const int bigW = CARD_W * 3;
+                    const int bigH = CARD_H * 3;
+                    SDL_Rect dst = {
+                        (WINDOW_WIDTH  - bigW) / 2,
+                        (WINDOW_HEIGHT - bigH) / 2,
+                        bigW, bigH
+                    };
+                    SDL_RenderCopy(ren, zoom_tex, NULL, &dst);
+                    SDL_RenderDrawRect(ren, &dst);
+                    SDL_SetRenderDrawBlendMode(ren, SDL_BLENDMODE_NONE);
+                }
+
+                SDL_RenderPresent(ren);
+            }
                 break;
             }
             case BTN_DECK: {
                 // int player = upper ? PLAYER2 : PLAYER1;
-                SDL_Rect back = { win.x+80, win.y+100, 105,160 };
+                SDL_Rect back = { win.x+80, win.y+100, CARD_W,CARD_H };
                 SDL_RenderCopy(ren, card_back, NULL, &back);
-                SDL_Rect discard = { back.x+150, back.y, 105,160 };
+                SDL_Rect discard = { back.x+150, back.y, CARD_W,CARD_H };
                 // SDL_RenderCopy(ren, basic_card[CARD_BASIC_ATTACK_L1], NULL, &discard); // top of discard
                 SDL_SetRenderDrawColor(ren, 0, 200, 255, 255);  // 藍色框
                 SDL_RenderDrawRect(ren, &discard);
@@ -470,7 +547,7 @@ void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int3
     game_data_search_cards(cards, &num, player, CARD_SPACE_HAND, CARD_ORIGINAL, -1);
     // debug_print("查到張數 = %d\n", num);
 
-    int gap = 20, w = 105, h = 160;
+    int gap = 20, w = CARD_W, h = CARD_H;
     int base_x = 50;
     int base_y = (player == PLAYER1) ? 500 : 100;  // 玩家在下面，對手在上面
 
@@ -487,31 +564,6 @@ void render_hand(SDL_Renderer* ren, int32_t player, SDL_Texture* card_back, int3
             SDL_RenderCopy(ren, card_back, NULL, &d);
         }
     }
-    // sPlayerData pdata;
-    // if (player_data_get(&pdata, player) < 0) return;
-
-    // int gap = 20, w = 105, h = 160;
-    // int base_x = 50;
-    // int base_y = (player == PLAYER1) ? 500 : 100;  // 玩家在下面，對手在上面
-    // int count = 0;
-
-    // for (int i = 0; i < CARD_SPACE_HAND; ++i) {
-    //     int32_t card_id = pdata.card_on[i];
-    //     if (card_id == CARD_UNDEFINED) continue;
-    //     debug_print("player %d hand[%d] = card_id %d\n", player, i, card_id);
-
-    //     SDL_Rect d = { base_x + count * (w + gap), base_y, w, h };
-
-    //     if (player == PLAYER1) {
-    //         // 顯示卡片正面
-    //         SDL_Texture* tex = card_data_get_texture(card_id, characters, player);
-    //         if (tex != NULL) SDL_RenderCopy(ren, tex, NULL, &d);
-    //     } else {
-    //         // 顯示卡背
-    //         SDL_RenderCopy(ren, card_back, NULL, &d);
-    //     }
-    //     count++;
-    // }
 }
 
 SDL_Texture* card_data_get_texture(int32_t card_type, int32_t player)
@@ -590,4 +642,26 @@ int32_t detect_skill_stack(SDL_Point p, int32_t player)
         return finish[col];
     }
     return -1;
+}
+
+bool detect_hand_card_click(SDL_Point p, int32_t player, int* outType)
+{
+    sCardData cards[CARD_NUM];
+    int32_t   num = 0;
+    game_data_search_cards(cards, &num, player, CARD_SPACE_HAND, CARD_ORIGINAL, -1);
+
+    const int gap    = 20;
+    const int w      = CARD_W;
+    const int h      = CARD_H;
+    const int base_x = 50;
+    const int base_y = (player == PLAYER1) ? 500 : 100;   // only this line changed
+
+    for (int i = 0; i < num; ++i) {
+        SDL_Rect r = { base_x + i*(w+gap), base_y, w, h };
+        if (SDL_PointInRect(&p, &r)) {
+            *outType = cards[i].type;
+            return true;
+        }
+    }
+    return false;
 }

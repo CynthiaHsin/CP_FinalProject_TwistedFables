@@ -14,3 +14,4 @@ SDL_Texture* card_data_get_texture(int32_t card_id, int32_t player);
 void draw_stat_text(int x, int y, const char *utf8);
 int32_t detect_basic_stack(SDL_Point p);
 int32_t detect_skill_stack(SDL_Point p, int32_t player);
+bool detect_hand_card_click(SDL_Point p, int32_t player, int* outType);
