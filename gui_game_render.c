@@ -88,9 +88,9 @@ void draw_board(int32_t characters[])
 
         int idx = pos + md->block_mid;
         SDL_Rect token = {
-            TRACK_START_X + idx * TRACK_W + (TRACK_W - 48)/2,
-            TRACK_Y        + (TRACK_H - 48)/2,
-            48, 48
+            TRACK_START_X + idx * TRACK_W + (TRACK_W-63)/2,
+            TRACK_Y        + (TRACK_H-96)/2,
+            63, 96
         };
         SDL_RenderCopy(ren, character[characters[player]], NULL, &token);
     }

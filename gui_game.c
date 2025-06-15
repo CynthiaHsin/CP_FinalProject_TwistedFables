@@ -74,7 +74,7 @@ int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
     int32_t character_selected = 0;
     bool running = true;
     SDL_Event event;
-    character_selected = choose_character(ren, character, running, selected, event, CHARACTER_SNOW_WHITE);
+    character_selected = choose_character(ren, character, running, selected, event, characters[PLAYER2]);
     if(character_selected == 1){      characters[PLAYER1] = CHARACTER_RED_RIDING_HOOD; }
     else if(character_selected == 2){ characters[PLAYER1] = CHARACTER_SNOW_WHITE; }
     else if(character_selected == 3){ characters[PLAYER1] = CHARACTER_MULAN; }
