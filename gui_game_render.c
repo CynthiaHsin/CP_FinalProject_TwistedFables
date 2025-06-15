@@ -353,7 +353,7 @@ void popup(enum BtnId id, bool upper, int32_t characters[])
                 SDL_RenderCopy(ren, card_back, NULL, &back);
                 SDL_Rect discard = { back.x+150, back.y, CARD_W,CARD_H };
                 // SDL_RenderCopy(ren, basic_card[CARD_BASIC_ATTACK_L1], NULL, &discard); // top of discard
-                SDL_SetRenderDrawColor(ren, 0, 200, 255, 255);  // 藍色框
+                // SDL_SetRenderDrawColor(ren, 0, 200, 255, 255);  // 藍色框
                 SDL_RenderDrawRect(ren, &discard);
                 break;
             }
