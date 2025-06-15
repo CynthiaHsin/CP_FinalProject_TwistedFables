@@ -1,6 +1,7 @@
 # include "main.h"
 # include "game_data.h"
 # include "game_action.h"
+# include "gui_game_choose.h"
 
 int32_t game_action_actions_allow (int32_t allow[], int32_t player){
     sStatusData status;
@@ -152,10 +153,15 @@ int32_t game_action_use_basic_card (int32_t card_idx, int32_t card_type, int32_t
         case CARD_BASIC_MOVEMENT_L2:
         case CARD_BASIC_MOVEMENT_L3: 
             level= card_type - CARD_BASIC_MOVEMENT_L1 + 1;
-            if (action_move(level, move_direction, player_use)<0) return -1;
+            if (player_data.character == CHARACTER_MULAN && 
+                player_data_card_is_on(-1, CARD_SKILL_MOVEMENT_EVOLUTION_L1, player_use)){
+                token_num= gui_choose_token (MIN(3, player_data.token), player_use, "Use token if you want to get more movement.");
+            }
+            if (action_move(level + token_num, move_direction, player_use)<0) return -1;
             if (player_data.character == CHARACTER_DOROTHY){
                 skill_dorothy_basic (level, CARD_BASIC_MOVEMENT_L1, player_use);
             }
+            status_mulan_token_add (-1*token_num, player_use);
             break;
     }
     action_modefy_power (level, player_use);

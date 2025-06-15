@@ -2,6 +2,7 @@
 # include "game_action_skill_mulan.h"
 # include "game_action_basic.h"
 # include "game_data.h"
+# include "gui_game_choose.h"
 
 int32_t skill_mulan (int32_t card_idx[MULAN_CARD_IDX_NUM], int32_t mulan_action[MULAN_ACTION_IDX_NUM], int32_t player_use, int32_t player_des){
     sCardData card_data;
@@ -35,7 +36,7 @@ int32_t skill_mulan (int32_t card_idx[MULAN_CARD_IDX_NUM], int32_t mulan_action[
                 action_move (2, direction, player_des);
             }
             if (map_data_is_at_edge(player_des)){
-                if (mulan_action[MULAN_ACTION_IDX_THROW_DES]) skill_mulan_throw_des_card;
+                if (mulan_action[MULAN_ACTION_IDX_THROW_DES]) skill_mulan_throw_des_card(player_des);
             }
             break;
         case CARD_SKILL_DEFENSE_BASE_L1:
@@ -127,6 +128,13 @@ int32_t skill_mulan_passive_attacked (int32_t attack_delta, int32_t player){
     int32_t card_throw= CARD_ORIGINAL;
     // -----
     printf ("game_action_mulan (130) || MARK: UI get card to throw here!!!!!!\n");
+    sCardData cards[CARD_NUM];
+    int32_t cnt;
+    int32_t type;
+    game_data_search_cards (cards, &cnt, player, CARD_SPACE_HAND, CARD_ORIGINAL, -1);
+    char mes[100]= "Choose the card you want to throw to reduse the damage.";
+    sprintf (mes, " (max damage: %d)", attack_delta);
+    card_throw= gui_choose_card (&type, cards, cnt, mes);
     // -----
     int32_t level= card_data_get_level(card_throw);
     if (level<0) return 0;

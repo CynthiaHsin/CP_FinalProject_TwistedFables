@@ -132,66 +132,160 @@ int32_t gui_action_use_skill (int32_t player){
 }
 
 int32_t gui_skill_red_riding_hood (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_t type[CARD_IDX_NUM]){
+    int32_t skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_NUM];
+    skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_SKILL]= card_idx[CARD_IDX_SKILL];
+    skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_ATTACH]= card_idx[CARD_IDX_ATTACH];
+    int32_t player_des= player;
+    sPlayerData pd;
+    player_data_get (&pd, player);
     switch (type[CARD_IDX_SKILL]){
         case CARD_SKILL_ATTACK_BASE_L1:
         case CARD_SKILL_ATTACK_BASE_L2:
         case CARD_SKILL_ATTACK_BASE_L3:
-        case CARD_SKILL_DEFENSE_BASE_L1:
-        case CARD_SKILL_DEFENSE_BASE_L2:
-        case CARD_SKILL_DEFENSE_BASE_L3:
         case CARD_SKILL_MOVEMENT_BASE_L1:
         case CARD_SKILL_MOVEMENT_BASE_L2:
         case CARD_SKILL_MOVEMENT_BASE_L3:
-        case CARD_SKILL_ATTACK_EVOLUTION_L1:
-        case CARD_SKILL_DEFENSE_EVOLUTION_L1:
-        case CARD_SKILL_MOVEMENT_EVOLUTION_L1:
-        case CARD_SKILL_ATTACK_EVOLUTION_L2:
-        case CARD_SKILL_DEFENSE_EVOLUTION_L2:
-        case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
+        {
+            sCardData cards[CARD_NUM];
+            int32_t card_num;
+            int32_t type;
+            gui_action_get_card (cards, &card_num, player, CARD_SPACE_HAND, CARD_SKILL_ATTACK_BASE_L1, CARD_SKILL_DEFENSE_EVOLUTION_L2);
+            if (player_data_card_is_on (CARD_ORIGINAL, CARD_SKILL_ATTACK_EVOLUTION_L1, player))
+                skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_ATTACK_EVOLUTION]= gui_choose_card (&type, cards, card_num, "Choose a card if you wand to use ATTACK EVOLUTION 1.");
+            while (player_data_card_is_on (CARD_ORIGINAL, CARD_SKILL_MOVEMENT_EVOLUTION_L1, player)
+                ||(skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_MOVEMENT_EVOLUTION]==skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_ATTACK_EVOLUTION] && skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_ATTACK_EVOLUTION]!=-1))
+                skilluse_card_idx[RED_RIDING_HOOD_CARD_IDX_MOVEMENT_EVOLUTION]= gui_choose_card (&type, cards, card_num, "Choose a card if you wand to use ATTACK EVOLUTION 1.");
+            // no break
+        }
+        case CARD_SKILL_DEFENSE_BASE_L1:
+        case CARD_SKILL_DEFENSE_BASE_L2:
+        case CARD_SKILL_DEFENSE_BASE_L3:
+        {
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+            break;
+        }
+        case CARD_SKILL_FINISH1:
+            // ???????????
+        case CARD_SKILL_FINISH2:
+            // ???????????
+        case CARD_SKILL_FINISH3:
+            // ???????????
         default: break;
     }
+    skill_red_riding_hood (skilluse_card_idx, player, player_des);
 }
 
 int32_t gui_skill_mulan (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_t type[CARD_IDX_NUM]){
+    int32_t mulan_action[MULAN_ACTION_IDX_NUM];
+    int32_t player_des;
+    sPlayerData pd;
+    player_data_get (&pd, player);
+
+    mulan_action[MULAN_ACTION_IDX_THROW_DES]= 1;
+    mulan_action[MULAN_ACTION_IDX_ATTACK_MOVE]= 1;
     switch (type[CARD_IDX_SKILL]){
         case CARD_SKILL_ATTACK_BASE_L1:
         case CARD_SKILL_ATTACK_BASE_L2:
         case CARD_SKILL_ATTACK_BASE_L3:
+        {
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+            mulan_action[MULAN_ACTION_IDX_ATTACK_MOVE]= gui_choose_move_yes_or_no("Do you want to move the opponent (to the other side)?");
+            mulan_action[MULAN_ACTION_IDX_THROW_DES]=   gui_choose_move_yes_or_no("Do you want to throw his/her card (if on the edge)?");
+            break;
+        }
         case CARD_SKILL_DEFENSE_BASE_L1:
         case CARD_SKILL_DEFENSE_BASE_L2:
         case CARD_SKILL_DEFENSE_BASE_L3:
+        {
+            int32_t level= card_data_get_level (type[CARD_IDX_SKILL]);
+            char mes[100]= TEXT_CHOSE_TOKEN;
+            strcat (mes, " (for defense skill: use token to get pull)");
+            mulan_action[MULAN_ACTION_IDX_DEFENSE_PULL]= gui_choose_token (MIN(pd.token, level), player, mes);
+            break;
+        }
         case CARD_SKILL_MOVEMENT_BASE_L1:
         case CARD_SKILL_MOVEMENT_BASE_L2:
         case CARD_SKILL_MOVEMENT_BASE_L3:
-        case CARD_SKILL_ATTACK_EVOLUTION_L1:
-        case CARD_SKILL_DEFENSE_EVOLUTION_L1:
-        case CARD_SKILL_MOVEMENT_EVOLUTION_L1:
-        case CARD_SKILL_ATTACK_EVOLUTION_L2:
-        case CARD_SKILL_DEFENSE_EVOLUTION_L2:
-        case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
+        {
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+            mulan_action[MULAN_ACTION_IDX_THROW_DES]=   gui_choose_move_yes_or_no("Do you want to throw his/her card (if on the edge)?");
+            break;
+        }
+        case CARD_SKILL_FINISH1:{
+            skill_mulan_finish (card_idx[CARD_IDX_SKILL], 0, player, player);
+            return 0;
+        }
+        case CARD_SKILL_FINISH2:{
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+            int32_t direction= gui_choose_move_direction ("Choose the direction you want to be at. (count from the opponent)");
+            skill_mulan_finish (card_idx[CARD_IDX_SKILL], direction, player, player_des);
+            return 0;
+        }
+        case CARD_SKILL_FINISH3:{
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+            skill_mulan_finish (card_idx[CARD_IDX_SKILL], 0, player, player_des);
+            return 0;
+        }
         default: break;
     }
+    if (player_data_card_is_on (-1, CARD_SKILL_ATTACK_EVOLUTION_L1, player)){
+        char mes[100]= TEXT_CHOSE_TOKEN;
+        strcat (mes, " (for attack evolution: use token to get damage)");
+        mulan_action[MULAN_ACTION_IDX_ATTACK_EVOLUTION_TOKEN]= gui_choose_token (pd.token, player, mes);
+    }
+    skill_mulan (card_idx, mulan_action, player, player_des);
+    return 0;
 }
 
 int32_t gui_skill_kaguya (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_t type[CARD_IDX_NUM]){
+    int32_t mulan_action[MULAN_ACTION_IDX_NUM];
+    int32_t player_des= player;
+    int32_t skill_move_use_hp_card_idx= CARD_ORIGINAL;
+    int32_t skill_move_evolution_direction= gui_choose_move_direction("Move the opponent to this direction. (1 time / round)");
+    sPlayerData pd;
+    player_data_get (&pd, player);
+
     switch (type[CARD_IDX_SKILL]){
         case CARD_SKILL_ATTACK_BASE_L1:
         case CARD_SKILL_ATTACK_BASE_L2:
         case CARD_SKILL_ATTACK_BASE_L3:
-        case CARD_SKILL_DEFENSE_BASE_L1:
-        case CARD_SKILL_DEFENSE_BASE_L2:
-        case CARD_SKILL_DEFENSE_BASE_L3:
+        {
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+            break;
+        }
         case CARD_SKILL_MOVEMENT_BASE_L1:
         case CARD_SKILL_MOVEMENT_BASE_L2:
         case CARD_SKILL_MOVEMENT_BASE_L3:
-        case CARD_SKILL_ATTACK_EVOLUTION_L1:
-        case CARD_SKILL_DEFENSE_EVOLUTION_L1:
-        case CARD_SKILL_MOVEMENT_EVOLUTION_L1:
-        case CARD_SKILL_ATTACK_EVOLUTION_L2:
-        case CARD_SKILL_DEFENSE_EVOLUTION_L2:
-        case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
+        {
+            int32_t choose= gui_choose_move_yes_or_no ("Do you want to lose 1 hp to DELETE a card from HAND or THROW?");
+            if (choose){
+                sCardData cards[CARD_NUM];
+                int32_t card_num, cnt;
+                game_data_search_cards (cards, &cnt, player, CARD_SPACE_HAND, CARD_ORIGINAL, -1);
+                card_num+= cnt;
+                game_data_search_cards (cards + card_num, &cnt, player, CARD_SPACE_THROW, CARD_ORIGINAL, -1);
+                card_num+= cnt;
+                skill_move_use_hp_card_idx= gui_choose_card (&cnt, cards, card_num, "Choose the card to delete.");
+            }
+            break;
+        }
+        case CARD_SKILL_FINISH3:
+        {
+            skill_move_evolution_direction= gui_choose_move_direction ("Choose the direction you want the opponent move to. (count from your position)");
+            // no break
+        }
+        case CARD_SKILL_FINISH2:
+        {
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+            // no break
+        }
+        case CARD_SKILL_FINISH1:
+        {
+            return skill_kaguya_finish (card_idx[CARD_IDX_SKILL], skill_move_evolution_direction, player, player_des);
+        }
         default: break;
     }
+    return skill_kaguya (card_idx, skill_move_use_hp_card_idx, skill_move_evolution_direction, player, player_des);
 }
 
 int32_t gui_skill_dorothy (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_t type[CARD_IDX_NUM]){
@@ -249,12 +343,12 @@ int32_t gui_skill_dorothy (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32
         {
             sPlayerData pd;
             player_data_get (&pd, player);
-            int32_t token= gui_choose_token (pd.token_max, player, TEXT_CHOSE_TOKEN);
+            int32_t token= gui_choose_token (pd.token, player, TEXT_CHOSE_TOKEN);
             return skill_dorothy_finish (card_idx[CARD_IDX_SKILL], token, player, player_des);
         }
         default: break;
     }
-    while (player_data_card_is_on (-1, CARD_SKILL_MOVEMENT_EVOLUTION_L1, player) && type[CARD_IDX_SKILL]<CARD_SKILL_FINISH1){
+    while (player_data_card_is_on (-1, CARD_SKILL_MOVEMENT_EVOLUTION_L1, player)){
         gui_action_get_card (cards, &card_num, player, CARD_SPACE_HAND, CARD_BASIC_MOVEMENT_L1, CARD_BASIC_COMMON);
         choose= gui_choose_card(&choose_type, cards, card_num, "Choose a card you want to throw for the skill of move evolution 1.");
         if (choose < 0) break;
@@ -281,6 +375,9 @@ int32_t gui_skill_snow_white (int32_t player, int32_t card_idx[CARD_IDX_NUM], in
         case CARD_SKILL_ATTACK_EVOLUTION_L2:
         case CARD_SKILL_DEFENSE_EVOLUTION_L2:
         case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
+        case CARD_SKILL_FINISH1:
+        case CARD_SKILL_FINISH2:
+        case CARD_SKILL_FINISH3:
         default: break;
     }
 }
@@ -302,6 +399,9 @@ int32_t gui_skill_match_girl (int32_t player, int32_t card_idx[CARD_IDX_NUM], in
         case CARD_SKILL_ATTACK_EVOLUTION_L2:
         case CARD_SKILL_DEFENSE_EVOLUTION_L2:
         case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
+        case CARD_SKILL_FINISH1:
+        case CARD_SKILL_FINISH2:
+        case CARD_SKILL_FINISH3:
         default: break;
     }
 }
