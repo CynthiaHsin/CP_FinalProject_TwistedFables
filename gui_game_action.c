@@ -481,6 +481,7 @@ int32_t gui_skill_snow_white (int32_t player, int32_t card_idx[CARD_IDX_NUM], in
         case CARD_SKILL_ATTACK_BASE_L3:
         {
             player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+            break;
         }
         case CARD_SKILL_DEFENSE_BASE_L1:
         case CARD_SKILL_DEFENSE_BASE_L2:
@@ -494,18 +495,21 @@ int32_t gui_skill_snow_white (int32_t player, int32_t card_idx[CARD_IDX_NUM], in
             {
                 snow_white_action[Snow_White_CARD_IDX_POISON]= gui_choose_card (&type, cards, card_num, "Choose a card if you wand to use DEFENSE EVOLUTION 1.");
             }
+            break;
         }
         case CARD_SKILL_MOVEMENT_BASE_L1:
         case CARD_SKILL_MOVEMENT_BASE_L2:
         case CARD_SKILL_MOVEMENT_BASE_L3:
         {
-         player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER); 
-         move_direction=gui_choose_move_direction("Choose the direction you want to move(the oppenment right side or left side)? ")  ;
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER); 
+            move_direction=gui_choose_move_direction("Choose the direction you want to move(the oppenment right side or left side)? ")  ;
+            break;
         }
         case CARD_SKILL_FINISH1:
         case CARD_SKILL_FINISH2:
         {
             player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER); 
+            break;
         }
         case CARD_SKILL_FINISH3:
         {
@@ -516,11 +520,11 @@ int32_t gui_skill_snow_white (int32_t player, int32_t card_idx[CARD_IDX_NUM], in
             snow_white_action[Snow_White_CARD_IDX_FINISH1]= gui_choose_card (&type, cards, card_num, "Choose a card you want to put into your oppenment deck?(first one)");
             snow_white_action[Snow_White_CARD_IDX_FINISH2]= gui_choose_card (&type, cards, card_num, "Choose a card you want to put into your oppenment deck?(secend one)");
             snow_white_action[Snow_White_CARD_IDX_FINISH3]= gui_choose_card (&type, cards, card_num, "Choose a card you want to put into your oppenment deck?(last one)");
+            break;
         }
         default: break;
-        return skill_snow_white ( snow_white_action, move_direction, player_use, player_des);
-
     }
+    return skill_snow_white ( snow_white_action, move_direction, player_use, player_des);
 }
 
 int32_t gui_skill_match_girl (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_t type[CARD_IDX_NUM]){
@@ -541,7 +545,8 @@ int32_t gui_skill_match_girl (int32_t player, int32_t card_idx[CARD_IDX_NUM], in
             if(energy<0)energy=0;
             energy=(energy/3)*3;
             match_girl_action[Match_Girl_POWER_NUM_ATTACK]=energy;
-            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER); 
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+            break;
         }
         case CARD_SKILL_DEFENSE_BASE_L1:
         case CARD_SKILL_DEFENSE_BASE_L2:
@@ -552,6 +557,7 @@ int32_t gui_skill_match_girl (int32_t player, int32_t card_idx[CARD_IDX_NUM], in
             if(HP<0)HP=0;
             match_girl_action[Match_Girl_HP_NUM_DEFENSE]=HP;
             player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER); 
+            break;
         }
         case CARD_SKILL_MOVEMENT_BASE_L1:
         case CARD_SKILL_MOVEMENT_BASE_L2:
@@ -560,11 +566,10 @@ int32_t gui_skill_match_girl (int32_t player, int32_t card_idx[CARD_IDX_NUM], in
         case CARD_SKILL_FINISH2:
         case CARD_SKILL_FINISH3:
         {
-             player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER); 
-        }
-        
-
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER); 
+            break;
+        }    
         default: break;
-         return skill_match_girl (match_girl_action,   player_use,  player_des);
     }
+    return skill_match_girl (match_girl_action, player_use, player_des);
 }
