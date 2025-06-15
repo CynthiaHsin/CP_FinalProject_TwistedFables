@@ -9,11 +9,14 @@ OBJ_GAME := $(GAME_DATA) $(GAME_ACTION) $(GAME_ROUND)
 GUI_GAME := gui_game.c gui_game_render.c gui_choose_character.c gui_game_action.c gui_game_choose.c 
 OBJ_GUI :=  gui_opening.c gui_destroy.c gui_img_init.c  gui_img_data.c $(GUI_GAME)
 
+# robot
+OBJ_ROBOT := red_riding_robot.c snow_white_robot.c
+
 # all
 CC := gcc
 CFLAGS := -Wall -Wextra -std=c99 -O2 `sdl2-config --cflags`
 LDFLAGS := `sdl2-config --libs` -lSDL2_ttf -lSDL2_image -lSDL2 -lm
-OBJ := $(OBJ_GAME) $(OBJ_GUI)
+OBJ := $(OBJ_GAME) $(OBJ_GUI) $(OBJ_ROBOT)
 
 all: TwitedFables
 	# - gcc game.c $(OBJ) -o game

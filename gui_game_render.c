@@ -44,7 +44,7 @@ void game_scene_loop(int32_t characters[])
             }
             else if (e.type == SDL_MOUSEBUTTONDOWN) {
                 SDL_Point p = { e.button.x, e.button.y };
-                if (handle_button_click(&e, p, characters)) {continue;;}
+                if (handle_button_click(&e, p, characters)) {continue;}
             }
         }
 

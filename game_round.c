@@ -2,6 +2,8 @@
 # include "game_action.h"
 # include "game_data.h"
 # include "gui_game_render.h"
+# include "red_riding_robot.h"
+# include "snow_white_robot.h"
 
 extern int32_t gCharacters[];
 
@@ -112,7 +114,42 @@ int32_t game_round_action (int32_t mode, int32_t player){
     // int32_t ui_round (int32_t player);
     if (player==PLAYER1) game_scene_loop(gCharacters);
     else{
-        // robot
+        int32_t arr[CARD_NUM];
+        int32_t n;
+        sCardData hand_card[CARD_NUM];
+        game_data_search_cards (hand_card, &n, player, CARD_SPACE_HAND, CARD_ORIGINAL, -1);
+        for (int32_t i=0; i<n; i++) arr[i]= hand_card[i].index;
+        int32_t best_card[n];
+        int32_t best_card_skill[n];
+        int32_t best_card_defense[n];
+        int32_t player_use= PLAYER2;
+        int32_t player_des= PLAYER1;
+        snow_white_robot (arr, n, best_card, best_card_skill, best_card_defense, player_use, player_des);
+        int32_t skill_cards[Snow_White_CARD_IDX_NUM]= {-1, -1, -1, -1, -1, -1};
+        sCardData card_data;
+
+        int32_t direction;
+        sPlayerData pd;
+        player_data_get (&pd, player_use);
+        direction= pd.pos;
+        player_data_get (&pd, player_des);
+        direction-= pd.pos;
+        if (map_data_is_at_edge(player)) direction*= -1;
+
+        for (int32_t i=0; i<n; i++){
+            card_data_get (&card_data, best_card[i]);
+            if (card_data.type>= CARD_BASIC_ATTACK_L1 && card_data.type <= CARD_BASIC_MOVEMENT_L3){
+                game_action_use_basic_card (card_data.index, card_data.type, 0, direction, player_use, player_des);
+            }else if (card_data.type== CARD_BASIC_COMMON){
+                game_action_use_basic_card (card_data.index, CARD_BASIC_DEFENSE_L1, 0, 0, player_use, player_des);
+            }else{
+                skill_cards[Snow_White_CARD_IDX_SKILL]= best_card[i];
+                skill_cards[Snow_White_CARD_IDX_ATTACH]= best_card_skill[i];
+                skill_cards[Snow_White_CARD_IDX_POISON]= best_card_defense[i];
+                skill_snow_white (skill_cards, direction, player_use, player_des);
+            }
+        }
+        snow_white_buy_card (player);
     }
     return 0;
 }

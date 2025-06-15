@@ -4,7 +4,7 @@
 #include"game_data.h"
 #include"game_action.h"
 #include<stdint.h>
-sRed_Riding_Robot best_status;
+sRed_Riding_Robot red_riding_hood_best_status;
 
 int32_t red_riding_robot_process(int *card_idx, int end,int *best_card,int *best_card_skill,int *best_card_attack,int *best_card_movement,int *best_card_keep, int32_t player_use,int32_t player_des) {
     if(card_idx==NULL)return -1;
@@ -229,39 +229,39 @@ int32_t red_riding_robot_process(int *card_idx, int end,int *best_card,int *best
             status.power = player_data_usecopy.power;
              printf("%d,%d,%d,%d,%d,%d\n",card_idx[0],card_idx[1],card_idx[2],card_idx[3],card_idx[4],card_idx[5]);
              //printf("damage=%d,distance=%d,shell=%d,power=%d\n",status.damage,status.distance,status.shell,status.power);
-            // printf("best_damage=%d,distance=%d,shell=%d,power=%d\n",best_status.damage,best_status.distance,best_status.shell,best_status.power);
+            // printf("best_damage=%d,distance=%d,shell=%d,power=%d\n",red_riding_hood_best_status.damage,red_riding_hood_best_status.distance,red_riding_hood_best_status.shell,red_riding_hood_best_status.power);
             if(status.distance>=3)
             {
-                if(best_status.damage==0)
-                if(best_status.damage>status.damage)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                if(red_riding_hood_best_status.damage==0)
+                if(red_riding_hood_best_status.damage>status.damage)red_riding_best_data_cpy (&red_riding_hood_best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
                 {
-                    if(best_status.damage>status.damage)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
-                    else if(status.power>=best_status.power)
+                    if(red_riding_hood_best_status.damage>status.damage)red_riding_best_data_cpy (&red_riding_hood_best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                    else if(status.power>=red_riding_hood_best_status.power)
                      {
-                        if(status.power>best_status.power)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
-                        else if(status.shell>=best_status.shell)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                        if(status.power>red_riding_hood_best_status.power)red_riding_best_data_cpy (&red_riding_hood_best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                        else if(status.shell>=red_riding_hood_best_status.shell)red_riding_best_data_cpy (&red_riding_hood_best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
                      }
                      
                 }
             }
-            else if(best_status.damage>status.damage&&best_status.distance<3)
+            else if(red_riding_hood_best_status.damage>status.damage&&red_riding_hood_best_status.distance<3)
             {
-                if(best_status.damage>status.damage)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
-                else if(status.power>=best_status.power)
+                if(red_riding_hood_best_status.damage>status.damage)red_riding_best_data_cpy (&red_riding_hood_best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                else if(status.power>=red_riding_hood_best_status.power)
                 {
-                    if(status.power>best_status.power)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
-                    else if(status.shell>=best_status.shell)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                    if(status.power>red_riding_hood_best_status.power)red_riding_best_data_cpy (&red_riding_hood_best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                    else if(status.shell>=red_riding_hood_best_status.shell)red_riding_best_data_cpy (&red_riding_hood_best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
                 }
                      
             }
-            else if(status.power>best_status.power&&status.damage==best_status.damage)
+            else if(status.power>red_riding_hood_best_status.power&&status.damage==red_riding_hood_best_status.damage)
             {
-                if(status.power>best_status.power)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
-                else if(status.shell>=best_status.shell)red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                if(status.power>red_riding_hood_best_status.power)red_riding_best_data_cpy (&red_riding_hood_best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+                else if(status.shell>=red_riding_hood_best_status.shell)red_riding_best_data_cpy (&red_riding_hood_best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
             }
-            else if(status.shell>=best_status.shell&&best_status.distance<3&&best_status.damage==0&&best_status.power==0)
+            else if(status.shell>=red_riding_hood_best_status.shell&&red_riding_hood_best_status.distance<3&&red_riding_hood_best_status.damage==0&&red_riding_hood_best_status.power==0)
             {
-               red_riding_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
+               red_riding_best_data_cpy (&red_riding_hood_best_status, &status,len,best_card,card_idx_tmp,best_card_attack,card_attack,best_card_skill,card_skill,best_card_movement,card_movement,best_card_keep,card_keep);
                 
             }
             player_data_set(player_use,player_data_use);
@@ -312,13 +312,13 @@ int32_t red_riding_robot(int *arr, int32_t n, int *best_card,int *best_card_skil
     return 0;
 }
 
-int32_t red_riding_best_data_cpy (sRed_Riding_Robot *best_status, sRed_Riding_Robot *status,int32_t len,int32_t *best_card,int32_t *card,int32_t *best_card_attack,int32_t*card_attack,int32_t *best_card_skill,int32_t*card_skill,int32_t *best_card_movement,int32_t*card_movement,int32_t *best_card_keep,int32_t*card_keep)
+int32_t red_riding_best_data_cpy (sRed_Riding_Robot *red_riding_hood_best_status, sRed_Riding_Robot *status,int32_t len,int32_t *best_card,int32_t *card,int32_t *best_card_attack,int32_t*card_attack,int32_t *best_card_skill,int32_t*card_skill,int32_t *best_card_movement,int32_t*card_movement,int32_t *best_card_keep,int32_t*card_keep)
 {
 
-        best_status->damage=status->damage;
-        best_status->shell=status->shell;
-        best_status->distance=status->distance;
-        best_status->power=status->power;
+        red_riding_hood_best_status->damage=status->damage;
+        red_riding_hood_best_status->shell=status->shell;
+        red_riding_hood_best_status->distance=status->distance;
+        red_riding_hood_best_status->power=status->power;
     
     for(int32_t i=0; i<len ; i++)
     {

@@ -4,7 +4,7 @@
 #include"game_data.h"
 #include"game_action.h"
 #include<stdint.h>
-sSnow_White_Robot best_status;
+sSnow_White_Robot snow_white_best_status;
 
 int32_t snow_white_process(int *card_idx, int end,int *best_card,int *best_card_skill,int *best_card_defense, int32_t player_use,int32_t player_des) {
     if(card_idx==NULL)return -1;
@@ -252,65 +252,65 @@ int32_t snow_white_process(int *card_idx, int end,int *best_card,int *best_card_
             
             //   printf("%d,%d,%d,%d,%d,%d\n",card_idx_tmp[0],card_idx_tmp[1],card_idx_tmp[2],card_idx_tmp[3],card_idx_tmp[4],card_idx_tmp[5]);
             //   printf("poison=%d,damage=%d,distance=%d,shell=%d,power=%d\n",status.poison,status.damage,status.distance,status.shell,status.power);
-            //   printf("poison=%d,best_damage=%d,distance=%d,shell=%d,power=%d\n",best_status.poison,best_status.damage,best_status.distance,best_status.shell,best_status.power);
-            if(status.distance>=4||status.distance>best_status.distance)
+            //   printf("poison=%d,best_damage=%d,distance=%d,shell=%d,power=%d\n",snow_white_best_status.poison,snow_white_best_status.damage,snow_white_best_status.distance,snow_white_best_status.shell,snow_white_best_status.power);
+            if(status.distance>=4||status.distance>snow_white_best_status.distance)
             {
-                if(best_status.poison==0)snow_white_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
-                else if(best_status.poison>=status.poison)
+                if(snow_white_best_status.poison==0)snow_white_best_data_cpy (&snow_white_best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
+                else if(snow_white_best_status.poison>=status.poison)
                 {
-                    if(best_status.poison>status.poison)snow_white_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
-                    else if(status.power>=best_status.power)
+                    if(snow_white_best_status.poison>status.poison)snow_white_best_data_cpy (&snow_white_best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
+                    else if(status.power>=snow_white_best_status.power)
                     {
-                        if(status.power>best_status.power)snow_white_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
-                        else if(status.damage>=best_status.damage)
+                        if(status.power>snow_white_best_status.power)snow_white_best_data_cpy (&snow_white_best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
+                        else if(status.damage>=snow_white_best_status.damage)
                         {
-                            if(status.shell>=best_status.shell)snow_white_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
-                            else if(status.damage>best_status.damage)snow_white_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
+                            if(status.shell>=snow_white_best_status.shell)snow_white_best_data_cpy (&snow_white_best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
+                            else if(status.damage>snow_white_best_status.damage)snow_white_best_data_cpy (&snow_white_best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
                         }
                         
                     }
                      
                 }
             }
-            else if(best_status.poison<status.poison&&best_status.distance<4)
+            else if(snow_white_best_status.poison<status.poison&&snow_white_best_status.distance<4)
             {
                 
-                if(best_status.poison<status.poison)
+                if(snow_white_best_status.poison<status.poison)
                 {
                    
-                    snow_white_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
+                    snow_white_best_data_cpy (&snow_white_best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
 
                 }
-                else if(status.power>=best_status.power)
+                else if(status.power>=snow_white_best_status.power)
                 {
-                    if(status.power>best_status.power)snow_white_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
-                    else if(status.damage>=best_status.damage)
+                    if(status.power>snow_white_best_status.power)snow_white_best_data_cpy (&snow_white_best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
+                    else if(status.damage>=snow_white_best_status.damage)
                     {
                         
-                        if(status.damage>best_status.damage)snow_white_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
-                        else if(status.shell>=best_status.shell)snow_white_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
+                        if(status.damage>snow_white_best_status.damage)snow_white_best_data_cpy (&snow_white_best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
+                        else if(status.shell>=snow_white_best_status.shell)snow_white_best_data_cpy (&snow_white_best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
                         
                     }
                 }
                
             }
-            else if(status.power>best_status.power&&best_status.poison==status.poison)
+            else if(status.power>snow_white_best_status.power&&snow_white_best_status.poison==status.poison)
             {
-                if(status.power>best_status.power)snow_white_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
-                else if(status.damage>=best_status.damage)
+                if(status.power>snow_white_best_status.power)snow_white_best_data_cpy (&snow_white_best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
+                else if(status.damage>=snow_white_best_status.damage)
                 {
-                    if(status.damage>best_status.damage)snow_white_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
-                    else if(status.shell>=best_status.shell)snow_white_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
+                    if(status.damage>snow_white_best_status.damage)snow_white_best_data_cpy (&snow_white_best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
+                    else if(status.shell>=snow_white_best_status.shell)snow_white_best_data_cpy (&snow_white_best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
                         
                 }
             }
-            else if(status.damage>best_status.damage&&best_status.poison==status.poison)
+            else if(status.damage>snow_white_best_status.damage&&snow_white_best_status.poison==status.poison)
             {
-                if(status.damage>best_status.damage)snow_white_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
-                else if(status.shell>=best_status.shell)snow_white_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
+                if(status.damage>snow_white_best_status.damage)snow_white_best_data_cpy (&snow_white_best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
+                else if(status.shell>=snow_white_best_status.shell)snow_white_best_data_cpy (&snow_white_best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill);
                         
             }
-            else if(status.shell>=best_status.shell&&best_status.distance<=4&&best_status.power==0&&best_status.poison==0&&best_status.damage==0)snow_white_best_data_cpy (&best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill); 
+            else if(status.shell>=snow_white_best_status.shell&&snow_white_best_status.distance<=4&&snow_white_best_status.power==0&&snow_white_best_status.poison==0&&snow_white_best_status.damage==0)snow_white_best_data_cpy (&snow_white_best_status, &status,len,best_card,card_idx_tmp,best_card_defense,card_defense,best_card_skill,card_skill); 
             player_data_set(player_use,player_data_use);
             player_data_set(player_des,player_data_des);
             
@@ -367,13 +367,13 @@ int32_t snow_white_robot(int *arr, int32_t n, int *best_card,int *best_card_skil
     return 0;
 }
 
-int32_t snow_white_best_data_cpy (sSnow_White_Robot *best_status, sSnow_White_Robot *status,int32_t len,int32_t *best_card,int32_t *card,int32_t *best_card_defense,int32_t*card_defense,int32_t *best_card_skill,int32_t*card_skill)
+int32_t snow_white_best_data_cpy (sSnow_White_Robot *snow_white_best_status, sSnow_White_Robot *status,int32_t len,int32_t *best_card,int32_t *card,int32_t *best_card_defense,int32_t*card_defense,int32_t *best_card_skill,int32_t*card_skill)
 {
-        best_status->poison=status->poison;
-        best_status->damage=status->damage;
-        best_status->shell=status->shell;
-        best_status->distance=status->distance;
-        best_status->power=status->power;
+        snow_white_best_status->poison=status->poison;
+        snow_white_best_status->damage=status->damage;
+        snow_white_best_status->shell=status->shell;
+        snow_white_best_status->distance=status->distance;
+        snow_white_best_status->power=status->power;
     
     for(int32_t i=0; i<len ; i++)
     {

@@ -5,7 +5,7 @@ typedef enum _eSnowWhiteCardIdx{
     Snow_White_CARD_IDX_SKILL= 0,              // 主要技能（用蛻變二也是這裡標蛻變二）
     Snow_White_CARD_IDX_POISON,                // 防禦蛻變二附帶的牌
     Snow_White_CARD_IDX_ATTACH,                // 技能附帶基本牌  
-    Snow_White_CARD_IDX_FINISH1,                //必殺技三的附帶牌，有的話填編號，沒的話-1;
+    Snow_White_CARD_IDX_FINISH1,               // 必殺技三的附帶牌，有的話填編號，沒的話-1;
     Snow_White_CARD_IDX_FINISH2,            
     Snow_White_CARD_IDX_FINISH3,
     Snow_White_CARD_IDX_NUM
