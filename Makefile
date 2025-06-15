@@ -6,7 +6,8 @@ GAME_ROUND := game_round.c
 OBJ_GAME := $(GAME_DATA) $(GAME_ACTION) $(GAME_ROUND)
 
 # ui
-OBJ_GUI := gui_game.c gui_opening.c gui_choose_character.c gui_destroy.c gui_img_init.c gui_game_render.c gui_img_data.c
+GUI_GAME := gui_game.c gui_game_render.c gui_choose_character.c gui_game_action.c gui_game_choose.c 
+OBJ_GUI :=  gui_opening.c gui_destroy.c gui_img_init.c  gui_img_data.c $(GUI_GAME)
 
 # all
 CC := gcc

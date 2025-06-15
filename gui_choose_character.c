@@ -26,11 +26,16 @@ int32_t choose_character(SDL_Renderer* ren, SDL_Texture* character[], bool runni
         SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
         SDL_RenderClear(ren);
 
+        int32_t x[3]= {200, WINDOW_WIDTH/2 - IMG_SIZE/2, WINDOW_WIDTH - IMG_SIZE - 200};
+        int32_t y[2]= {(WINDOW_HEIGHT/2-IMG_SIZE/2) - (IMG_SIZE + 40), (WINDOW_HEIGHT/2-IMG_SIZE/2) + (IMG_SIZE + 40)};
+
         for (int i = 0; i < 6; i++) {
             int row = i / 3, col = i % 3;
             SDL_Rect dst = {
-                150 + col * (WINDOW_WIDTH/3 + 40),
-                100 + row * (WINDOW_HEIGHT/2 + 40),
+                // 150 + col * (WINDOW_WIDTH/3 + 40),
+                // 100 + row * (WINDOW_HEIGHT/2 + 40),
+                x[col],
+                y[row],
                 IMG_SIZE,
                 IMG_SIZE
             };
