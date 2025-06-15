@@ -25,7 +25,7 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
         if (!character[CHARACTER_RED_RIDING_HOOD] || !character[CHARACTER_SNOW_WHITE] || 
             !character[CHARACTER_MULAN] || !character[CHARACTER_KAGUYA] || 
             !character[CHARACTER_MATCH_GIRL] || !character[CHARACTER_DOROTHY]) {
-            printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
+            debug_print("IMG_LoadTexture Error: %s\n", IMG_GetError());
             SDL_DestroyRenderer(ren);
             SDL_DestroyWindow(win);
             IMG_Quit();
@@ -37,7 +37,7 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     // load plate
     *plate = IMG_LoadTexture(ren, "assets/plate_token_track/plate.png");
     if (!plate) {
-        printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
+        debug_print("IMG_LoadTexture Error: %s\n", IMG_GetError());
         SDL_DestroyRenderer(ren);
         SDL_DestroyWindow(win);
         IMG_Quit();
@@ -52,7 +52,7 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     token[3] = IMG_LoadTexture(ren, "assets/plate_token_track/power_token.png");
     for (int i = 0; i < 4; i++) {
         if (!token[i]) {
-            printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
+            debug_print("IMG_LoadTexture Error: %s\n", IMG_GetError());
             SDL_DestroyRenderer(ren);
             SDL_DestroyWindow(win);
             IMG_Quit();
@@ -78,7 +78,7 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
         if (!sheet[CHARACTER_RED_RIDING_HOOD] || !sheet[CHARACTER_SNOW_WHITE] || 
             !sheet[CHARACTER_MULAN] || !sheet[CHARACTER_KAGUYA] || 
             !sheet[CHARACTER_MATCH_GIRL] || !sheet[CHARACTER_DOROTHY]) {
-            printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
+            debug_print("IMG_LoadTexture Error: %s\n", IMG_GetError());
             SDL_DestroyRenderer(ren);
             SDL_DestroyWindow(win);
             IMG_Quit();
@@ -90,7 +90,7 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     // load track
     *track = IMG_LoadTexture(ren, "assets/plate_token_track/fight_track.png");
     if (!track) {
-        printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
+        debug_print("IMG_LoadTexture Error: %s\n", IMG_GetError());
         SDL_DestroyRenderer(ren);
         SDL_DestroyWindow(win);
         IMG_Quit();
@@ -101,7 +101,7 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     // load card back
     *card_back = IMG_LoadTexture(ren, "assets/card/card_back.png");
     if (!card_back) {
-        printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
+        debug_print("IMG_LoadTexture Error: %s\n", IMG_GetError());
         SDL_DestroyRenderer(ren);
         SDL_DestroyWindow(win);
         IMG_Quit();
@@ -122,7 +122,7 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     basic_card[CARD_BASIC_COMMON] = IMG_LoadTexture(ren, "assets/card/wild.png");
     for (int i = 1; i <= CARD_BASIC_COMMON; i++) {
         if (!basic_card[i]) {
-            printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
+            debug_print("IMG_LoadTexture Error: %s\n", IMG_GetError());
             SDL_DestroyRenderer(ren);
             SDL_DestroyWindow(win);
             IMG_Quit();
@@ -154,7 +154,7 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     }
     for(int i = CARD_SKILL_ATTACK_BASE_L1; i <= CARD_SKILL_FINISH3; i++){
         if(!rrh_card[i]){
-            printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
+            debug_print("IMG_LoadTexture Error: %s\n", IMG_GetError());
             SDL_DestroyRenderer(ren);
             SDL_DestroyWindow(win);
             IMG_Quit();
@@ -186,7 +186,7 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     }
     for(int i = CARD_SKILL_ATTACK_BASE_L1; i <= CARD_SKILL_FINISH3; i++){
         if(!sw_card[i]){
-            printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
+            debug_print("IMG_LoadTexture Error: %s\n", IMG_GetError());
             SDL_DestroyRenderer(ren);
             SDL_DestroyWindow(win);
             IMG_Quit();
@@ -218,7 +218,7 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     }
     for(int i = CARD_SKILL_ATTACK_BASE_L1; i <= CARD_SKILL_FINISH3; i++){
         if(!mulan_card[i]){
-            printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
+            debug_print("IMG_LoadTexture Error: %s\n", IMG_GetError());
             SDL_DestroyRenderer(ren);
             SDL_DestroyWindow(win);
             IMG_Quit();
@@ -250,7 +250,7 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     }
     for(int i = CARD_SKILL_ATTACK_BASE_L1; i <= CARD_SKILL_FINISH3; i++){
         if(!kaguya_card[i]){
-            printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
+            debug_print ("IMG_LoadTexture Error: %s\n", IMG_GetError());
             SDL_DestroyRenderer(ren);
             SDL_DestroyWindow(win);
             IMG_Quit();
@@ -285,7 +285,7 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     mg_card[CARD_MATCH] = IMG_LoadTexture(ren, "assets/card/134.png");
     for(int i = CARD_SKILL_ATTACK_BASE_L1; i <= CARD_SKILL_FINISH3; i++){
         if(!rrh_card[i]){
-            printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
+            debug_print("IMG_LoadTexture Error: %s\n", IMG_GetError());
             SDL_DestroyRenderer(ren);
             SDL_DestroyWindow(win);
             IMG_Quit();
@@ -294,7 +294,7 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
         }
     }
     if(!mg_card[CARD_MATCH]){
-        printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
+        debug_print("IMG_LoadTexture Error: %s\n", IMG_GetError());
         SDL_DestroyRenderer(ren);
         SDL_DestroyWindow(win);
         IMG_Quit();
@@ -325,7 +325,7 @@ int32_t img_init(SDL_Window* win, SDL_Renderer* ren, SDL_Texture* character[],
     }
     for(int i = CARD_SKILL_ATTACK_BASE_L1; i <= CARD_SKILL_FINISH3; i++){
         if(!dorothy_card[i]){
-            printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
+            debug_print("IMG_LoadTexture Error: %s\n", IMG_GetError());
             SDL_DestroyRenderer(ren);
             SDL_DestroyWindow(win);
             IMG_Quit();

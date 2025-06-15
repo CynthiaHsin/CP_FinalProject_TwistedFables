@@ -387,6 +387,16 @@ int32_t gui_skill_kaguya (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_
     return skill_kaguya (card_idx, skill_move_use_hp_card_idx, skill_move_evolution_direction, player, player_des);
 }
 
+// return card idx
+int32_t gui_passive_dorothy (int32_t player){
+    int32_t choose= gui_choose_move_yes_or_no ("Do you want to use the passive skill?");
+    if (!choose) return -1;
+    sCardData cards[CARD_NUM];
+    int32_t cnt;
+    gui_action_get_skill_card (cards, &cnt, player, CARD_SPACE_HAND);
+    return gui_choose_card (&cnt, cards, cnt, "Choose the skill you want to use.");
+}
+
 int32_t gui_skill_dorothy (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_t type[CARD_IDX_NUM]){
     
     int32_t defense_throw_idx[3]= {0};

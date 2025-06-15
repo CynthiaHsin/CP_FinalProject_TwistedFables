@@ -26,24 +26,24 @@ int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
     *pMode= GAMEMODE_1V1;
     // init
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) { 
-		printf("error initializing SDL: %s\n", SDL_GetError()); 
+		debug_print("error initializing SDL: %s\n", SDL_GetError()); 
 	} 
 
     if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) == 0) {
-        printf("IMG_Init Error: %s\n", IMG_GetError());
+        debug_print("IMG_Init Error: %s\n", IMG_GetError());
         SDL_Quit();
         return 1;
     }
 
     // init font
     if (TTF_Init() != 0) {
-        printf("TTF_Init error: %s\n", TTF_GetError());
+        debug_print("TTF_Init error: %s\n", TTF_GetError());
         return 1;
     }
 
     font_main = TTF_OpenFont("assets/fonts/NotoSansTC-ExtraBold.ttf", 16);
     if (!font_main) {
-        printf("Failed to load font: %s\n", TTF_GetError());
+        debug_print("Failed to load font: %s\n", TTF_GetError());
         return 1;
     }
 
@@ -54,7 +54,7 @@ int32_t gui_game_start(int32_t characters[PLAYER_NUM], int32_t *pMode){
                             WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN); 
     
     if (win == NULL) {
-        printf("SDL_CreateWindow Error: %s\n", SDL_GetError());
+        debug_print("SDL_CreateWindow Error: %s\n", SDL_GetError());
         SDL_Quit();
         return 1;
     }

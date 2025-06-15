@@ -5,7 +5,7 @@ int32_t opening(SDL_Renderer* ren, SDL_Texture* title, SDL_Window* win){
     // load title
     title = IMG_LoadTexture(ren, "assets/title&sheet/title.png");
     if (!title) {
-        printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
+        debug_print("IMG_LoadTexture Error: %s\n", IMG_GetError());
         SDL_DestroyRenderer(ren);
         SDL_DestroyWindow(win);
         IMG_Quit();

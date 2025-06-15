@@ -15,6 +15,10 @@ int32_t status_mulan_defense_token_accept_add (int32_t delta){
     return 0;
 }
 
+int32_t status_mulan_defense_token_accept_get (){
+    return mulan_defense_token_accept;
+}
+
 // return | delta token |
 int32_t status_mulan_token_add (int32_t token, int32_t player){
     sPlayerData player_data;

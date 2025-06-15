@@ -25,4 +25,4 @@ int32_t skill_mulan_passive_attacked (int32_t attack_delta, int32_t player);
 
 int32_t skill_mulan_round_start (int32_t player);
 // 沒有用到：defense_pull_token<=0, card_idx=CARD_ORIGINAL
-int32_t skill_mulan_round_end (int32_t defense_pull_token, int32_t defense_evolution1_card_idx_throw, int32_t player);
+int32_t skill_mulan_round_end (int32_t player);
