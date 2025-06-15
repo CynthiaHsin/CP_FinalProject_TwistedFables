@@ -21,12 +21,11 @@ int32_t action_attack (int32_t delta, int32_t area, int32_t player_use, int32_t 
             delta= skill_kaguya_passive_attacked (delta, 0, player_use, player_des);
             break;
 
-        case CHARACTER_MATCH_GIRL:
-            {
-                int32_t move_direction=0;
-                if(delta>player_data_des.defense)move_direction=gui_choose_move_direction ("輸入你想要移動的方向：");
-                skill_match_girl_movement_evolution(delta, player_des,move_direction);
-            }
+        case CHARACTER_MATCH_GIRL: {
+            int32_t move_direction=0;
+            if(delta>player_data_des.defense)move_direction=gui_choose_move_direction ("輸入你想要移動的方向：");
+            skill_match_girl_movement_evolution(delta, player_des,move_direction);
+        }
         default:
             break;
     }

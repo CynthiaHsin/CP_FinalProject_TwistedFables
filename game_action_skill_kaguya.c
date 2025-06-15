@@ -18,7 +18,7 @@ int32_t skill_kaguya (int32_t card_idx[KAGUYA_CARD_IDX_NUM], int32_t skill_move_
     switch (card_data.type) {
         case CARD_SKILL_ATTACK_BASE_L1:
         case CARD_SKILL_ATTACK_BASE_L2:
-        case CARD_SKILL_ATTACK_BASE_L3:
+        case CARD_SKILL_ATTACK_BASE_L3:{
             level_attach= status_kaguya_use_defense_card_as_attack (level_attach, player_use);
             if (level_attach==0) return -1;
             if (player_data.defense>=3){
@@ -26,9 +26,10 @@ int32_t skill_kaguya (int32_t card_idx[KAGUYA_CARD_IDX_NUM], int32_t skill_move_
             }
             if (action_attack (level_attach + level_skill, 1, player_use, player_des));
             break;
+        }
         case CARD_SKILL_DEFENSE_BASE_L1:
         case CARD_SKILL_DEFENSE_BASE_L2:
-        case CARD_SKILL_DEFENSE_BASE_L3:
+        case CARD_SKILL_DEFENSE_BASE_L3:{
             action_defense (level_attach + level_skill, player_use);
             sCardData cards[3];
             int32_t choose[3]= {0}; // 0: return, -1: throw, 1: defense
@@ -50,18 +51,21 @@ int32_t skill_kaguya (int32_t card_idx[KAGUYA_CARD_IDX_NUM], int32_t skill_move_
                 }
             }
             break;
+        }
         case CARD_SKILL_MOVEMENT_BASE_L2:
-        case CARD_SKILL_MOVEMENT_BASE_L3:
+        case CARD_SKILL_MOVEMENT_BASE_L3:{
             status_kaguya_skill_area_set (card_idx[0], 4-level_attach);
             card_data_set (card_idx[0], 1, CARD_SPACE_USE_LASTING, CARD_ORIGINAL, PLAYER_ORIGINAL);
             card_data_set (card_idx[1], 1, CARD_SPACE_USE_LASTING, CARD_ORIGINAL, PLAYER_ORIGINAL);
-        case CARD_SKILL_MOVEMENT_BASE_L1:
+        }
+        case CARD_SKILL_MOVEMENT_BASE_L1:{
             action_attack (level_skill, level_attach, player_use, player_des);
             if (skill_move_use_hp_card_idx != CARD_ORIGINAL){
                 action_lose_hp (1, -1, player_des, player_use);
             }
             break;
-        case CARD_SKILL_MOVEMENT_EVOLUTION_L1:
+        }
+        case CARD_SKILL_MOVEMENT_EVOLUTION_L1:{
             int32_t def= player_data.defense;
             player_data_get (&player_data, player_des);
             def-= player_data.defense;
@@ -69,6 +73,7 @@ int32_t skill_kaguya (int32_t card_idx[KAGUYA_CARD_IDX_NUM], int32_t skill_move_
             int32_t area= status_kaguya_use_evolution1_movement (player_use);
             action_move (area, skill_move_evolution_direction, player_des);
             break;
+        }
         default:
             break;
     }
@@ -85,15 +90,17 @@ int32_t skill_kaguya_finish (int32_t card_idx, int32_t finish3_direction, int32_
     card_data_get (&card_data, card_idx);
     sPlayerData player_data;
     switch (card_data.type){
-        case CARD_SKILL_FINISH1:
+        case CARD_SKILL_FINISH1:{
             status_kaguya_skill_finish1 (player_use);
             card_data_set (card_idx, 1, CARD_SPACE_USE, CARD_ORIGINAL, PLAYER_ORIGINAL);
             break;
-        case CARD_SKILL_FINISH2:
+        }
+        case CARD_SKILL_FINISH2:{
             action_defense (6, player_use);
             card_data_set (card_idx, 1, CARD_SPACE_USE_LASTING, CARD_ORIGINAL, PLAYER_ORIGINAL);
             break;
-        case CARD_SKILL_FINISH3:
+        }
+        case CARD_SKILL_FINISH3:{
             player_data_get (&player_data, player_use);
             int32_t delta= player_data.pos + finish3_direction;
             player_data_get (&player_data, player_des);
@@ -103,6 +110,7 @@ int32_t skill_kaguya_finish (int32_t card_idx, int32_t finish3_direction, int32_
             card_data_set (card_idx, 1, CARD_SPACE_USE_LASTING, CARD_ORIGINAL, PLAYER_ORIGINAL);
             status_kaguya_skill_finish3 (player_use, player_des);
             break;
+        }
         default:
             return -1;
     }
@@ -147,7 +155,7 @@ int32_t skill_kaguya_round_start (int32_t player){
         level= card_data_get_level (card_datas[i].index);
         switch (card_datas[i].type){
             case CARD_SKILL_MOVEMENT_BASE_L2:
-            case CARD_SKILL_MOVEMENT_BASE_L3:
+            case CARD_SKILL_MOVEMENT_BASE_L3:{
                 int32_t area= status_kaguya_skill_area_get (card_datas[i].index);
                 for (int32_t p=PLAYER1; p<=PLAYER2; p++){
                     if (p==player) continue;
@@ -158,7 +166,8 @@ int32_t skill_kaguya_round_start (int32_t player){
                     if (pos > area) action_attack (level*2, ACTION_NO_AREA, player, p);
                 }
                 break;
-            case CARD_SKILL_FINISH2:
+            }
+            case CARD_SKILL_FINISH2:{
                 for (int32_t p=PLAYER1; p<=PLAYER2; p++){
                     if (p==player) continue;
                     int32_t def= player_data.defense;
@@ -166,7 +175,8 @@ int32_t skill_kaguya_round_start (int32_t player){
                     def-= player_data.defense;
                     if (def>0) action_lose_hp (def, -1, player, p);    
                 }
-            case CARD_SKILL_FINISH3:
+            }
+            case CARD_SKILL_FINISH3:{
                 int32_t des= status_kaguya_skill_finish3_des_get();
                 int32_t direction= player_data.pos;
                 player_data_get (&player_data, des);
@@ -182,6 +192,7 @@ int32_t skill_kaguya_round_start (int32_t player){
                 action_move (abs(direction), direction, des);
                 action_attack (3, 1, player, des);
                 break;
+            }
             default:
                 break;
         }

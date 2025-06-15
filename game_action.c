@@ -74,7 +74,7 @@ int32_t game_action_buy_card (int32_t card_idx, int32_t player){
         case CARD_SKILL_MOVEMENT_EVOLUTION_L1:
         case CARD_SKILL_ATTACK_EVOLUTION_L2:
         case CARD_SKILL_DEFENSE_EVOLUTION_L2:
-        case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
+        case CARD_SKILL_MOVEMENT_EVOLUTION_L2:{
             if (player_data.character==CHARACTER_RED_RIDING_HOOD){
                 card_data_set (card_next.index, 1, CARD_SPACE_USE_LASTING, CARD_ORIGINAL, player);
                 status_red_riding_hood_evolution2_on (card_next.type);
@@ -82,8 +82,8 @@ int32_t game_action_buy_card (int32_t card_idx, int32_t player){
             }
             card_data_set (card_next.index, 1, CARD_SPACE_THROW, CARD_ORIGINAL, player);
             break;
-        default:
-            break;
+        }
+        default: break;
     }
     status_data_add_action (player);
     return 0;

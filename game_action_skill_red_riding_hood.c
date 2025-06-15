@@ -18,7 +18,7 @@ int32_t skill_red_riding_hood (int32_t card_idx[RED_RIDING_HOOD_CARD_IDX_NUM], i
     switch (card_data.type) {
         case CARD_SKILL_ATTACK_BASE_L1:
         case CARD_SKILL_ATTACK_BASE_L2:
-        case CARD_SKILL_ATTACK_BASE_L3:
+        case CARD_SKILL_ATTACK_BASE_L3:{
             attack_area += level;
             attach_level= card_attach_calculate(card_idx[RED_RIDING_HOOD_CARD_IDX_ATTACH], ACTION_ATTACK);
             if (attach_level<0){
@@ -34,9 +34,10 @@ int32_t skill_red_riding_hood (int32_t card_idx[RED_RIDING_HOOD_CARD_IDX_NUM], i
                 return -1;
             }
             break;
+        }
         case CARD_SKILL_DEFENSE_BASE_L1:
         case CARD_SKILL_DEFENSE_BASE_L2:
-        case CARD_SKILL_DEFENSE_BASE_L3:
+        case CARD_SKILL_DEFENSE_BASE_L3:{
             attach_level= card_attach_calculate(card_idx[RED_RIDING_HOOD_CARD_IDX_ATTACH], ACTION_DEFENSE);
             if (attach_level<0){
                 return -1;
@@ -47,9 +48,10 @@ int32_t skill_red_riding_hood (int32_t card_idx[RED_RIDING_HOOD_CARD_IDX_NUM], i
             action_attack (level, level, player_use, player_des);
             card_data_set (card_data.index, 1, CARD_SPACE_USE_LASTING, CARD_ORIGINAL, PLAYER_ORIGINAL);
             break;
+        }
         case CARD_SKILL_MOVEMENT_BASE_L1:
         case CARD_SKILL_MOVEMENT_BASE_L2:
-        case CARD_SKILL_MOVEMENT_BASE_L3:
+        case CARD_SKILL_MOVEMENT_BASE_L3:{
             int32_t attacked= 0;
             int32_t attach_level= card_attach_calculate(card_idx[RED_RIDING_HOOD_CARD_IDX_ATTACH], ACTION_MOVE);
             if (attach_level<0){
@@ -71,14 +73,16 @@ int32_t skill_red_riding_hood (int32_t card_idx[RED_RIDING_HOOD_CARD_IDX_NUM], i
                 action_move (attach_level, attack_direction, player_des);
             }
             break;
+        }
         case CARD_SKILL_ATTACK_EVOLUTION_L2:
         case CARD_SKILL_DEFENSE_EVOLUTION_L2:
-        case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
+        case CARD_SKILL_MOVEMENT_EVOLUTION_L2:{
             if (status_red_riding_hood_evolution2_card_set(card_idx[RED_RIDING_HOOD_CARD_IDX_EVOLUTION2], card_data.type)<0){
                 debug_print ("error: you cannot set this card to evolution deck\n");
                 return -1;
             }
             break;
+        }
     }
     for (int32_t i=0; i<RED_RIDING_HOOD_CARD_IDX_NUM; i++){
         card_data_get(&card_data, card_idx[i]);

@@ -22,8 +22,6 @@ int32_t skill_match_girl (int32_t card_idx[Match_Girl_CARD_IDX_NUM],  int32_t pl
         case CARD_SKILL_ATTACK_BASE_L2:
         case CARD_SKILL_ATTACK_BASE_L3:
         {
-            
-            
             if(card_idx[Match_Girl_POWER_NUM_ATTACK]>player_data_use.power)return -1;
             int32_t attach_level= card_attach_calculate(card_idx[Match_Girl_CARD_IDX_ATTACH], ACTION_ATTACK);
             int32_t power_plus=(card_idx[Match_Girl_POWER_NUM_ATTACK]/3);

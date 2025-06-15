@@ -28,7 +28,7 @@ int32_t skill_mulan (int32_t card_idx[MULAN_CARD_IDX_NUM], int32_t mulan_action[
     switch (card_data.type) {
         case CARD_SKILL_ATTACK_BASE_L1:
         case CARD_SKILL_ATTACK_BASE_L2:
-        case CARD_SKILL_ATTACK_BASE_L3:
+        case CARD_SKILL_ATTACK_BASE_L3:{
             token= skill_mulan_evolution1 (mulan_action[MULAN_ACTION_IDX_ATTACK_EVOLUTION_TOKEN], player_use);
             if (action_attack(level_skill+level_attach+token, 1, player_use, player_des)<0) return -1;
             direction= player_data_use.pos - player_data_des.pos;
@@ -39,15 +39,17 @@ int32_t skill_mulan (int32_t card_idx[MULAN_CARD_IDX_NUM], int32_t mulan_action[
                 if (mulan_action[MULAN_ACTION_IDX_THROW_DES]) skill_mulan_throw_des_card(player_des);
             }
             break;
+        }
         case CARD_SKILL_DEFENSE_BASE_L1:
         case CARD_SKILL_DEFENSE_BASE_L2:
-        case CARD_SKILL_DEFENSE_BASE_L3:
+        case CARD_SKILL_DEFENSE_BASE_L3:{
             action_defense(level_attach, player_use);
             status_mulan_defense_token_accept_add (level_skill);
             break;
+        }
         case CARD_SKILL_MOVEMENT_BASE_L1:
         case CARD_SKILL_MOVEMENT_BASE_L2:
-        case CARD_SKILL_MOVEMENT_BASE_L3:
+        case CARD_SKILL_MOVEMENT_BASE_L3:{
             if (action_attack(level_skill, 1, player_use, player_des)<0) return -1;
             // token= skill_mulan_evolution1_attack (CARD_SKILL_MOVEMENT_EVOLUTION_L1, mulan_action[MULAN_ACTION_IDX_ATTACK_EVOLUTION_TOKEN], player_use);
             direction= player_data_des.pos - player_data_use.pos;
@@ -56,6 +58,7 @@ int32_t skill_mulan (int32_t card_idx[MULAN_CARD_IDX_NUM], int32_t mulan_action[
             if (direction>0) direction++;
             else direction--;
             action_move (direction, direction, player_use);
+        }
         case CARD_SKILL_ATTACK_EVOLUTION_L1:
         case CARD_SKILL_DEFENSE_EVOLUTION_L1:
         case CARD_SKILL_MOVEMENT_EVOLUTION_L1:
@@ -101,10 +104,11 @@ int32_t skill_mulan_finish (int32_t card_idx, int32_t finish2_direction, int32_t
     sCardData card_data;
     card_data_get (&card_data, card_idx);
     switch (card_data.type){
-        case CARD_SKILL_FINISH1:
+        case CARD_SKILL_FINISH1:{
             status_mulan_finish1_on();
             break;
-        case CARD_SKILL_FINISH2:
+        }
+        case CARD_SKILL_FINISH2:{
             player_data_get (&player_data, player_des);
             int32_t pos= player_data.pos + finish2_direction;
             player_data_get (&player_data, player_use);
@@ -112,13 +116,16 @@ int32_t skill_mulan_finish (int32_t card_idx, int32_t finish2_direction, int32_t
             if (action_move (direction, direction, player_use)<0) return -1;
             status_mulan_token_add (3, player_use);
             break;
-        case CARD_SKILL_FINISH3:
+        }
+        case CARD_SKILL_FINISH3:{
             player_data_get (&player_data, player_use);
             status_mulan_token_add (-1*player_data.token, player_use);
             break;
-        default:
+        }
+        default:{
             debug_print ("error: wrong card\n");
             return -1;
+        }
     }
     card_data_set (card_idx, 1, CARD_SPACE_USE, CARD_ORIGINAL, PLAYER_ORIGINAL);
     return 0;

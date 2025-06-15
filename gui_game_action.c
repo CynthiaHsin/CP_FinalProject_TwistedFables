@@ -546,7 +546,7 @@ int32_t gui_skill_match_girl (int32_t player, int32_t card_idx[CARD_IDX_NUM], in
         case CARD_SKILL_DEFENSE_BASE_L1:
         case CARD_SKILL_DEFENSE_BASE_L2:
         case CARD_SKILL_DEFENSE_BASE_L3:
-         {
+        {
             int32_t level= card_data_get_level (type[CARD_IDX_SKILL]);
             int32_t HP= gui_choose_token (MIN(level, pd.hp), player, "想要花費的HP值");
             if(HP<0)HP=0;
