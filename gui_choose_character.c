@@ -3,7 +3,14 @@
 #include "game_data.h"
 // return the chose character
 int32_t choose_character(SDL_Renderer* ren, SDL_Texture* character[], bool running, int32_t selected, SDL_Event event, int32_t enemy_character){
-    int32_t enemy = enemy_character - 1;
+    int32_t enemy = 0;
+    if(enemy_character == 1){enemy = 0;}
+    else if(enemy_character == 2){ enemy = 1;}
+    else if(enemy_character == 5){ enemy = 2;}
+    else if(enemy_character == 6){ enemy = 3;}
+    else if(enemy_character == 8){ enemy = 4;}
+    else if(enemy_character == 9){ enemy = 5;}
+
     int32_t backup = 0;
     while (running) {
         while (SDL_PollEvent(&event)) {
