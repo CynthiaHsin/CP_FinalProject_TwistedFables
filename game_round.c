@@ -19,35 +19,33 @@ int32_t game_round(){
     for (int32_t i=0; i<2; i++){
         // debug_print ("player_order %d: %d\n", i, status.player_order[i]);
         int32_t player= status.player_order[i];
-        if (player == PLAYER1){
-            // 回合開始階段
-            game_round_start (mode, player);
-            // 判斷是否結束
-            winner= game_round_gameend_parse (mode);
-            if (winner!=PLAYER_UNDEFINED){
-                return winner;
-            }
-            // 清理階段
-            game_round_clear (mode, player);
-            // 判斷是否結束
-            winner= game_round_gameend_parse (mode);
-            if (winner!=PLAYER_UNDEFINED){
-                return winner;
-            }
-            // 行動階段
-            game_round_action (mode, player);
-            // 判斷是否結束
-            winner= game_round_gameend_parse (mode);
-            if (winner!=PLAYER_UNDEFINED){
-                return winner;
-            }
-            // 結束階段
-            game_round_end (mode, player);
-            // 判斷是否結束
-            winner= game_round_gameend_parse (mode);
-            if (winner!=PLAYER_UNDEFINED){
-                return winner;
-            }
+        // 回合開始階段
+        game_round_start (mode, player);
+        // 判斷是否結束
+        winner= game_round_gameend_parse (mode);
+        if (winner!=PLAYER_UNDEFINED){
+            return winner;
+        }
+        // 清理階段
+        game_round_clear (mode, player);
+        // 判斷是否結束
+        winner= game_round_gameend_parse (mode);
+        if (winner!=PLAYER_UNDEFINED){
+            return winner;
+        }
+        // 行動階段
+        game_round_action (mode, player);
+        // 判斷是否結束
+        winner= game_round_gameend_parse (mode);
+        if (winner!=PLAYER_UNDEFINED){
+            return winner;
+        }
+        // 結束階段
+        game_round_end (mode, player);
+        // 判斷是否結束
+        winner= game_round_gameend_parse (mode);
+        if (winner!=PLAYER_UNDEFINED){
+            return winner;
         }
     }
     status_data_next_round();
@@ -112,7 +110,10 @@ int32_t game_round_clear (int32_t mode, int32_t player){
 
 int32_t game_round_action (int32_t mode, int32_t player){
     // int32_t ui_round (int32_t player);
-    game_scene_loop(gCharacters);
+    if (player==PLAYER1) game_scene_loop(gCharacters);
+    else{
+        // robot
+    }
     return 0;
 }
 
