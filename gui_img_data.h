@@ -2,7 +2,8 @@
 
 #include "gui_sdl_config.h"
 
-#define IMG_SIZE 150
+#define IMG_SIZE_X 150
+#define IMG_SIZE_Y 180
 #define SCALE 1.2
 
 #define WINDOW_WIDTH 1200

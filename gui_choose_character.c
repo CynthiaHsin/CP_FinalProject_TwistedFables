@@ -2,7 +2,9 @@
 #include "gui_img_data.h"
 #include "game_data.h"
 // return the chose character
-int32_t choose_character(SDL_Renderer* ren, SDL_Texture* character[], bool running, int32_t selected, SDL_Event event){
+int32_t choose_character(SDL_Renderer* ren, SDL_Texture* character[], bool running, int32_t selected, SDL_Event event, int32_t enemy_character){
+    int32_t enemy = enemy_character - 1;
+    int32_t backup = 0;
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT){
@@ -11,11 +13,43 @@ int32_t choose_character(SDL_Renderer* ren, SDL_Texture* character[], bool runni
             }
             else if (event.type == SDL_KEYDOWN) {
                 switch (event.key.keysym.sym) {
-                    case SDLK_LEFT:  if (selected % 3 > 0) selected--; break;
-                    case SDLK_RIGHT: if (selected % 3 < 2) selected++; break;
-                    case SDLK_UP:    if (selected >= 3) selected -= 3; break;
-                    case SDLK_DOWN:  if (selected < 3) selected += 3; break;
+                    case SDLK_LEFT:  
+                        // if (selected % 3 > 0) selected--; break;
+                        backup = selected;
+                        do {
+                            if (selected % 3 > 0) selected--;
+                            else break;
+                        } while (selected == enemy && selected != backup);
+                        break;
+                    case SDLK_RIGHT: 
+                        // if (selected % 3 < 2) selected++; break;
+                        backup = selected;
+                        do {
+                            if (selected % 3 < 2) selected++;
+                            else break;
+                        } while (selected == enemy && selected != backup);
+                        break;
+                    case SDLK_UP:    
+                        // if (selected >= 3) selected -= 3; break;
+                        backup = selected;
+                        do {
+                            if (selected >= 3) selected -= 3;
+                            else break;
+                        } while (selected == enemy && selected != backup);
+                        break;
+                    case SDLK_DOWN:  
+                        // if (selected < 3) selected += 3; break;
+                        backup = selected;
+                        do {
+                            if (selected < 3) selected += 3;
+                            else break;
+                        } while (selected == enemy && selected != backup);
+                        break;
                     case SDLK_RETURN:
+                        if (selected == enemy) {
+                            printf("這個角色已被對手選擇，請選別的角色！\n");
+                            break;
+                        }
                         printf("You selected image #%d\n", selected + 1);
                         running = false;
                         break;
@@ -26,44 +60,75 @@ int32_t choose_character(SDL_Renderer* ren, SDL_Texture* character[], bool runni
         SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
         SDL_RenderClear(ren);
 
-        int32_t x[3]= {200, WINDOW_WIDTH/2 - IMG_SIZE/2, WINDOW_WIDTH - IMG_SIZE - 200};
-        int32_t y[2]= {(WINDOW_HEIGHT/2-IMG_SIZE/2) - (IMG_SIZE + 40), (WINDOW_HEIGHT/2-IMG_SIZE/2) + (IMG_SIZE + 40)};
+        int32_t x[3]= {200, WINDOW_WIDTH/2 - IMG_SIZE_X/2, WINDOW_WIDTH - IMG_SIZE_X - 200};
+        int32_t y[2]= {(WINDOW_HEIGHT/2-IMG_SIZE_Y/2) - (IMG_SIZE_Y + 40), (WINDOW_HEIGHT/2-IMG_SIZE_Y/2) + (IMG_SIZE_Y + 40)};
 
         for (int i = 0; i < 6; i++) {
             int row = i / 3, col = i % 3;
             SDL_Rect dst = {
-                // 150 + col * (WINDOW_WIDTH/3 + 40),
-                // 100 + row * (WINDOW_HEIGHT/2 + 40),
                 x[col],
                 y[row],
-                IMG_SIZE,
-                IMG_SIZE
+                IMG_SIZE_X,
+                IMG_SIZE_Y
             };
 
-            if (i == selected) {
-                int scale = IMG_SIZE * SCALE;
-                dst.x -= (scale - IMG_SIZE) / 2;
-                dst.y -= (scale - IMG_SIZE) / 2;
-                dst.w = dst.h = scale;
+            if (i == selected && i != enemy) {
+                int scale_x = IMG_SIZE_X * SCALE;
+                int scale_y = IMG_SIZE_Y * SCALE;
+                dst.x -= (scale_x - IMG_SIZE_X) / 2;
+                dst.y -= (scale_y - IMG_SIZE_Y) / 2;
+                // dst.w = dst.h = scale;
+                dst.w = scale_x;
+                dst.h = scale_y;
             }
 
             if(i == 0){
                 SDL_RenderCopy(ren, character[CHARACTER_RED_RIDING_HOOD], NULL, &dst);
+                // 如果是敵方角色，加紅色邊框
+                if (i == enemy) {
+                    SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
+                    SDL_RenderDrawRect(ren, &dst);
+                }
             }
             else if(i == 1){
                 SDL_RenderCopy(ren, character[CHARACTER_SNOW_WHITE], NULL, &dst);
+                // 如果是敵方角色，加紅色邊框
+                if (i == enemy) {
+                    SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
+                    SDL_RenderDrawRect(ren, &dst);
+                }
             }
             else if(i == 2){
                 SDL_RenderCopy(ren, character[CHARACTER_MULAN], NULL, &dst);
+                // 如果是敵方角色，加紅色邊框
+                if (i == enemy) {
+                    SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
+                    SDL_RenderDrawRect(ren, &dst);
+                }
             }
             else if(i == 3){
                 SDL_RenderCopy(ren, character[CHARACTER_KAGUYA], NULL, &dst);
+                // 如果是敵方角色，加紅色邊框
+                if (i == enemy) {
+                    SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
+                    SDL_RenderDrawRect(ren, &dst);
+                }
             }
             else if(i == 4){
                 SDL_RenderCopy(ren, character[CHARACTER_MATCH_GIRL], NULL, &dst);
+                // 如果是敵方角色，加紅色邊框
+                if (i == enemy) {
+                    SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
+                    SDL_RenderDrawRect(ren, &dst);
+                }
             }
             else if(i == 5){
                 SDL_RenderCopy(ren, character[CHARACTER_DOROTHY], NULL, &dst);
+                // 如果是敵方角色，加紅色邊框
+                if (i == enemy) {
+                    SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
+                    SDL_RenderDrawRect(ren, &dst);
+                }
             }
         }
 
