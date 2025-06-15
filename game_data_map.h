@@ -31,3 +31,6 @@ int32_t map_data_init (int32_t mode);
 int32_t map_data_cannot_move (int32_t road, int32_t pos, int32_t player);
 
 int32_t map_data_is_at_edge (int32_t player);
+
+const sMapData* map_data_get(void); 
+int32_t map_data_get_player(int32_t road, int32_t pos);

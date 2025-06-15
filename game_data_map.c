@@ -56,3 +56,15 @@ int32_t map_data_is_at_edge (int32_t player){
     if (abs(player_data.pos) == map_data.block_mid) return 1;
     return 0;
 }
+
+const sMapData* map_data_get(void) { 
+    return &map_data;
+}
+
+int32_t map_data_get_player(int32_t road, int32_t pos)
+{
+    if (road < 0 || road >= ROAD_MAX)               return PLAYER_UNDEFINED;
+    int col = POS_CALCULATE(map_data.block_mid, pos);
+    if (col < 0 || col >= BLOCK_MAX)                return PLAYER_UNDEFINED;
+    return map_data.map[road][col].player;
+}
