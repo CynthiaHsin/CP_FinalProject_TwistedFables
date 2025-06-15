@@ -2,6 +2,8 @@
 # include "game_action_skill_kaguya.h"
 # include "game_action_basic.h"
 # include "game_data.h"
+# include "gui_game_action.h"
+# include "gui_game_choose.h"
 
 // skill_move_use_hp_card_idx: 要使用一點生命值移除牌，輸入牌編號，否則輸入CARD_ORIGINAL
 int32_t skill_kaguya (int32_t card_idx[KAGUYA_CARD_IDX_NUM], int32_t skill_move_use_hp_card_idx, int32_t skill_move_evolution_direction, int32_t player_use, int32_t player_des){
@@ -110,7 +112,14 @@ int32_t skill_kaguya_passive_attacked (int32_t delta, int32_t attack_type, int32
     if (attack_type==1) return delta;
     int32_t card_idx= -1;
     // -------
-    printf ("game_action_skill_kaguya (skill_kaguya_passive_attacked) || 被動技能捨棄牌");
+    sCardData cards[CARD_NUM];
+    int32_t card_num;
+    gui_action_get_card (cards, &card_num, player_attacked, CARD_SPACE_HAND, CARD_BASIC_ATTACK_L1, CARD_BASIC_ATTACK_L3);
+    int32_t cnt;
+    game_data_search_cards (cards+card_num, &cnt, player_attacked, CARD_SPACE_HAND, CARD_COST_COMMON, -1);
+    card_num+= cnt;
+    int32_t type;
+    card_idx= gui_choose_card(&type, cards, card_num, "ATTACKED. Throw a card to attack and pull another.");
     // -------
     if (card_idx<0) return delta;
     int32_t level= status_kaguya_use_defense_card_as_attack (card_idx, player_attacked);
@@ -162,7 +171,7 @@ int32_t skill_kaguya_round_start (int32_t player){
                 direction-= player_data.pos;
                 direction/= abs(direction);
                 // -----
-                printf ("選擇要移動的方向");
+                direction= gui_choose_move_direction ("Choose the direction you want the opponent move to. (count from your position) (SKILL FINISH3)");
                 // ------
                 player_data_get (&player_data, player);
                 direction= direction + player_data.pos;

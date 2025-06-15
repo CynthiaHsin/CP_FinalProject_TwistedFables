@@ -148,6 +148,9 @@ int32_t gui_skill_red_riding_hood (int32_t player, int32_t card_idx[CARD_IDX_NUM
         case CARD_SKILL_ATTACK_EVOLUTION_L2:
         case CARD_SKILL_DEFENSE_EVOLUTION_L2:
         case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
+        case CARD_SKILL_FINISH1:
+        case CARD_SKILL_FINISH2:
+        case CARD_SKILL_FINISH3:
         default: break;
     }
 }
@@ -215,24 +218,54 @@ int32_t gui_skill_mulan (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_t
 }
 
 int32_t gui_skill_kaguya (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_t type[CARD_IDX_NUM]){
+    int32_t mulan_action[MULAN_ACTION_IDX_NUM];
+    int32_t player_des= player;
+    int32_t skill_move_use_hp_card_idx= CARD_ORIGINAL;
+    int32_t skill_move_evolution_direction= gui_choose_move_direction("Move the opponent to this direction. (1 time / round)");
+    sPlayerData pd;
+    player_data_get (&pd, player);
+
     switch (type[CARD_IDX_SKILL]){
         case CARD_SKILL_ATTACK_BASE_L1:
         case CARD_SKILL_ATTACK_BASE_L2:
         case CARD_SKILL_ATTACK_BASE_L3:
-        case CARD_SKILL_DEFENSE_BASE_L1:
-        case CARD_SKILL_DEFENSE_BASE_L2:
-        case CARD_SKILL_DEFENSE_BASE_L3:
+        {
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+            break;
+        }
         case CARD_SKILL_MOVEMENT_BASE_L1:
         case CARD_SKILL_MOVEMENT_BASE_L2:
         case CARD_SKILL_MOVEMENT_BASE_L3:
-        case CARD_SKILL_ATTACK_EVOLUTION_L1:
-        case CARD_SKILL_DEFENSE_EVOLUTION_L1:
-        case CARD_SKILL_MOVEMENT_EVOLUTION_L1:
-        case CARD_SKILL_ATTACK_EVOLUTION_L2:
-        case CARD_SKILL_DEFENSE_EVOLUTION_L2:
-        case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
+        {
+            int32_t choose= gui_choose_move_yes_or_no ("Do you want to lose 1 hp to DELETE a card from HAND or THROW?");
+            if (choose){
+                sCardData cards[CARD_NUM];
+                int32_t card_num, cnt;
+                game_data_search_cards (cards, &cnt, player, CARD_SPACE_HAND, CARD_ORIGINAL, -1);
+                card_num+= cnt;
+                game_data_search_cards (cards + card_num, &cnt, player, CARD_SPACE_THROW, CARD_ORIGINAL, -1);
+                card_num+= cnt;
+                skill_move_use_hp_card_idx= gui_choose_card (&cnt, cards, card_num, "Choose the card to delete.");
+            }
+            break;
+        }
+        case CARD_SKILL_FINISH3:
+        {
+            skill_move_evolution_direction= gui_choose_move_direction ("Choose the direction you want the opponent move to. (count from your position)");
+            // no break
+        }
+        case CARD_SKILL_FINISH2:
+        {
+            player_des= gui_choose_des_player (TEXT_CHOOSE_DES_PLAYER);
+            // no break
+        }
+        case CARD_SKILL_FINISH1:
+        {
+            return skill_kaguya_finish (card_idx[CARD_IDX_SKILL], skill_move_evolution_direction, player, player_des);
+        }
         default: break;
     }
+    return skill_kaguya (card_idx, skill_move_use_hp_card_idx, skill_move_evolution_direction, player, player_des);
 }
 
 int32_t gui_skill_dorothy (int32_t player, int32_t card_idx[CARD_IDX_NUM], int32_t type[CARD_IDX_NUM]){
@@ -322,6 +355,9 @@ int32_t gui_skill_snow_white (int32_t player, int32_t card_idx[CARD_IDX_NUM], in
         case CARD_SKILL_ATTACK_EVOLUTION_L2:
         case CARD_SKILL_DEFENSE_EVOLUTION_L2:
         case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
+        case CARD_SKILL_FINISH1:
+        case CARD_SKILL_FINISH2:
+        case CARD_SKILL_FINISH3:
         default: break;
     }
 }
@@ -343,6 +379,9 @@ int32_t gui_skill_match_girl (int32_t player, int32_t card_idx[CARD_IDX_NUM], in
         case CARD_SKILL_ATTACK_EVOLUTION_L2:
         case CARD_SKILL_DEFENSE_EVOLUTION_L2:
         case CARD_SKILL_MOVEMENT_EVOLUTION_L2:
+        case CARD_SKILL_FINISH1:
+        case CARD_SKILL_FINISH2:
+        case CARD_SKILL_FINISH3:
         default: break;
     }
 }
