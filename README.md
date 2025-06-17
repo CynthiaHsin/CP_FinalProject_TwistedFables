@@ -13,7 +13,7 @@
 1. 請先安裝 SDL2：
    >以 Ubuntu 為例：
    ```bash
-   sudo apt install libsdl2-dev
+   sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
    ```
 
 2. 編譯專案：
