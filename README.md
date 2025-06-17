@@ -1,6 +1,6 @@
 # CP_FinalProject_TwistedFables
 > 2025 NTNU CSIE Computer Programming II Final Project 
-> Twist Fables
+> Twisted Fables
 
 ---
 
